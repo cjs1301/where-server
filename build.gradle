@@ -30,16 +30,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-task buildZip(type: Zip) {
-	from compileJava
-	from processResources
-	into('lib') {
-		from(configurations.compileClasspath) {
-			exclude 'tomcat-embed-*'
-		}
-	}
-}
-
 tasks.named('test') {
 	useJUnitPlatform()
 }
