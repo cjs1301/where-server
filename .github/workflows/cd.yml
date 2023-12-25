@@ -31,10 +31,10 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}            # set this to your Amazon ECR repository name
-  ECS_SERVICE: ${{ secrets.ECS_SERVICE }}                  # set this to your Amazon ECS service name
-  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}                  # set this to your Amazon ECS cluster name
+  AWS_REGION: 'ap-northeast-2'#${{ secrets.AWS_REGION }}                   # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: 'odiya_server'#${{ secrets.ECR_REPOSITORY }}            # set this to your Amazon ECR repository name
+  ECS_SERVICE: 'odiya-server-service'#${{ secrets.ECS_SERVICE }}                  # set this to your Amazon ECS service name
+  ECS_CLUSTER: 'odiya-server'#${{ secrets.ECS_CLUSTER }}                  # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .aws/odiya-server-task-revision1.json # set this to the path to your Amazon ECS task definition
   # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: 'odiya-server'            # set this to the name of the container in the
