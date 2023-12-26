@@ -1,0 +1,11 @@
+{
+    "applinks":{
+        "apps":[],
+        "details":[
+                {
+                    "appID":"DD8NQWK3XA.com.app.where",
+                    "paths":["NOT /_/*","/*"]
+                }
+            ]
+        }
+}
