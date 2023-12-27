@@ -1,8 +1,0 @@
-spring:
-  config:
-    activate:
-      on-profile: prod
-  data:
-    redis:
-      host: "odiya-socket-redis.vb9spc.clustercfg.apn2.cache.amazonaws.com"
-      port: 6379
