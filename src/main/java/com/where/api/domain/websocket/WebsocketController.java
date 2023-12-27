@@ -1,10 +1,11 @@
-package com.where.api.domain.socket_test;
+package com.where.api.domain.websocket;
 
-import com.where.api.domain.socket_test.dto.SocketMessage;
+import com.where.api.domain.websocket.dto.SocketMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 @Slf4j
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class WebsocketController {
 
-    private final SimpMessageSendingOperations simpMessageSendingOperations;
-
+    private final RedisTemplate redisTemplate;
+    private final ChannelTopic channelTopic;
     /*
         /sub/channel/12345      - 구독(channelId:12345)
         /pub/location              - 메시지 발행
@@ -24,6 +25,6 @@ public class WebsocketController {
         log.info("-------------------------------------------");
         log.info(message.toString());
         log.info("-------------------------------------------");
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message);
+        redisTemplate.convertAndSend(channelTopic.getTopic(), message);
     }
 }

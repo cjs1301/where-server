@@ -1,7 +1,7 @@
 package com.where.api.core.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.where.api.domain.socket_test.dto.SocketMessage;
+import com.where.api.domain.websocket.dto.SocketMessage;
 
 public class Utils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
