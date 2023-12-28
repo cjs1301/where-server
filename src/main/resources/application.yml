@@ -5,5 +5,5 @@ spring:
       "prod": "prod"
   config:
     import:
-      - submodule-config/application.prod.yml
+      - ../submodule-config/application.prod.yml
 #      - submodule-config/application.lo.yml
