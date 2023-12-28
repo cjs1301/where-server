@@ -2,3 +2,6 @@
 	path = src/main/resources/submodule
 	url = https://github.com/cjs1301/submodule-config
 	branch = main
+[submodule "src/main/submodule-config"]
+	path = src/main/submodule-config
+	url = https://github.com/cjs1301/submodule-config.git
