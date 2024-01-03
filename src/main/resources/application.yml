@@ -6,4 +6,12 @@ spring:
   config:
     import:
       - submodule-config/application.prod.yml
-#      - submodule-config/application.lo.yml
+#      - submodule-config/application.local.yml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
