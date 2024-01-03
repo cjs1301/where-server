@@ -1,3 +1,0 @@
-[submodule "src/main/resources/submodule-config"]
-	path = src/main/resources/submodule-config
-	url = https://github.com/cjs1301/submodule-config.git
