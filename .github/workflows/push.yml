@@ -19,6 +19,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Jasypt 키 주입
+        run: |
+          echo ${{secrets.JASYPT}} | base64 --decode >> ./src/main/resources/application.yml
+          echo ${{secrets.JASYPT}} | base64 --decode >> ./src/test/resources/application-test.yml
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
