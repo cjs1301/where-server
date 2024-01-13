@@ -25,6 +25,3 @@ spring:
     console:
       enabled: true
 
-jasypt:
-  encryptor:
-    password: test
