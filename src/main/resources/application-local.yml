@@ -1,0 +1,25 @@
+spring:
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: mysecretpassword
+  jpa:
+#    database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_schema: odiya
+      format_sql: true # sql 보기좋게
+      default_batch_fetch_size: 100 # 한번에 묶어서 쿼리보내는 갯수
+      time_zone: UTC
+
+aligo:
+  api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)

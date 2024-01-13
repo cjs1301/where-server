@@ -1,4 +1,4 @@
-package com.where.api.core.config.socket;
+package com.where.api.core.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

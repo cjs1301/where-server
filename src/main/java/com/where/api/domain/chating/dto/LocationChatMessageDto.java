@@ -1,4 +1,4 @@
-package com.where.api.domain.websocket.dto;
+package com.where.api.domain.chating.dto;
 
 import lombok.*;
 
@@ -7,11 +7,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class SocketMessage {
+public class LocationChatMessageDto {
     private String type;
     private String sender;
     private String channelId;
-    private Coordinates coordinates;
+    private CoordinateDto coordinates;
 
     public void setSender(String sender) {
         this.sender = sender;
