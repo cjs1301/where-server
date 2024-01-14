@@ -9,8 +9,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(value = "test")
 class AligoSmsServiceTest {
 
-    @Autowired
-    private AligoSmsService aligoSmsService;
+//    @Autowired
+//    private AligoSmsService aligoSmsService;
 /*
 * sms 서비스가 특정 ip에서만 작동합니다.
 * */

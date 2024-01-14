@@ -18,14 +18,14 @@ public class AligoSmsService {
     private final WebClientConfig webClientConfig;
     private static final String API_URL = "https://apis.aligo.in/send/";
     @Value("${aligo.api_key}")
-    private String API_KEY;
+    private String apiKey;
     private static final String USER_ID = "cjs5241";
     private static final String SENDER = "01049051113";
 
     public void sendSms(String msg,String receiver,boolean isTest) {
         // Set up form data
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("key", API_KEY);
+        formData.add("key", apiKey);
         formData.add("user_id", USER_ID);
         formData.add("sender", SENDER);
         formData.add("receiver", receiver);
