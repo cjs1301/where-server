@@ -1,9 +1,12 @@
 package com.where.api.domain.member.entity;
 
+import com.where.api.domain.chating.entity.FollowChannelEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import net.minidev.json.annotate.JsonIgnore;
+
+import java.util.List;
 
 
 @Entity
@@ -31,4 +34,7 @@ public class MemberEntity {
     String password;
 
     MemberRole role;
+
+    @OneToMany(mappedBy = "member")
+    List<FollowChannelEntity> followingChannelList;
 }

@@ -1,6 +1,7 @@
 package com.where.api.domain.chating.controller;
 
 import com.where.api.domain.chating.dto.LocationChatMessageDto;
+import com.where.api.domain.chating.entity.ChannelEntity;
 import com.where.api.domain.chating.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +27,23 @@ public class ChatController {
     */
 
     @MessageMapping("/location")
+    public void locationMessage(LocationChatMessageDto message) {
+        log.info("-------------------------------------------");
+        log.info(message.toString());
+        log.info("-------------------------------------------");
+        simpMessageSendingOperations.convertAndSend("/sub/channels/" + message.getChannelId(), message);
+    }
+    @MessageMapping("/chat")
     public void message(LocationChatMessageDto message) {
         log.info("-------------------------------------------");
         log.info(message.toString());
         log.info("-------------------------------------------");
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message);
+        simpMessageSendingOperations.convertAndSend("/sub/channels/" + message.getChannelId(), message);
     }
 
     @PostMapping("/channels")
-    public ResponseEntity<String> createChannel(){
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<ChannelEntity> createChannel(){
+
+        return ResponseEntity.ok(chatService.createChannel());
     }
 }

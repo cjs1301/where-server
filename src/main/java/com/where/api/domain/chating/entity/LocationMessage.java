@@ -1,6 +1,7 @@
 package com.where.api.domain.chating.entity;
 
 import com.where.api.core.common.TimeStamped;
+import com.where.api.domain.member.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,11 @@ public class LocationMessage extends TimeStamped {
     Long id;
 
     @Column(columnDefinition = "geometry(Point, 4326)")
-    private Point position;
+    Point position;
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+    ChannelEntity channel;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    MemberEntity member;
 }

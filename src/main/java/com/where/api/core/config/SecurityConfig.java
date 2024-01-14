@@ -48,7 +48,7 @@ public class SecurityConfig {
 
         httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/mobile/**","/login").permitAll()
                         .requestMatchers("/.wll-known/**").permitAll()
-                        .requestMatchers("/ws-chat/**", "/actuator/**").permitAll()
+                        .requestMatchers("/ws/**", "/actuator/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 );
