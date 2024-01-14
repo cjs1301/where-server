@@ -9,7 +9,6 @@ services:
       - --providers.docker.swarmMode
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
-      - --providers.docker.network=odiya
       - --api.dashboard=true
       - --ping.entryPoint=web
       - --accessLog={}
@@ -66,7 +65,6 @@ services:
       - odiya
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=odiya"
       - "traefik.http.routers.spring-server.rule=Host(`server.odiya.link`)"
       - "traefik.http.routers.golf-api.entrypoints=web"
       - "traefik.http.services.spring-server.loadbalancer.server.port=8081"
