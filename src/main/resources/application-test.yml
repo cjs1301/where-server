@@ -2,8 +2,9 @@ spring:
   config:
     activate:
       on-profile: test
-    import:
-      - optional:file:env/test.env[.properties]
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
   datasource:
 #    driver-class-name: org.h2.Driver
     url: jdbc:h2:~/test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;NON_KEYWORDS=VALUE
@@ -24,3 +25,9 @@ spring:
   h2:
     console:
       enabled: true
+  jwt:
+    secret: ENC(Sf0mbAVAvAquNajogLZTaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9oNQ=)
+    expired: 604800000 #
+aligo:
+  api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
+
