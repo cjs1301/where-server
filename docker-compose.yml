@@ -73,4 +73,3 @@ services:
 
 networks:
   odiya:
-    external: true
