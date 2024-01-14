@@ -43,9 +43,9 @@ services:
     image: cjs5241/odiya-server
     ports:
       - "8080:8080"
-    healthcheck:
-      test: [ "CMD", "curl", "-l", "localhost:8080/actuator/health" ]
-      timeout: 5s
+#    healthcheck:
+#      test: [ "CMD", "curl", "-l", "localhost:8080/actuator/health" ]
+#      timeout: 5s
     deploy:
       mode: replicated
       replicas: 2
