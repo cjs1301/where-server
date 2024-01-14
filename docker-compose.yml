@@ -44,11 +44,11 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      test: [ "CMD", "curl", "-l", "http://localhost:8080/actuator/health" ]
+      test: [ "CMD", "curl", "-l", "localhost:8080/actuator/health" ]
       timeout: 5s
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 2
       resources:
         limits:
           memory: '1g'
