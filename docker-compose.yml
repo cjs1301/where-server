@@ -6,24 +6,31 @@ services:
     deploy:
       replicas: 2
     restart: always
-    ports:
-      - target: 8080
-        published: 8080
-        mode: host
-    networks:
-    - odiya
-
-
-  nginx-proxy:
-    image: nginx
-    restart: always
-    ports:
-      - 8080:80
-    volumes:
-      - /home/ubuntu/nginx/proxy/nginx-be.conf:/etc/nginx/nginx.conf
     networks:
       - odiya
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spring-server.rule=Host(`server.odiya.link`)"
+      - "traefik.http.services.spring-server.loadbalancer.server.port=8080"
+
+  nginx-proxy:
+    image: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - 80:80
+      - 8080:8080 # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - odiya
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
 
 networks:
   odiya:
-    driver: bridge
