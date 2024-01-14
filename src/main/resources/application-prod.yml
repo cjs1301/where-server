@@ -12,8 +12,6 @@ spring:
     password: ENC(oWB0jD2lS1+y/SOFHbs9KpE9IpG0p2VZ)
   jpa:
     #    database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-    hibernate:
-      ddl-auto: create
     properties:
       hibernate:
         default_schema: odiya
