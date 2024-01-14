@@ -15,7 +15,7 @@ services:
       - -log.level=DEBUG
     ports:
       - "80:80"
-      - "9000:9000" # Traefik dashboard
+      - "9999:9999" # Traefik dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
