@@ -30,3 +30,6 @@ spring:
     expired: 604800000 #
 aligo:
   api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
+jasypt:
+  encryptor:
+    password: ehxhfl
