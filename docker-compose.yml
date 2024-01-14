@@ -41,9 +41,9 @@ services:
   spring-server:
     image: cjs5241/odiya-server
     ports:
-      - "8091"
+      - "8090"
     healthcheck:
-      test: [ "CMD", "curl", "-l", "http://localhost:8080/actuator/prometheus" ]
+      test: [ "CMD", "curl", "-l", "http://localhost:8090/actuator/health" ]
       timeout: 5s
     deploy:
       mode: replicated
@@ -73,3 +73,4 @@ services:
 
 networks:
   odiya:
+    external: true
