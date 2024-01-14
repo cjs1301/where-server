@@ -8,11 +8,10 @@ services:
       - --api.insecure=true
       - --providers.docker
       - --providers.docker.swarmMode
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
+      - --providers.docker.exposedByDefault=false
+      - --entryPoints.web.address=:80
       - --api.dashboard=true
       - --ping.entryPoint=web
-      - --accessLog={}
     ports:
       - 80:80
       - 8080:8080 # Traefik dashboard
@@ -42,7 +41,7 @@ services:
   spring-server:
     image: cjs5241/odiya-server
     ports:
-      - "8090"
+      - "8081"
     healthcheck:
       test: [ "CMD", "curl", "-l", "http://localhost:8090/actuator/health" ]
       timeout: 5s
@@ -68,8 +67,8 @@ services:
       - odiya
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.spring-server.rule=Host(`server.odiya.link`)"
-      - "traefik.http.routers.golf-api.entrypoints=web"
+      - "traefik.http.routers.spring-server.rule=Host(`spring-server.localhost`)"
+      - "traefik.http.routers.spring-server.entrypoints=web"
       - "traefik.http.services.spring-server.loadbalancer.server.port=8081"
 
 networks:
