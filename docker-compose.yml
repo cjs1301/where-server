@@ -20,7 +20,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - home/ubuntu/nginx/proxy/nginx-be.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/nginx/proxy/nginx-be.conf:/etc/nginx/nginx.conf
     networks:
       - odiya
 
