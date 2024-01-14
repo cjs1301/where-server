@@ -43,7 +43,7 @@ services:
     ports:
       - "8081"
     healthcheck:
-      test: [ "CMD", "curl", "-l", "http://localhost:8090/actuator/health" ]
+      test: [ "CMD", "curl", "-l", "http://localhost:8081/actuator/health" ]
       timeout: 5s
     deploy:
       mode: replicated
