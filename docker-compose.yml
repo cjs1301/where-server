@@ -5,6 +5,7 @@ services:
   traefik:
     image: traefik
     command:
+      - --api.insecure=true
       - --providers.docker
       - --providers.docker.swarmMode
       - --providers.docker.exposedbydefault=false
