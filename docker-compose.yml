@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  spring-server:
+    image: cjs5241/odiya-server
+  deploy:
+    replicas: 2
+  restart: always
+  ports:
+    - target: 8080-8082
+      published: 8080
+      mode: host
+  networks:
+    - odiya
+
+
+  nginx-proxy:
+    image: nginx
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - home/ubuntu/nginx/proxy/nginx-be.conf:/etc/nginx/nginx.conf
+    networks:
+      - odiya
+
+networks:
+  odiya:
+    driver: overlay
