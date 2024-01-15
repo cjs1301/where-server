@@ -1,17 +1,17 @@
 package com.where.api.core.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.where.api.domain.chating.dto.LocationChatMessageDto;
+import com.where.api.domain.chating.dto.LocationMessageDto;
 
 public class Utils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private Utils(){}
 
-    public static LocationChatMessageDto getObject(final String socketMessage) throws Exception{
-        return objectMapper.readValue(socketMessage, LocationChatMessageDto.class);
+    public static LocationMessageDto getObject(final String socketMessage) throws Exception{
+        return objectMapper.readValue(socketMessage, LocationMessageDto.class);
     }
-    public static String getString(final LocationChatMessageDto locationChatMessageDto) throws Exception{
-        return objectMapper.writeValueAsString(locationChatMessageDto);
+    public static String getString(final LocationMessageDto locationMessageDto) throws Exception{
+        return objectMapper.writeValueAsString(locationMessageDto);
     }
 }
