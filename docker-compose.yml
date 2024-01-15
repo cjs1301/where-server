@@ -1,36 +1,122 @@
 version: "3.8"
 
 services:
-  spring-server:
-    image: cjs5241/odiya-server
-    deploy:
-      replicas: 2
-    restart: always
-    networks:
-      - odiya
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.spring-server.rule=Host(`server.odiya.link`)"
-      - "traefik.http.services.spring-server.loadbalancer.server.port=8080"
 
-  nginx-proxy:
-    image: traefik
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.swarmMode=true"
-      - "--entrypoints.web.address=:80"
+#  traefik:
+#    image: traefik
+#    command:
+#      - --api.insecure=true
+#      - --api.dashboard=true
+#      - --entryPoints.web.address=:80
+#      - --entryPoints.web.forwardedHeaders.insecure
+#      - --providers.docker
+#      - --providers.docker.swarmMode=true
+#      - --providers.docker.exposedByDefault=false
+#      - --providers.docker.network=odiya
+#      - --log.level=DEBUG
+#    ports:
+#      - "80:80"
+#      - "8080:8080" # Traefik dashboard
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    networks:
+#      - odiya
+#    deploy:
+#      mode: replicated
+#      replicas: 2
+#      update_config:
+#        order: start-first
+#        delay: 10s
+#        failure_action: rollback
+#      rollback_config:
+#        order: stop-first
+#        parallelism: 0
+#      restart_policy:
+#        condition: on-failure
+#        delay: 5s
+#        max_attempts: 3
+#      placement:
+#        constraints:
+#          - node.role == manager
+
+
+  spring-server:
+    container_name: "spring-server"
+    image: cjs5241/odiya-server
     ports:
-      - 80:80
-      - 8080:8080 # Traefik dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "4000:4000"
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          memory: '1g'
+          cpus: '1'
+      update_config:
+        order: start-first
+        delay: 5s
+        failure_action: rollback
+      rollback_config:
+        order: stop-first
+        parallelism: 0
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
     networks:
       - odiya
+#    labels:
+#      - traefik.enable=true
+#      - traefik.docker.network=odiya
+#      - traefik.http.routers.spring-server.rule=Host(`localhost:4000`)
+#      - traefik.http.routers.spring-server.entrypoints=web
+#      - traefik.http.services.spring-server.loadbalancer.server.port=4000
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: ingress
     deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
       placement:
         constraints:
           - node.role == manager
+          - node.labels.monitoring == true
+
+    networks:
+      - odiya
+
+  prometheus:
+    image: bitnami/prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - spring-server
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+          - node.labels.monitoring == true
+    volumes:
+      - /home/ubuntu/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - odiya
+
+
+volumes:
+  grafana-data:
+  prometheus-data:
 
 networks:
   odiya:
+    external: true
