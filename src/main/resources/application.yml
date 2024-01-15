@@ -7,7 +7,8 @@ spring:
   jwt:
     secret: ENC(Sf0mbAVAvAquNajogLZTaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9oNQ=)
     expired: 604800000 # ms 1000 / sec 60 / min 60 / hour 24 / day 7
-
+server:
+  port: 4000
 management:
   endpoints:
     web:
