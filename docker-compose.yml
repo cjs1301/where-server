@@ -2,42 +2,42 @@ version: "3.8"
 
 services:
 
-  traefik:
-    image: traefik
-    command:
-      - --api.insecure=true
-      - --api.dashboard=true
-      - --entryPoints.web.address=:80
-      - --entryPoints.web.forwardedHeaders.insecure
-      - --providers.docker
-      - --providers.docker.swarmMode=true
-      - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=odiya
-      - --log.level=DEBUG
-    ports:
-      - "80:80"
-      - "8080:8080" # Traefik dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - odiya
-    deploy:
-      mode: replicated
-      replicas: 2
-      update_config:
-        order: start-first
-        delay: 10s
-        failure_action: rollback
-      rollback_config:
-        order: stop-first
-        parallelism: 0
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-      placement:
-        constraints:
-          - node.role == manager
+#  traefik:
+#    image: traefik
+#    command:
+#      - --api.insecure=true
+#      - --api.dashboard=true
+#      - --entryPoints.web.address=:80
+#      - --entryPoints.web.forwardedHeaders.insecure
+#      - --providers.docker
+#      - --providers.docker.swarmMode=true
+#      - --providers.docker.exposedByDefault=false
+#      - --providers.docker.network=odiya
+#      - --log.level=DEBUG
+#    ports:
+#      - "80:80"
+#      - "8080:8080" # Traefik dashboard
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    networks:
+#      - odiya
+#    deploy:
+#      mode: replicated
+#      replicas: 2
+#      update_config:
+#        order: start-first
+#        delay: 10s
+#        failure_action: rollback
+#      rollback_config:
+#        order: stop-first
+#        parallelism: 0
+#      restart_policy:
+#        condition: on-failure
+#        delay: 5s
+#        max_attempts: 3
+#      placement:
+#        constraints:
+#          - node.role == manager
 
 
   spring-server:
@@ -65,12 +65,12 @@ services:
         max_attempts: 3
     networks:
       - odiya
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=odiya
-      - traefik.http.routers.spring-server.rule=Host(`localhost:4000`)
-      - traefik.http.routers.spring-server.entrypoints=web
-      - traefik.http.services.spring-server.loadbalancer.server.port=4000
+#    labels:
+#      - traefik.enable=true
+#      - traefik.docker.network=odiya
+#      - traefik.http.routers.spring-server.rule=Host(`localhost:4000`)
+#      - traefik.http.routers.spring-server.entrypoints=web
+#      - traefik.http.services.spring-server.loadbalancer.server.port=4000
 
   grafana:
     image: grafana/grafana
