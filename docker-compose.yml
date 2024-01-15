@@ -6,13 +6,14 @@ services:
     image: traefik
     command:
       - --api.insecure=true
-      - --providers.docker
-      - --providers.docker.swarmMode
-      - --providers.docker.exposedByDefault=false
-      - --entryPoints.web.address=:80
       - --api.dashboard=true
-      - --ping.entryPoint=web
-      - -log.level=DEBUG
+      - --entryPoints.web.address=:80
+      - --entryPoints.web.forwardedHeaders.insecure=true
+      - --providers.docker
+      - --providers.docker.swarmMode=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=odiya
+      - --log.level=DEBUG
     ports:
       - "80:80"
       - "8080:8080" # Traefik dashboard
@@ -65,10 +66,11 @@ services:
     networks:
       - odiya
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.spring-server.rule=Host(`0.0.0.0`)"
-      - "traefik.http.routers.spring-server.entrypoints=web"
-      - "traefik.http.services.spring-server.loadbalancer.server.port=4000"
+      - traefik.enable=true
+      - traefik.docker.network=odiya
+      - traefik.http.routers.spring-server.rule=Host(`0.0.0.0`)
+      - traefik.http.routers.spring-server.entrypoints=web
+      - traefik.http.services.spring-server.loadbalancer.server.port=4000
 
   grafana:
     image: grafana/grafana
