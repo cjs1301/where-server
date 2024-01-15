@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 10s # 10초 마다 Metric을 Pulling
+  evaluation_interval: 10s # rule 을 얼마나 빈번하게 검증하는지 설정
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: "spring-server"
+    metrics_path: "/actuator/prometheus" # Application prometheus endpoint
+    static_configs:
+      - targets: ["spring-server:4000"] # Application host:port

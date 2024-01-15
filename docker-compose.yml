@@ -40,15 +40,15 @@ services:
 
 
   spring-server:
+    container_name: "spring-server"
     image: cjs5241/odiya-server
     ports:
       - "4000:4000"
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider localhost:4000/actuator/health || exit 1
+      test: [ "CMD", "curl", "-f", "http://localhost:4000/actuator/health" ]
       interval: 30s
-      retries: 5
-      start_period: 5s
-      timeout: 3s
+      timeout: 10s
+      retries: 3
     deploy:
       mode: replicated
       replicas: 2
@@ -74,6 +74,51 @@ services:
       - "traefik.http.routers.spring-server.rule=Host(`0.0.0.0`)"
       - "traefik.http.routers.spring-server.entrypoints=web"
       - "traefik.http.services.spring-server.loadbalancer.server.port=4000"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: ingress
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+          - node.labels.monitoring == true
+
+    networks:
+      - odiya
+
+  prometheus:
+    image: bitnami/prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - spring-server
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+          - node.labels.monitoring == true
+    volumes:
+      - /home/ubuntu/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - odiya
+
+
+volumes:
+  grafana-data:
+  prometheus-data:
 
 networks:
   odiya:
