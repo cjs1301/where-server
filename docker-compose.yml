@@ -44,7 +44,7 @@ services:
     ports:
       - "4000:4000"
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider localhost:8080/actuator/health || exit 1
+      test: wget --no-verbose --tries=1 --spider localhost:4000/actuator/health || exit 1
       timeout: 5s
     deploy:
       mode: replicated
