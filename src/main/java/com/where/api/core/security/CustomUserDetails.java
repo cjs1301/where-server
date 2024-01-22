@@ -19,6 +19,9 @@ public class CustomUserDetails implements UserDetails {
     public Long getId(){
         return memberEntity.getId();
     }
+    public String getRole(){
+        return memberEntity.getRole().toString();
+    }
 
 
     @Override
