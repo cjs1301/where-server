@@ -10,5 +10,5 @@ import java.util.List;
 public class CustomUserDetailDto {
     String name;
     String mobile;
-    List<String> role;
+    String role;
 }
