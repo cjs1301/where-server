@@ -1,10 +1,13 @@
 package com.where.api.domain.member.controller;
 
 
+import com.where.api.core.security.CustomUserDetails;
+import com.where.api.domain.member.dto.CustomUserDetailDto;
 import com.where.api.domain.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +29,8 @@ public class AuthController {
 
 
     @GetMapping
-    public ResponseEntity<String> getAuthInfo(){
-        return ResponseEntity.ok().body(SecurityContextHolder.getContext().getAuthentication().getName());
+    public ResponseEntity<CustomUserDetailDto> getAuthInfo(@AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok().body(CustomUserDetailDto.builder().mobile(user.getUsername()).role(user.getAuthorities().toString()).name(user.getNickName()).build());
     }
 
 }

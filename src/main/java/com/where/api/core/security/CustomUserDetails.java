@@ -31,6 +31,10 @@ public class CustomUserDetails implements UserDetails {
         return collection;
     }
 
+    public String getNickName(){
+        return memberEntity.getName();
+    }
+
     @Override
     public String getPassword() {
 
