@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 
 @Slf4j
 @RestController
@@ -30,7 +32,7 @@ public class AuthController {
 
     @GetMapping
     public ResponseEntity<CustomUserDetailDto> getAuthInfo(@AuthenticationPrincipal CustomUserDetails user){
-        return ResponseEntity.ok().body(CustomUserDetailDto.builder().mobile(user.getUsername()).role(user.getAuthorities().toString()).name(user.getNickName()).build());
+        return ResponseEntity.ok().body(CustomUserDetailDto.builder().mobile(user.getUsername()).role(user.getAuthorities().stream().map(Objects::toString).toList()).name(user.getNickName()).build());
     }
 
 }
