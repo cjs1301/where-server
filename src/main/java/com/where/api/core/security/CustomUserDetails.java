@@ -20,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
         return memberEntity.getId();
     }
     public String getRole(){
-        return memberEntity.getRole().toString();
+        return memberEntity.getRole().name();
     }
 
 
