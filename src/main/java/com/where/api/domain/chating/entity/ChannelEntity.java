@@ -4,6 +4,7 @@ import com.where.api.core.common.TimeStamped;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
@@ -22,6 +23,4 @@ public class ChannelEntity extends TimeStamped {
     @Column(name = "channel_id", nullable = false)
     UUID id;
     String name;
-    @OneToMany(mappedBy = "channel")
-    List<FollowChannelEntity> followingChannelList;
 }
