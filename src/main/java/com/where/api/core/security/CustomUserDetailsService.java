@@ -18,10 +18,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String mobile)throws UsernameNotFoundException {
         MemberEntity memberEntity = memberRepository.findByMobile(mobile);
         if (memberEntity != null) {
-            System.out.println("유저 찾음");
             return new CustomUserDetails(memberEntity);
         }
-        System.out.println("유저를 찾을수 없음");
         return null;
     }
 }

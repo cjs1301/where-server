@@ -29,6 +29,10 @@ public class JWTUtil {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("mobile", String.class);
     }
+    public Long getId(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
+    }
 
     public String getRole(String token) {
 
@@ -40,9 +44,10 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String mobile, String role) {
+    public String createJwt(Long id,String mobile, String role) {
 
         return Jwts.builder()
+                .claim("id", id)
                 .claim("mobile", mobile)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
