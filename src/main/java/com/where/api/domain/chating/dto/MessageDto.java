@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageDto {
-    Long id;
+    String id;
     String channelId;
     String sender;
     String message;
@@ -21,7 +21,7 @@ public class MessageDto {
 
     public static MessageDto fromEntity(MessageEntity messageEntity){
         return MessageDto.builder()
-                .id(messageEntity.getId())
+                .id(messageEntity.getId().toString())
                 .sender(messageEntity.getMember().getMobile())
                 .message(messageEntity.getMessage())
                 .createdAt(messageEntity.getCreatedAt())

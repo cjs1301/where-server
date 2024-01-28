@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "message")
@@ -16,8 +19,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageEntity extends TimeStamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @UuidGenerator
+    @Column(name = "message_id", nullable = false)
+    UUID id;
     String message;
     @ManyToOne
     @JoinColumn(name = "channel_id")
