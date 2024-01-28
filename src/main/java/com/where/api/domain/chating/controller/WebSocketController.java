@@ -19,19 +19,27 @@ public class WebSocketController {
     private final ChannelService channelService;
 
     /*
-        /sub/channels/12345      - 구독(channelId:12345)
+        /sub/location/channels/12345      - 구독(channelId:12345)
+        /sub/chat/channels/12345      - 구독(channelId:12345)
         /pub/location              - 메시지 발행
         /pub/chats              - 메시지 발행
     */
 
+//    @MessageMapping("/enter")
+//    public void enterToChannel(MessageDto message){
+//        simpMessageSendingOperations.convertAndSend("/sub/channels/" + message.getChannelId(),message);
+//    }
+
     @MessageMapping("/location")
     public void locationMessage(LocationMessageDto message, @AuthenticationPrincipal CustomUserDetails user) {
         channelService.createLocationMessage(message,user.getId());
-        simpMessageSendingOperations.convertAndSend("/sub/channels/" + message.getChannelId(), message);
+        log.info(message.toString());
+        simpMessageSendingOperations.convertAndSend("/sub/location/channels/" + message.getChannelId(), message);
     }
     @MessageMapping("/chats")
     public void message(MessageDto message,@AuthenticationPrincipal CustomUserDetails user) {
         channelService.createMessage(message,user.getId());
-        simpMessageSendingOperations.convertAndSend("/sub/channels/" + message.getChannelId(), message);
+        log.info(message.toString());
+        simpMessageSendingOperations.convertAndSend("/sub/chat/channels/" + message.getChannelId(), message);
     }
 }

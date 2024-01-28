@@ -50,8 +50,9 @@ public class ChannelService {
     public List<ChannelEntity> getMemberChannelList(Long memberId){
         return followChannelRepository.findAllByMemberId(memberId);
     }
-    public List<MessageEntity> getChannelMessageList(UUID channelId){
-        return messageRepository.findAllByChannelId(channelId);
+    public List<MessageDto> getChannelMessageList(UUID channelId){
+        List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId);
+        return messageEntities.stream().map(MessageDto::fromEntity).toList();
     }
 
     public void createLocationMessage(LocationMessageDto messageDto,Long memberId){

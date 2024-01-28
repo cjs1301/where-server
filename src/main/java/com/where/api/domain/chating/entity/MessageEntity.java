@@ -5,10 +5,12 @@ import com.where.api.domain.member.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "message")
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
