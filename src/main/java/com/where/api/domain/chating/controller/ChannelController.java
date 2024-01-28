@@ -2,6 +2,7 @@ package com.where.api.domain.chating.controller;
 
 import com.where.api.core.security.CustomUserDetails;
 import com.where.api.domain.chating.dto.CreateChannelDto;
+import com.where.api.domain.chating.dto.MessageDto;
 import com.where.api.domain.chating.entity.ChannelEntity;
 import com.where.api.domain.chating.entity.MessageEntity;
 import com.where.api.domain.chating.service.ChannelService;
@@ -34,7 +35,7 @@ public class ChannelController {
         return ResponseEntity.ok(channelService.getMemberChannelList(user.getId()));
     }
     @GetMapping("/{channelId}/messages")
-    public ResponseEntity<List<MessageEntity>> getChannelMessageList(@PathVariable UUID channelId){
+    public ResponseEntity<List<MessageDto>> getChannelMessageList(@PathVariable UUID channelId){
         return ResponseEntity.ok(channelService.getChannelMessageList(channelId));
     }
 
