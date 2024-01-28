@@ -19,7 +19,9 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -48,16 +50,15 @@ public class ChannelService {
     }
 
     public List<ChannelEntity> getMemberChannelList(Long memberId){
-        return followChannelRepository.findAllByMemberId(memberId);
+        return followChannelRepository.findAllByMemberId(memberId).orElse(new ArrayList<>());
     }
     public List<MessageDto> getChannelMessageList(UUID channelId){
-        List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId);
-        return messageEntities.stream().map(MessageDto::fromEntity).toList();
+        Optional<List<MessageEntity>> messageEntities = messageRepository.findAllByChannelId(channelId);
+        return messageEntities.map(entities -> entities.stream().map(MessageDto::fromEntity).toList()).orElseGet(ArrayList::new);
     }
 
-    public void createLocationMessage(LocationMessageDto messageDto,Long memberId){
-        MemberEntity member = new MemberEntity();
-        member.setId(memberId);
+    public void createLocationMessage(LocationMessageDto messageDto){
+        MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
         LocationMessageEntity locationMessage = LocationMessageEntity.builder()
                 .position(new Point(messageDto.getCoordinates().getLatitude(),messageDto.getCoordinates().getLongitude()))
                 .member(member)
@@ -66,9 +67,8 @@ public class ChannelService {
         locationMessageRepository.save(locationMessage);
     }
 
-    public void createMessage(MessageDto messageDto, Long memberId){
-        MemberEntity member = new MemberEntity();
-        member.setId(memberId);
+    public void createMessage(MessageDto messageDto){
+        MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
         MessageEntity message = MessageEntity.builder()
                 .message(messageDto.getMessage())
                 .member(member)

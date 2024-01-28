@@ -30,6 +30,11 @@ public class ChannelController {
         createChannelDto.setMemberMobileNumber(user.getUsername());
         return ResponseEntity.ok(channelService.createChannel(createChannelDto));
     }
+    @DeleteMapping
+    public ResponseEntity<String> deleteChannel(){
+        // TODO deleteChannel
+        return ResponseEntity.ok("삭제");
+    }
     @GetMapping
     public ResponseEntity<List<ChannelEntity>> getChannelList(@AuthenticationPrincipal CustomUserDetails user){
         return ResponseEntity.ok(channelService.getMemberChannelList(user.getId()));

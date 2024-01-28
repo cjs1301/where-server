@@ -18,7 +18,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String mobile)throws UsernameNotFoundException {
         MemberEntity memberEntity = memberRepository.findByMobile(mobile);
         if (memberEntity != null) {
-            return new CustomUserDetails(memberEntity);
+            return CustomUserDetails.builder()
+                    .id(memberEntity.getId())
+                    .name(memberEntity.getName())
+                    .mobile(memberEntity.getMobile())
+                    .password(memberEntity.getPassword())
+                    .role(memberEntity.getRole().toString())
+                    .isEnabled(memberEntity.isEnabled())
+                    .build();
         }
         return null;
     }

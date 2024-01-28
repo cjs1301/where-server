@@ -1,26 +1,37 @@
 package com.where.api.core.security;
 
-import com.where.api.domain.member.entity.MemberEntity;
+import com.where.api.domain.member.entity.MemberRole;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
-
+@Getter
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
 
-    private final MemberEntity memberEntity;
+    Long id;
 
-    public CustomUserDetails(MemberEntity memberEntity) {
+    String name;
 
-        this.memberEntity = memberEntity;
-    }
+    boolean isEnabled;
+
+    String mobile;
+    @JsonIgnore
+    String password;
+
+    String role;
 
     public Long getId(){
-        return memberEntity.getId();
+        return this.id;
     }
     public String getRole(){
-        return memberEntity.getRole().name();
+        return this.role;
     }
 
 
@@ -29,25 +40,25 @@ public class CustomUserDetails implements UserDetails {
 
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
-        collection.add((GrantedAuthority) () -> String.valueOf(memberEntity.getRole()));
+        collection.add((GrantedAuthority) () -> String.valueOf(this.role));
 
         return collection;
     }
 
     public String getNickName(){
-        return memberEntity.getName();
+        return this.name;
     }
 
     @Override
     public String getPassword() {
 
-        return memberEntity.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername() {
 
-        return memberEntity.getMobile();
+        return this.mobile;
     }
 
     @Override
@@ -71,6 +82,6 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
 
-        return memberEntity.isEnabled();
+        return this.isEnabled;
     }
 }

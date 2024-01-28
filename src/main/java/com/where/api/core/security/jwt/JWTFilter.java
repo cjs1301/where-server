@@ -43,7 +43,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
 
         //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
+        if (Boolean.TRUE.equals(jwtUtil.isExpired(token))) {
 
             filterChain.doFilter(request, response);
 
@@ -55,16 +55,17 @@ public class JWTFilter extends OncePerRequestFilter {
         String mobile = jwtUtil.getMobile(token);
         Long id = jwtUtil.getId(token);
         String role = jwtUtil.getRole(token);
-
-        //memberEntity를 생성하여 값 set
-        MemberEntity member = new MemberEntity();
-        member.setId(id);
-        member.setMobile(mobile);
-        member.setRole(MemberRole.valueOf(role));
-        member.setPassword("temppassword");
+        System.out.println("hrerererererer");
+        System.out.println(id);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomUserDetails customUserDetails = new CustomUserDetails(member);
+        CustomUserDetails customUserDetails = CustomUserDetails.builder()
+                .id(id)
+                .mobile(mobile)
+                .password("temppassword")
+                .role(role)
+                .isEnabled(true)
+                .build();
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
