@@ -7,7 +7,7 @@ import com.where.api.domain.chating.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class WebSocketController {
-    private final SimpMessageSendingOperations simpMessageSendingOperations;
+    private final SimpMessagingTemplate template;
     private final ChannelService channelService;
 
     /*
@@ -31,15 +31,15 @@ public class WebSocketController {
 //    }
 
     @MessageMapping("/location")
-    public void locationMessage(LocationMessageDto message, @AuthenticationPrincipal CustomUserDetails user) {
-        channelService.createLocationMessage(message,user.getId());
+    public void locationMessage(LocationMessageDto message) {
+        channelService.createLocationMessage(message);
         log.info(message.toString());
-        simpMessageSendingOperations.convertAndSend("/sub/location/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/sub/location/channels/" + message.getChannelId(), message);
     }
-    @MessageMapping("/chats")
-    public void message(MessageDto message,@AuthenticationPrincipal CustomUserDetails user) {
-        channelService.createMessage(message,user.getId());
+    @MessageMapping("/chat")
+    public void message(MessageDto message) {
+        channelService.createMessage(message);
         log.info(message.toString());
-        simpMessageSendingOperations.convertAndSend("/sub/chat/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/sub/chat/channels/" + message.getChannelId(), message);
     }
 }
