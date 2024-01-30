@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
     boolean isEnabled;
 
     String mobile;
-    @JsonIgnore
+
     String password;
 
     String role;
