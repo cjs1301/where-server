@@ -55,8 +55,6 @@ public class JWTFilter extends OncePerRequestFilter {
         String mobile = jwtUtil.getMobile(token);
         Long id = jwtUtil.getId(token);
         String role = jwtUtil.getRole(token);
-        System.out.println("hrerererererer");
-        System.out.println(id);
 
         //UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = CustomUserDetails.builder()
