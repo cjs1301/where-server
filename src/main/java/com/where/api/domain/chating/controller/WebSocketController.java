@@ -27,7 +27,8 @@ public class WebSocketController {
 
 //    @MessageMapping("/enter")
 //    public void enterToChannel(MessageDto message){
-//        simpMessageSendingOperations.convertAndSend("/sub/channels/" + message.getChannelId(),message);
+//        template.convertAndSend("/sub/location/channels/" + message.getChannelId(),message);
+//        template.convertAndSend("/sub/chat/channels/" + message.getChannelId(),message);
 //    }
 
     @MessageMapping("/location")

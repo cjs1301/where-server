@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,4 +24,7 @@ public class ChannelEntity extends TimeStamped {
     @Column(name = "channel_id", nullable = false)
     UUID id;
     String name;
+
+    @OneToMany(mappedBy = "channel")
+    List<FollowChannelEntity> followChannelEntities = new ArrayList<>();
 }

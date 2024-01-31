@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
+public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
     Optional<List<MessageEntity>> findAllByChannelId(UUID channel_id);
 }

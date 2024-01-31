@@ -23,7 +23,7 @@ public class MessageEntity extends TimeStamped {
     @Column(name = "message_id", nullable = false)
     UUID id;
     String message;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "channel_id")
     ChannelEntity channel;
     @ManyToOne

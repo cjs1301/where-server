@@ -1,11 +1,14 @@
 package com.where.api.domain.chating.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateChannelDto {
-    private String channelName;
-    private String memberMobileNumber;
+    String channelName;
+    String memberMobileNumber;
 }
