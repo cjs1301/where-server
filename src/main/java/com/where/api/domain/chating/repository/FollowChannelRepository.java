@@ -14,4 +14,10 @@ public interface FollowChannelRepository extends JpaRepository<FollowChannelEnti
 //    Optional<List<ChannelEntity>> findAllByMemberId(Long memberId);
 @Query("select f from FollowChannelEntity f where f.member.id = ?1")
 List<FollowChannelEntity> findAllByMemberId(Long memberId);
+
+    @Query("select (count(f) > 0) from FollowChannelEntity f where f.channel.id = ?1 and f.member.id = ?2")
+    Boolean existsByChannelIdAndMemberId(UUID channelId, Long memberId);
+
+    @Query("select f from FollowChannelEntity f where f.channel.id = ?1 and f.member.id = ?2")
+    FollowChannelEntity findByChannelIdAndMemberId(UUID channelId, Long memberId);
 }

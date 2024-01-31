@@ -84,6 +84,10 @@ public class ChannelService {
     public FollowChannelDto createFollowChannel(UUID channelId, Long memberId) {
         ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
         MemberEntity member = memberRepository.findById(memberId).orElseThrow();
+        Boolean isExists = followChannelRepository.existsByChannelIdAndMemberId(channelId,memberId);
+        if(Boolean.TRUE.equals(isExists)){
+            return FollowChannelDto.fromEntity(followChannelRepository.findByChannelIdAndMemberId(channelId,memberId));
+        }
         FollowChannelEntity followChannelEntity = FollowChannelEntity.builder().member(member).channel(channel).build();
         followChannelRepository.save(followChannelEntity);
         return FollowChannelDto.fromEntity(followChannelEntity);
