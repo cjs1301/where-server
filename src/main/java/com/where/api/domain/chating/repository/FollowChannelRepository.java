@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface FollowChannelRepository extends JpaRepository<FollowChannelEntity, Long> {
-    @Query("select f.channel from FollowChannelEntity f where f.member.id = ?1")
-    Optional<List<ChannelEntity>> findAllByMemberId(Long memberId);
+public interface FollowChannelRepository extends JpaRepository<FollowChannelEntity, UUID> {
+//    @Query("select f.channel from FollowChannelEntity f where f.member.id = ?1")
+//    Optional<List<ChannelEntity>> findAllByMemberId(Long memberId);
+@Query("select f from FollowChannelEntity f where f.member.id = ?1")
+List<FollowChannelEntity> findAllByMemberId(Long memberId);
 }

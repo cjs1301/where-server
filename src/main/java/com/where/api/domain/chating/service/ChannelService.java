@@ -1,6 +1,7 @@
 package com.where.api.domain.chating.service;
 
 import com.where.api.domain.chating.dto.CreateChannelDto;
+import com.where.api.domain.chating.dto.FollowChannelDto;
 import com.where.api.domain.chating.dto.LocationMessageDto;
 import com.where.api.domain.chating.dto.MessageDto;
 import com.where.api.domain.chating.entity.ChannelEntity;
@@ -35,7 +36,7 @@ public class ChannelService {
     private final LocationMessageRepository locationMessageRepository;
 
     @Transactional
-    public ChannelEntity createChannel(CreateChannelDto createChannelDto){
+    public FollowChannelDto createChannelAndFollow(CreateChannelDto createChannelDto){
         MemberEntity member = memberRepository.findByMobile(createChannelDto.getMemberMobileNumber());
         ChannelEntity channel = ChannelEntity.builder()
                 .name(createChannelDto.getChannelName())
@@ -46,11 +47,13 @@ public class ChannelService {
                 .member(member)
                 .build();
         followChannelRepository.save(followChannelEntity);
-        return channel;
+        log.info(followChannelEntity.toString());
+        return FollowChannelDto.fromEntity(followChannelEntity);
     }
 
-    public List<ChannelEntity> getMemberChannelList(Long memberId){
-        return followChannelRepository.findAllByMemberId(memberId).orElse(new ArrayList<>());
+    public List<FollowChannelDto> getFollowChannelList(Long memberId){
+
+        return followChannelRepository.findAllByMemberId(memberId).stream().map(FollowChannelDto::fromEntity).toList();
     }
     public List<MessageDto> getChannelMessageList(UUID channelId){
         Optional<List<MessageEntity>> messageEntities = messageRepository.findAllByChannelId(channelId);
@@ -75,5 +78,23 @@ public class ChannelService {
                 .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
                 .build();
         messageRepository.save(message);
+    }
+
+
+    public FollowChannelDto createFollowChannel(UUID channelId, Long memberId) {
+        ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow();
+        FollowChannelEntity followChannelEntity = FollowChannelEntity.builder().member(member).channel(channel).build();
+        followChannelRepository.save(followChannelEntity);
+        return FollowChannelDto.fromEntity(followChannelEntity);
+    }
+
+    public void deleteFollowChannel(UUID channelId,UUID followChannelId) {
+        followChannelRepository.deleteById(followChannelId);
+        ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
+        if(channel.getFollowChannelEntities().isEmpty()){
+            log.info("channelRepository.deleteById({})",channelId);
+            channelRepository.deleteById(channelId);
+        }
     }
 }

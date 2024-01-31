@@ -5,10 +5,12 @@ import com.where.api.domain.member.entity.MemberRole;
 import com.where.api.domain.member.repository.MemberRepository;
 import com.where.api.infrastructure.sms.AligoSmsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -45,6 +47,7 @@ public class AuthService {
         }
         String msg = "[오디야?] 본인확인 인증번호 \n" +
                 "["+randomNumber+"]를 화면에 입력해주세요";
+        log.info(randomNumber);
         aligoSmsService.sendSms(msg,mobileNumber,false);
     }
 }

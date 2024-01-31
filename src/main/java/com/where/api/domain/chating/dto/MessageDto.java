@@ -8,8 +8,6 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageDto {
@@ -17,14 +15,14 @@ public class MessageDto {
     String channelId;
     String sender;
     String message;
-    String createdAt;
+    OffsetDateTime createdAt;
 
     public static MessageDto fromEntity(MessageEntity messageEntity){
         return MessageDto.builder()
                 .id(messageEntity.getId().toString())
                 .sender(messageEntity.getMember().getMobile())
                 .message(messageEntity.getMessage())
-                .createdAt(messageEntity.getCreatedAt().toString())
+                .createdAt(messageEntity.getCreatedAt())
                 .build();
     }
 }

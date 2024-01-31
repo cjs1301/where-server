@@ -1,15 +1,15 @@
 package com.where.api.domain.chating.dto;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationMessageDto {
-    private String type;
-    private String sender;
-    private String channelId;
-    private CoordinateDto coordinates;
+    String type;
+    String sender;
+    String channelId;
+    CoordinateDto coordinates;
 }

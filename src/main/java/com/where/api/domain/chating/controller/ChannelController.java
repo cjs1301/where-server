@@ -2,6 +2,7 @@ package com.where.api.domain.chating.controller;
 
 import com.where.api.core.security.CustomUserDetails;
 import com.where.api.domain.chating.dto.CreateChannelDto;
+import com.where.api.domain.chating.dto.FollowChannelDto;
 import com.where.api.domain.chating.dto.MessageDto;
 import com.where.api.domain.chating.entity.ChannelEntity;
 import com.where.api.domain.chating.entity.MessageEntity;
@@ -24,24 +25,29 @@ public class ChannelController {
     private final ChannelService channelService;
 
     @PostMapping
-    public ResponseEntity<ChannelEntity> createChannel(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String channelName){
+    public ResponseEntity<FollowChannelDto> createChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String channelName){
         CreateChannelDto createChannelDto = new CreateChannelDto();
         createChannelDto.setChannelName(channelName);
         createChannelDto.setMemberMobileNumber(user.getUsername());
-        return ResponseEntity.ok(channelService.createChannel(createChannelDto));
+        return ResponseEntity.ok(channelService.createChannelAndFollow(createChannelDto));
     }
-    @DeleteMapping
-    public ResponseEntity<String> deleteChannel(){
-        // TODO deleteChannel
+    @DeleteMapping("/{channelId}/follow/{followId}")
+    public ResponseEntity<String> deleteFollowChannelAndChannel(@PathVariable UUID channelId,@PathVariable UUID followId){
+        channelService.deleteFollowChannel(channelId,followId);
         return ResponseEntity.ok("삭제");
     }
-    @GetMapping
-    public ResponseEntity<List<ChannelEntity>> getChannelList(@AuthenticationPrincipal CustomUserDetails user){
-        return ResponseEntity.ok(channelService.getMemberChannelList(user.getId()));
+    @GetMapping("follow")
+    public ResponseEntity<List<FollowChannelDto>> getFollowChannelList(@AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok(channelService.getFollowChannelList(user.getId()));
     }
     @GetMapping("/{channelId}/messages")
     public ResponseEntity<List<MessageDto>> getChannelMessageList(@PathVariable UUID channelId){
         return ResponseEntity.ok(channelService.getChannelMessageList(channelId));
+    }
+
+    @PostMapping("/{channelId}/follow")
+    public ResponseEntity<FollowChannelDto> createFollowChannel(@PathVariable UUID channelId,@AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok(channelService.createFollowChannel(channelId,user.getId()));
     }
 
 }

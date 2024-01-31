@@ -4,19 +4,24 @@ import com.where.api.domain.member.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "follow_channel")
+@Table(name = "follow_channel",uniqueConstraints = {
+        @UniqueConstraint(name = "uk_channel_member", columnNames = {"channel_id", "member_id"})
+})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FollowChannelEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @UuidGenerator
     @Column(name = "follow_channel_id", nullable = false)
-    Long id;
+    UUID id;
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
