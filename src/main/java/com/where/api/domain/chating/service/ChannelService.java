@@ -63,7 +63,7 @@ public class ChannelService {
     public void createLocationMessage(LocationMessageDto messageDto){
         MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
         LocationMessageEntity locationMessage = LocationMessageEntity.builder()
-                .position(new Point(messageDto.getCoordinates().getLatitude(),messageDto.getCoordinates().getLongitude()))
+                .position(LocationMessageEntity.createPoint(messageDto.getCoordinates()))
                 .member(member)
                 .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
                 .build();
@@ -98,7 +98,7 @@ public class ChannelService {
         ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
         if(channel.getFollowChannelEntities().isEmpty()){
             log.info("channelRepository.deleteById({})",channelId);
-            channelRepository.deleteById(channelId);
+            messageRepository.deleteAllByChannelId(channelId);
         }
     }
 }

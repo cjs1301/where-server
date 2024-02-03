@@ -15,14 +15,14 @@ public class MessageDto {
     String channelId;
     String sender;
     String message;
-    OffsetDateTime createdAt;
+    String createdAt;
 
     public static MessageDto fromEntity(MessageEntity messageEntity){
         return MessageDto.builder()
                 .id(messageEntity.getId().toString())
                 .sender(messageEntity.getMember().getMobile())
                 .message(messageEntity.getMessage())
-                .createdAt(messageEntity.getCreatedAt())
+                .createdAt(messageEntity.getCreatedAt().toString())
                 .build();
     }
 }
