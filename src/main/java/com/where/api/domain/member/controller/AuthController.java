@@ -25,7 +25,7 @@ public class AuthController {
 * */
     @GetMapping("/mobile/certification-number")
     public ResponseEntity<String> mobileNumberCertificationProcess(String mobileNumber) {
-        if(!Objects.equals(mobileNumber, "00000000000")){
+        if(!Objects.equals(mobileNumber, "01000000000")){
             authService.mobileNumberCertificationProcess(mobileNumber);
         }
         return ResponseEntity.ok().body("성공");
