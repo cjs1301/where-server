@@ -3,7 +3,9 @@ package com.where.api.domain.chating.repository;
 import com.where.api.domain.chating.entity.ChannelEntity;
 import com.where.api.domain.chating.entity.FollowChannelEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,9 @@ List<FollowChannelEntity> findAllByMemberId(Long memberId);
 
     @Query("select f from FollowChannelEntity f where f.channel.id = ?1 and f.member.id = ?2")
     FollowChannelEntity findByChannelIdAndMemberId(UUID channelId, Long memberId);
+
+    @Transactional
+    @Modifying
+    @Query("delete from FollowChannelEntity f where f.member.id = ?1")
+    void deleteAllByMemberId(Long id);
 }

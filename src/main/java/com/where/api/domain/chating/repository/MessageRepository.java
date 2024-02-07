@@ -17,4 +17,9 @@ public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
     @Modifying
     @Query("delete from MessageEntity m where m.channel.id = ?1")
     void deleteAllByChannelId(UUID channel_id);
+
+    @Transactional
+    @Modifying
+    @Query("delete from MessageEntity m where m.member.id = ?1")
+    void deleteAllByMemberId(Long id);
 }
