@@ -47,7 +47,6 @@ public class AuthService {
         }
         String msg = "[오디야?] 본인확인 인증번호 \n" +
                 "["+randomNumber+"]를 화면에 입력해주세요";
-        log.info(randomNumber);
         aligoSmsService.sendSms(msg,mobileNumber,false);
     }
 }

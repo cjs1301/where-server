@@ -41,6 +41,6 @@ public class AligoSmsService {
                 .body(BodyInserters.fromFormData(formData))
                 .retrieve()
                 .bodyToMono(String.class)
-                .subscribe(response -> log.info("Response from Aligo API: " + response));
+                .subscribe(response -> log.debug("Response from Aligo API: " + response));
     }
 }

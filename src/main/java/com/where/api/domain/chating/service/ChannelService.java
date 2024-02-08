@@ -47,7 +47,6 @@ public class ChannelService {
                 .member(member)
                 .build();
         followChannelRepository.save(followChannelEntity);
-        log.info(followChannelEntity.toString());
         return FollowChannelDto.fromEntity(followChannelEntity);
     }
 
@@ -97,7 +96,6 @@ public class ChannelService {
         followChannelRepository.deleteById(followChannelId);
         ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
         if(channel.getFollowChannelEntities().isEmpty()){
-            log.info("channelRepository.deleteById({})",channelId);
             messageRepository.deleteAllByChannelId(channelId);
         }
     }

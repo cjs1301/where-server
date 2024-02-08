@@ -34,13 +34,13 @@ public class WebSocketController {
     @MessageMapping("/location")
     public void locationMessage(LocationMessageDto message) {
         channelService.createLocationMessage(message);
-        log.info(message.toString());
+//        log.info(message.toString());
         template.convertAndSend("/sub/location/channels/" + message.getChannelId(), message);
     }
     @MessageMapping("/chat")
     public void message(MessageDto message) {
         channelService.createMessage(message);
-        log.info(message.toString());
+//        log.info(message.toString());
         template.convertAndSend("/sub/chat/channels/" + message.getChannelId(), message);
     }
 }
