@@ -73,7 +73,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=odiya
-      - traefik.http.routers.spring-server.rule=Host(`spring-server:4000`)
+      - traefik.http.routers.spring-server.rule=Host(`localhost:4000`)
       - traefik.http.routers.spring-server.entrypoints=web
       - traefik.http.services.spring-server.loadbalancer.server.port=4000
   zookeeper:
