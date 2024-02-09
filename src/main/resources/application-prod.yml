@@ -25,7 +25,7 @@ spring:
     consumer:
       group-id: foo # server 1
     template:
-      default-topic: chanel
+      default-topic: channel
 
 aligo:
   api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
