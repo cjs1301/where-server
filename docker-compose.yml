@@ -45,7 +45,7 @@ services:
     ports:
       - "4000:4000"
     healthcheck:
-      test: [ "CMD", "curl", "-l", "spring-server/actuator/health" ]
+      test: [ "CMD", "curl", "-l", "spring-server:4000/actuator/health" ]
       timeout: 5s
     deploy:
       mode: replicated
@@ -70,7 +70,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=odiya
-      - traefik.http.routers.spring-server.rule=Host(`spring-server`)
+      - traefik.http.routers.spring-server.rule=Host(`server.odiya.link`)
       - traefik.http.routers.spring-server.entrypoints=web
       - traefik.http.services.spring-server.loadbalancer.server.port=4000
   zookeeper:
