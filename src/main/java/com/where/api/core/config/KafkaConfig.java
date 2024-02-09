@@ -1,6 +1,5 @@
 package com.where.api.core.config;
 
-import com.where.api.domain.chating.dto.MessageDto;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -44,7 +43,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, MessageDto> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -59,12 +58,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, MessageDto> kafkaTemplate() {
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ConsumerFactory<String, MessageDto> consumerFactory() {
+    public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -83,9 +82,9 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, MessageDto>
+    public ConcurrentKafkaListenerContainerFactory<String, Object>
     kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, MessageDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }

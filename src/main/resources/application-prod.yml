@@ -21,11 +21,11 @@ spring:
 #    hibernate:
 #      ddl-auto: create
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: foo # server 1
     template:
-      default-topic: chatroom
+      default-topic: chanel
 
 aligo:
   api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
