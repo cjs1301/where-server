@@ -38,7 +38,7 @@ public class KafkaConsumer {
                     .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
                     .build();
             messageRepository.save(message);
-            messagingTemplate.convertAndSend("/sub/chat/channels/" + messageDto.getChannelId(), messageDto); // Websocket 구독자에게 채팅 메시지 Send
+            messagingTemplate.convertAndSend("/topic/chat/channels/" + messageDto.getChannelId(), messageDto); // Websocket 구독자에게 채팅 메시지 Send
 //            rabbitTemplate.convertAndSend("/sub/chat/channels/" + messageDto.getChannelId(), messageDto);
         } catch (Exception e) {
             log.error(e.getMessage());
