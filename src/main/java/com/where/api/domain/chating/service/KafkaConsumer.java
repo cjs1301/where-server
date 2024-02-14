@@ -9,6 +9,7 @@ import com.where.api.domain.member.entity.MemberEntity;
 import com.where.api.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Service
 public class KafkaConsumer {
     private final SimpMessageSendingOperations messagingTemplate;
+//    private final RabbitTemplate rabbitTemplate;
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
@@ -37,6 +39,7 @@ public class KafkaConsumer {
                     .build();
             messageRepository.save(message);
             messagingTemplate.convertAndSend("/sub/chat/channels/" + messageDto.getChannelId(), messageDto); // Websocket 구독자에게 채팅 메시지 Send
+//            rabbitTemplate.convertAndSend("/sub/chat/channels/" + messageDto.getChannelId(), messageDto);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
