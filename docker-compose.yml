@@ -109,7 +109,8 @@ services:
     networks:
       - odiya
   rabbitmq:
-    image: rabbitmq:management
+    image: cjs5241/rabbitmq-stomp
+    container_name: rabbitmq
     ports:
       - "15672:15672"
       - "61613:61613"
