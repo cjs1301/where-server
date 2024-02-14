@@ -109,11 +109,11 @@ services:
     networks:
       - odiya
   rabbitmq:
-    image: cjs5241/rabbitmq-stomp
+    image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     ports:
+      - "5672:5672"
       - "15672:15672"
-      - "61613:61613"
     networks:
       - odiya
 
