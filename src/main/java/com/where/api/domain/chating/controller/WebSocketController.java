@@ -41,9 +41,9 @@ public class WebSocketController {
     }
     @MessageMapping("/chat")
     public void message(MessageDto message) {
-//        channelService.createMessage(message);
+        channelService.createMessage(message);
 //        log.info(message.toString());
-//        template.convertAndSend("/sub/chat/channels/" + message.getChannelId(), message);
-        kafkaConsumer.sendMessage(message);
+        template.convertAndSend("/topic/chat/channels/" + message.getChannelId(), message);
+//        kafkaConsumer.sendMessage(message);
     }
 }
