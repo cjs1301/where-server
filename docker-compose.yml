@@ -44,12 +44,12 @@ services:
     image: cjs5241/odiya-server
     ports:
       - "4000:4000"
-#    healthcheck:
-#      test: "curl --fail --silent spring-server:4000/actuator/health | grep UP || exit 1"
-#      interval: 20s
-#      timeout: 5s
-#      retries: 5
-#      start_period: 40s
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:4000/actuator/health", "|", "grep", "UP", "||", "exit", "1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     deploy:
       mode: replicated
       replicas: 2
