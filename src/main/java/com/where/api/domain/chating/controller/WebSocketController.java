@@ -6,6 +6,7 @@ import com.where.api.domain.chating.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,22 +19,22 @@ public class WebSocketController {
     private final ChannelService channelService;
 
     /*
-        /sub/location/channels/12345      - 구독(channelId:12345)
-        /sub/chat/channels/12345      - 구독(channelId:12345)
+        /topic/location/channels/12345      - 구독(channelId:12345)
+        /topic/chat/channels/12345      - 구독(channelId:12345)
         /pub/location              - 메시지 발행
         /pub/chats              - 메시지 발행
     */
 
     @MessageMapping("/location")
-    public void locationMessage(LocationMessageDto message) {
+    public void locationMessage(@Payload LocationMessageDto message) {
         channelService.createLocationMessage(message);
 //        log.info(message.toString());
-        template.convertAndSend("/sub/location/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/topic/location/channels/" + message.getChannelId(), message);
     }
     @MessageMapping("/chat")
-    public void message(MessageDto message) {
+    public void message(@Payload MessageDto message) {
         channelService.createMessage(message);
 //        log.info(message.toString());
-        template.convertAndSend("/sub/chat/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/topic/chat/channels/" + message.getChannelId(), message);
     }
 }
