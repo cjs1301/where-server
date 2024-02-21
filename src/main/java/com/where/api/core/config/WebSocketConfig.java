@@ -17,7 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/pub");
 //        registry.enableSimpleBroker("/sub");
         registry.enableStompBrokerRelay("/sub")
-                .setRelayHost("rabbitmq")
+                .setRelayHost("localhost")
                 .setClientLogin("guest")
                 .setClientPasscode("guest")
                 .setRelayPort(61613)
