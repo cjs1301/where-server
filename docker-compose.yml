@@ -40,23 +40,22 @@ services:
 
 
   spring-server:
-    container_name: "spring-server"
     image: cjs5241/odiya-server
     ports:
       - "4000:4000"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:4000/actuator/health", "|", "grep", "UP", "||", "exit", "1"]
+      test: ["CMD", "curl", "--fail", "--silent", "spring-server:4000/actuator/health", "|", "grep", "UP", "||", "exit", "1"]
       interval: 20s
       timeout: 5s
       retries: 5
       start_period: 40s
     deploy:
       mode: replicated
-      replicas: 2
-#      resources:
-#        limits:
-#          memory: '1g'
-#          cpus: '1'
+      replicas: 3
+      resources:
+        limits:
+          memory: '1g'
+          cpus: '1'
       update_config:
         order: start-first
         delay: 5s
@@ -79,8 +78,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.12.13-management-alpine
-    restart: on-failure
-    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
