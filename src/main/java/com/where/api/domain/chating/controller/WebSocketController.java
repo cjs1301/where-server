@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebSocketController {
     private final SimpMessagingTemplate template;
     private final ChannelService channelService;
-//    private final KafkaConsumer kafkaConsumer;
 
     /*
         /sub/location/channels/12345      - 구독(channelId:12345)
@@ -41,6 +40,5 @@ public class WebSocketController {
         channelService.createMessage(message);
 //        log.info(message.toString());
         template.convertAndSend("/topic/chat/channels/" + message.getChannelId(), message);
-//        kafkaConsumer.sendMessage(message);
     }
 }
