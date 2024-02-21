@@ -1,15 +1,12 @@
 package com.where.api.domain.chating.controller;
 
-import com.where.api.core.security.CustomUserDetails;
 import com.where.api.domain.chating.dto.LocationMessageDto;
 import com.where.api.domain.chating.dto.MessageDto;
 import com.where.api.domain.chating.service.ChannelService;
-import com.where.api.domain.chating.service.KafkaConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebSocketController {
     private final SimpMessagingTemplate template;
     private final ChannelService channelService;
-    private final KafkaConsumer kafkaConsumer;
+//    private final KafkaConsumer kafkaConsumer;
 
     /*
         /sub/location/channels/12345      - 구독(channelId:12345)
