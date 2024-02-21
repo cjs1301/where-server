@@ -15,12 +15,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
 
         registry.setApplicationDestinationPrefixes("/pub");
-        registry.enableStompBrokerRelay("/sub","/topic", "/queue")
-                .setRelayHost("rabbitmq")
-                .setClientLogin("guest")
-                .setClientPasscode("guest")
-                .setRelayPort(61613)
-                .setVirtualHost("/");
+        registry.enableSimpleBroker("/sub");
+//        registry.enableStompBrokerRelay("/sub")
+//                .setRelayHost("rabbitmq")
+//                .setClientLogin("guest")
+//                .setClientPasscode("guest")
+//                .setRelayPort(61613)
+//                .setVirtualHost("/");
     }
 
     @Override
