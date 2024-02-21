@@ -85,6 +85,11 @@ services:
       - "5672:5672"
       - "15672:15672"
       - "61613:61613"
+    deploy:
+      resources:
+        limits:
+          memory: '1g'
+          cpus: '1'
     networks:
       - odiya
 
