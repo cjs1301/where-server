@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,13 +27,15 @@ public class WebSocketController {
     */
 
     @MessageMapping("/location")
-    public void locationMessage(@Payload LocationMessageDto message) {
+    public void locationMessage(@Payload LocationMessageDto message, SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
         channelService.createLocationMessage(message);
 //        log.info(message.toString());
         template.convertAndSend("/topic/location/channels/" + message.getChannelId(), message);
     }
     @MessageMapping("/chat")
-    public void message(@Payload MessageDto message) {
+    public void message(@Payload MessageDto message,SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
         channelService.createMessage(message);
 //        log.info(message.toString());
         template.convertAndSend("/topic/chat/channels/" + message.getChannelId(), message);
