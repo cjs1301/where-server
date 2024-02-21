@@ -31,13 +31,13 @@ public class WebSocketController {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         channelService.createLocationMessage(message);
 //        log.info(message.toString());
-        template.convertAndSend("/topic/location/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/topic/location" + message.getChannelId(), message);
     }
     @MessageMapping("/chat")
     public void message(@Payload MessageDto message,SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         channelService.createMessage(message);
 //        log.info(message.toString());
-        template.convertAndSend("/topic/chat/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/topic/chat" + message.getChannelId(), message);
     }
 }
