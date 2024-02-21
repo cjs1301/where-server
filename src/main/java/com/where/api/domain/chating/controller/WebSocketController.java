@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class WebSocketController {
-    private final SimpMessagingTemplate template;
+    private final SimpMessageSendingOperations template;
     private final ChannelService channelService;
 
     /*
