@@ -29,12 +29,20 @@ public class LocationMessageEntity extends TimeStamped {
     @Column(columnDefinition = "geometry(Point, 4326)")
     Point position;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     ChannelEntity channel;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     MemberEntity member;
+
+    public MemberEntity getMember() {
+        return member;
+    }
+
+    public ChannelEntity getChannel() {
+        return channel;
+    }
 
     public static Point createPoint(CoordinateDto coordinateDto){
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),4326);
