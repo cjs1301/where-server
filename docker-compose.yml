@@ -78,7 +78,7 @@ services:
 #      - traefik.http.services.spring-server.loadbalancer.server.port=4000
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:3.12.13-management-alpine
     container_name: rabbitmq
     ports:
       - "5672:5672"
