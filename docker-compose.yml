@@ -76,38 +76,7 @@ services:
 #      - traefik.http.routers.spring-server.rule=Host(`server.odiya.link`)
 #      - traefik.http.routers.spring-server.entrypoints=web
 #      - traefik.http.services.spring-server.loadbalancer.server.port=4000
-#  zookeeper:
-#    # 사용할 이미지
-#    image: zookeeper
-#    restart: always
-#    # 컨테이너명 설정
-#    container_name: zookeeper
-#    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-#    ports:
-#      - "2181:2181"
-#    networks:
-#      - odiya
-#  kafka:
-#    # 사용할 이미지
-#    image: wurstmeister/kafka
-#    # 컨테이너명 설정
-#    container_name: kafka
-#    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-#    ports:
-#      - "9092:9092"
-#    # 환경 변수 설정
-#    environment:
-#      KAFKA_ADVERTISED_HOST_NAME: kafka
-#      #      KAFKA_CREATE_TOPICS: "test-chat:3:1" # 토픽이름:파티션개수:레플리카
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#    # 볼륨 설정
-#    volumes:
-#      - /var/run/docker.sock
-#    # 의존 관계 설정
-#    depends_on:
-#      - zookeeper
-#    networks:
-#      - odiya
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq

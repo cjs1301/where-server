@@ -23,22 +23,16 @@ public class WebSocketController {
         /pub/chats              - 메시지 발행
     */
 
-//    @MessageMapping("/enter")
-//    public void enterToChannel(MessageDto message){
-//        template.convertAndSend("/sub/location/channels/" + message.getChannelId(),message);
-//        template.convertAndSend("/sub/chat/channels/" + message.getChannelId(),message);
-//    }
-
     @MessageMapping("/location")
     public void locationMessage(LocationMessageDto message) {
         channelService.createLocationMessage(message);
 //        log.info(message.toString());
-        template.convertAndSend("/pub/location/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/topic/location/channels/" + message.getChannelId(), message);
     }
     @MessageMapping("/chat")
     public void message(MessageDto message) {
         channelService.createMessage(message);
 //        log.info(message.toString());
-        template.convertAndSend("/pub/chat/channels/" + message.getChannelId(), message);
+        template.convertAndSend("/topic/chat/channels/" + message.getChannelId(), message);
     }
 }
