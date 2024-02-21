@@ -12,7 +12,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/pub")
                 .enableStompBrokerRelay("/topic")
-                .setVirtualHost("/");
+                .setVirtualHost("/")
+                .setSystemHeartbeatReceiveInterval(10000);
     }
 
     @Override
