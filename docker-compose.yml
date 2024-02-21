@@ -88,7 +88,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: '1g'
+          memory: '2g'
           cpus: '1'
     networks:
       - odiya
