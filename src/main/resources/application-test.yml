@@ -28,16 +28,11 @@ spring:
   jwt:
     secret: ENC(Sf0mbAVAvAquNajogLZTaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9oNQ=)
     expired: 604800000 #
-  kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-    consumer:
-      group-id: foo
-      enable-auto-commit: false
-    template:
-      default-topic: chanel
-    listener:
-      ack-mode: manual
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    port: 61613
 
 aligo:
   api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
