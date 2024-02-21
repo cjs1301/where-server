@@ -16,11 +16,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         log.info(HOST);
-        registry.setApplicationDestinationPrefixes("/pub")
-                .enableStompBrokerRelay("/topic")
+        registry.setApplicationDestinationPrefixes("/pub");
+        registry.enableStompBrokerRelay("/sub")
                 .setRelayHost(HOST)
-                .setVirtualHost("/")
-                .setSystemHeartbeatReceiveInterval(10000);
+                .setVirtualHost("/");
     }
 
     @Override
