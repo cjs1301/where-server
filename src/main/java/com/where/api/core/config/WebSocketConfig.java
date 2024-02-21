@@ -11,14 +11,15 @@ import org.springframework.web.socket.config.annotation.*;
 @Slf4j
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    @Value("${spring.rabbitmq.host}")
-    private String HOST;
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        log.info(HOST);
+
         registry.setApplicationDestinationPrefixes("/pub");
         registry.enableStompBrokerRelay("/sub")
-                .setRelayHost(HOST)
+                .setRelayHost("rabbitmq")
+                .setClientLogin("guest")
+                .setClientPasscode("guest")
+                .setRelayPort(61613)
                 .setVirtualHost("/");
     }
 

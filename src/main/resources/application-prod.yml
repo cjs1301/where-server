@@ -20,11 +20,6 @@ spring:
       time_zone: UTC
 #    hibernate:
 #      ddl-auto: create
-  rabbitmq:
-    host: rabbitmq
-    username: guest
-    password: guest
-    port: 61613
 
 aligo:
   api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
