@@ -37,6 +37,8 @@ jobs:
         with:
           name: app
           path: build/libs
+          overwrite: true
+
   Push:
     name: Push to Docker Hub
     runs-on: ubuntu-latest
