@@ -52,11 +52,11 @@ services:
 #      start_period: 40s
     deploy:
       mode: replicated
-      replicas: 3
-      resources:
-        limits:
-          memory: '1g'
-          cpus: '1'
+      replicas: 2
+#      resources:
+#        limits:
+#          memory: '1g'
+#          cpus: '1'
       update_config:
         order: start-first
         delay: 5s
