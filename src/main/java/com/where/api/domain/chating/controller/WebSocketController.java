@@ -6,14 +6,14 @@ import com.where.api.domain.chating.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class WebSocketController {
-    private final SimpMessagingTemplate template;
+    private final SimpMessageSendingOperations template;
     private final ChannelService channelService;
 
     /*
