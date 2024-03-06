@@ -18,6 +18,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradlew
 
       - name: Jasypt 키 주입
         run: |
