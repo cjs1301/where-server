@@ -1,28 +1,34 @@
 spring:
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
     default-schema: odiya
   config:
     activate:
       on-profile: local
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
     username: postgres
     password: mysecretpassword
-  jpa:
-    database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+#    password: mysecretpassword
+#  jpa:
+#    database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
 #    hibernate:
 #      ddl-auto: create
-    properties:
-      hibernate:
-        default_schema: odiya
-        show_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-      format_sql: true # sql 보기좋게
-      default_batch_fetch_size: 100 # 한번에 묶어서 쿼리보내는 갯수
-      time_zone: UTC
-
+#    properties:
+#      hibernate:
+#        default_schema: odiya
+#        show_sql: true
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#      format_sql: true # sql 보기좋게
+#      default_batch_fetch_size: 100 # 한번에 묶어서 쿼리보내는 갯수
+#      time_zone: UTC
+logging:
+  level:
+    org.springframework.r2dbc.core: debug
 aligo:
   api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)

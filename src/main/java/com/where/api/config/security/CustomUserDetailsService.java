@@ -1,7 +1,7 @@
 package com.where.api.config.security;
 
-import com.where.api.domain.MemberEntity;
-import com.where.api.repository.MemberRepository;
+import com.where.api.domain.member.MemberEntity;
+import com.where.api.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
