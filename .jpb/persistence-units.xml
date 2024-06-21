@@ -4,7 +4,7 @@
     <persistence-units>
       <persistence-unit name="Default">
         <packages>
-          <package value="com.where.api" />
+          <package value="com.where.backend" />
         </packages>
       </persistence-unit>
     </persistence-units>
