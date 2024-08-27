@@ -48,6 +48,9 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+	testImplementation 'com.squareup.okhttp3:mockwebserver'
+	testImplementation 'io.projectreactor:reactor-test'
+
 }
 
 tasks.named('test') {

@@ -25,5 +25,6 @@ public class ChannelEntity extends TimeStamped {
     String name;
 
     @OneToMany(mappedBy = "channel")
+    @Builder.Default
     List<FollowChannelEntity> followChannelEntities = new ArrayList<>();
 }

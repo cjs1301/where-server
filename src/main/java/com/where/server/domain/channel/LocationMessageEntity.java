@@ -1,13 +1,9 @@
 package com.where.server.domain.channel;
 
-import com.where.server.api.service.channel.dto.CoordinateDto;
 import com.where.server.domain.TimeStamped;
 import com.where.server.domain.member.MemberEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -16,8 +12,6 @@ import org.locationtech.jts.geom.PrecisionModel;
 
 @Entity
 @Table(name = "location_message")
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationMessageEntity extends TimeStamped {
@@ -29,23 +23,21 @@ public class LocationMessageEntity extends TimeStamped {
     @Column(columnDefinition = "geometry(Point, 4326)")
     Point position;
 
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     ChannelEntity channel;
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     MemberEntity member;
 
-    public MemberEntity getMember() {
-        return member;
-    }
-
-    public ChannelEntity getChannel() {
-        return channel;
-    }
-
-    public static Point createPoint(CoordinateDto coordinateDto){
-        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),4326);
-        return geometryFactory.createPoint(new Coordinate(coordinateDto.getLatitude(),coordinateDto.getLongitude()));
+    @Builder
+    public LocationMessageEntity(Long id, double latitude, double longitude, ChannelEntity channel, MemberEntity member) {
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        this.id = id;
+        this.position = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+        this.channel = channel;
+        this.member = member;
     }
 }

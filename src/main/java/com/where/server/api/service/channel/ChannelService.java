@@ -1,15 +1,12 @@
 package com.where.server.api.service.channel;
 
-import com.where.server.api.service.channel.dto.MessageDto;
+import com.where.server.api.service.channel.dto.*;
 import com.where.server.domain.channel.LocationMessageEntity;
 import com.where.server.domain.channel.MessageEntity;
 import com.where.server.domain.channel.ChannelRepository;
 import com.where.server.domain.channel.FollowChannelRepository;
 import com.where.server.domain.channel.LocationMessageRepository;
 import com.where.server.domain.channel.MessageRepository;
-import com.where.server.api.service.channel.dto.CreateChannelDto;
-import com.where.server.api.service.channel.dto.FollowChannelDto;
-import com.where.server.api.service.channel.dto.LocationMessageDto;
 import com.where.server.domain.channel.ChannelEntity;
 import com.where.server.domain.channel.FollowChannelEntity;
 import com.where.server.domain.member.MemberEntity;
@@ -58,12 +55,13 @@ public class ChannelService {
 
     public void createLocationMessage(LocationMessageDto messageDto){
         MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
-        LocationMessageEntity locationMessage = LocationMessageEntity.builder()
-                .position(LocationMessageEntity.createPoint(messageDto.getCoordinates()))
+        CoordinateDto coordinate = messageDto.getCoordinates();
+        LocationMessageEntity.builder()
+                .latitude(coordinate.getLatitude())
+                .longitude(coordinate.getLongitude())
                 .member(member)
                 .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
                 .build();
-        locationMessageRepository.save(locationMessage);
     }
 
     public void createMessage(MessageDto messageDto){
