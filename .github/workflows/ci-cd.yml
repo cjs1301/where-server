@@ -99,7 +99,7 @@ jobs:
 
       - name: Debug build-image outputs
         run: |
-          echo "Built image tag: ${{ steps.build-image.outputs.tags }}"
+          echo "Built image tag: ${{ steps.build-image.outputs }}"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
