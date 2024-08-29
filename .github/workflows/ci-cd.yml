@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: where-server            # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: where_server            # set this to your Amazon ECR repository name
   ECS_SERVICE: where-service                  # set this to your Amazon ECS service name
   ECS_CLUSTER: ProjectWhere                  # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .aws/odiya-server-task.json # set this to the path to your Amazon ECS task definition
