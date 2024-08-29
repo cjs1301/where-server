@@ -12,7 +12,7 @@ env:
   ECS_TASK_DEFINITION: .aws/odiya-server-task.json # set this to the path to your Amazon ECS task definition
   # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: server            # set this to the name of the container in the
-
+  IMAGE_TAG: ${{ github.sha }}
 
 permissions:
   contents: read
@@ -85,19 +85,14 @@ jobs:
       - name: Build and push
         id: build-image
         uses: docker/build-push-action@v5
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         with:
           context: .
           platforms: linux/arm64
           push: true # 이미지를 푸쉬합니다.
           tags: |
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha # 여기서 gha 는 Guthub Actions 용 캐시를 의미합니다.
           cache-to: type=gha,mode=max
-        run: |
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -105,7 +100,8 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
