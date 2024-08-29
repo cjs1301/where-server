@@ -97,6 +97,10 @@ jobs:
           cache-from: type=gha # 여기서 gha 는 Guthub Actions 용 캐시를 의미합니다.
           cache-to: type=gha,mode=max
 
+      - name: Debug build-image outputs
+        run: |
+          echo "Built image tag: ${{ steps.build-image.outputs.tags }}"
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
