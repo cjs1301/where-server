@@ -85,13 +85,12 @@ jobs:
       - name: Build and push
         id: build-image
         uses: docker/build-push-action@v5
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         with:
           context: .
           platforms: linux/arm64
           push: true # 이미지를 푸쉬합니다.
-          tags: ${{ github.sha }} # ${{ env.ECR_REGISTRY }}/odiya_server:latest
+          tags: |
+            ${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           cache-from: type=gha # 여기서 gha 는 Guthub Actions 용 캐시를 의미합니다.
           cache-to: type=gha,mode=max
 
