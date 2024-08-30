@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Spring Boot + AWS Lambda demo project
+
+Globals:
+  Api:
+    # API Gateway regional endpoints
+    EndpointConfiguration: REGIONAL
+Parameters:
+  ProfileParameter:
+    Type: String
+    Default: "prod"
+Resources:
+  DemoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.where.server.StreamLambdaHandler::handleRequest
+      Runtime: java21
+      CodeUri: .
+      Architectures:
+        - x86_64
+      MemorySize: 2048
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 60
+      SnapStart:
+        ApplyOn: PublishedVersions
+      AutoPublishAlias: prod
+      Environment:
+        Variables:
+          SPRING_PROFILES_ACTIVE: !Ref ProfileParameter
+          JAVA_TOOL_OPTIONS: !Sub "-Djasypt.encryptor.password=ehxhfl"
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  DemoApplicationApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod'
+    Export:
+      Name: DemoApplicationApi
