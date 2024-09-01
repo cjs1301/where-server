@@ -35,8 +35,7 @@ jobs:
           echo ${{ secrets.JASYPT }} >> ./src/main/resources/application.yml
       - name: Create Firebase Key
         run: |
-          cat ./src/main/resources/firebase-adminsdk-service-key.json | base64
-          echo ${{ secrets.FIREBASE_KEY }} > ./src/main/resources/firebase-adminsdk-service-key.json
+          echo ${{ secrets.FIREBASE_KEY }} | base64 -di >  ./src/main/resources/firebase-adminsdk-service-key.json
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
