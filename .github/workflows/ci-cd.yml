@@ -33,6 +33,8 @@ jobs:
       - name: Jasypt 키 주입
         run: |
           echo ${{ secrets.JASYPT }} >> ./src/main/resources/application.yml
+      - name: Create Firebase Key
+        run: |
           cat ./src/main/resources/firebase-adminsdk-service-key.json
           echo ${{ secrets.FIREBASE_KEY }} > ./src/main/resources/firebase-adminsdk-service-key.json
 
