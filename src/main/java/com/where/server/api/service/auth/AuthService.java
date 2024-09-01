@@ -1,6 +1,5 @@
 package com.where.server.api.service.auth;
 
-import com.where.server.api.service.AligoSmsService;
 import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.MemberRole;
 import com.where.server.domain.member.MemberRepository;
@@ -16,8 +15,6 @@ import java.util.Random;
 public class AuthService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final AligoSmsService aligoSmsService;
-
 
     public String createRandomNumber(){
         Random rand = new Random();
@@ -47,6 +44,5 @@ public class AuthService {
         }
         String msg = "[오디야?] 본인확인 인증번호 \n" +
                 "["+randomNumber+"]를 화면에 입력해주세요";
-        aligoSmsService.sendSms(msg,mobileNumber,false);
     }
 }

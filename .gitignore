@@ -37,3 +37,5 @@ out/
 .vscode/
 
 local-db
+
+src/main/resources/firebase-adminsdk-service-key.json

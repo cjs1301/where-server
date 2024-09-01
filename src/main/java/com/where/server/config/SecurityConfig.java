@@ -1,8 +1,8 @@
 package com.where.server.config;
 
+import com.where.server.config.security.FirebaseAuthenticationFilter;
 import com.where.server.config.security.jwt.JWTFilter;
 import com.where.server.config.security.jwt.JWTUtil;
-import com.where.server.config.security.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -52,8 +53,16 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 );
 
-        httpSecurity.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-        httpSecurity.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil),UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+//        httpSecurity.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil),UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterAt(
+                new FirebaseAuthenticationFilter(
+                        "/login",
+                        authenticationManager(authenticationConfiguration),
+                        jwtUtil
+                ),
+                UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
