@@ -30,9 +30,6 @@ public class MemberEntity {
     @Column(name = "mobile",unique = true)
     String mobile;
 
-    @Column(length = 100)
-    String password;
-
     MemberRole role;
 
     @OneToMany(mappedBy = "member")

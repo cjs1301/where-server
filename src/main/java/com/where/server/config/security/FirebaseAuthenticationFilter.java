@@ -9,8 +9,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,10 +27,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+@Slf4j
 public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private String mobileParameter = "mobile";
+    private final String tokenParameter = "firebaseToken";
     public FirebaseAuthenticationFilter(String url, AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         super(new AntPathRequestMatcher(url, "POST"));
         this.authenticationManager = authenticationManager;
@@ -36,29 +40,31 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        String authHeader = request.getHeader("Authorization");
+        String firebaseToken = obtainFirebaseToken(request);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("JWT Token is missing");
+        if (firebaseToken == null) {
+            throw new AuthenticationServiceException("Firebase Token is missing");
         }
 
-        String token = authHeader.substring(7);
         try {
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            // Firebase 토큰 검증
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseToken);
             String uid = decodedToken.getUid();
-            String mobile = obtainMobile(request);
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(mobile, uid, null);
-            setDetails(request, authToken);
-            return authenticationManager.authenticate(authToken);
+
+            // Firebase에서 확인된 전화번호와 요청의 mobile이 일치하는지 확인
+            String phoneNumber = decodedToken.getClaims().get("phone_number").toString();
+            log.info("token phone number : {}", phoneNumber);
+
+            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(phoneNumber, null,null);
+            setDetails(request, authRequest);
+            return this.authenticationManager.authenticate(authRequest);
         } catch (FirebaseAuthException e) {
-            throw new RuntimeException(e);
+            throw new AuthenticationServiceException("Invalid Firebase token", e);
         }
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        chain.doFilter(request, response);
         //UserDetailsS
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -74,18 +80,35 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         String token = jwtUtil.createJwt(id, mobile, role);
 
         response.addHeader("Authorization", "Bearer " + token);
+        // 성공 메시지 추가
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        String successMessage = String.format("{ \"message\": \"Authentication successful\", \"userId\": %d, \"mobile\": \"%s\", \"role\": \"%s\" }", id, mobile, role);
+        response.getWriter().write(successMessage);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         //로그인 실패시 401 응답 코드 반환
-        response.setStatus(401);
+        try {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String errorMessage = String.format("{ \"error\": \"%s\" }", failed.getMessage());
+            log.error(failed.getMessage());
+            response.getWriter().write(errorMessage);
+        } catch (IOException e) {
+            // IOException이 발생하면 로그를 남기고 계속 진행
+            logger.error("Error writing unsuccessful authentication response", e);
+        }
     }
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
+
     @Nullable
-    protected String obtainMobile(HttpServletRequest request) {
-        return request.getParameter(this.mobileParameter);
+    protected String obtainFirebaseToken(HttpServletRequest request) {
+        return request.getParameter(this.tokenParameter);
     }
 }

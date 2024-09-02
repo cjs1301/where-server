@@ -12,6 +12,7 @@ import java.util.Collection;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
 
+    @Getter
     Long id;
 
     String name;
@@ -20,16 +21,8 @@ public class CustomUserDetails implements UserDetails {
 
     String mobile;
 
-    String password;
-
+    @Getter
     String role;
-
-    public Long getId(){
-        return this.id;
-    }
-    public String getRole(){
-        return this.role;
-    }
 
 
     @Override
@@ -49,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getPassword() {
 
-        return this.password;
+        return null;
     }
 
     @Override
@@ -80,5 +73,15 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
 
         return this.isEnabled;
+    }
+    @Override
+    public String toString() {
+        return "CustomUserDetails{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", role='" + role + '\'' +
+                ", isEnabled=" + isEnabled +
+                '}';
     }
 }
