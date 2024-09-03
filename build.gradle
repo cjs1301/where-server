@@ -47,8 +47,6 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 	implementation 'net.minidev:json-smart:2.5.0'
 
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-
 	implementation 'com.google.firebase:firebase-admin:9.3.0'
 
 	// JWT
