@@ -2,7 +2,7 @@
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 ARG JAR_FILE=build/libs/*-SNAPSHOT.jar
-COPY --from=build /app/${JAR_FILE} app.jar
+COPY ${JAR_FILE} app.jar
 
 EXPOSE 4000
 ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","app.jar"]
