@@ -1,6 +1,7 @@
 package com.where.server.config.security;
 
 import com.where.server.api.service.auth.CustomUserDetailsService;
+import com.where.server.config.log.ApiLoggingFilter;
 import com.where.server.config.security.jwt.JWTFilter;
 import com.where.server.config.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final FirebaseAuthenticationProvider firebaseAuthenticationProvider;
-
+    private final ApiLoggingFilter apiLoggingFilter;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -46,7 +47,7 @@ public class SecurityConfig {
 
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/mobile/**","/login").permitAll()
+        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/login").permitAll()
                         .requestMatchers("/.well-known/**").permitAll()
                         .requestMatchers("/ws/**", "/actuator/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
@@ -54,9 +55,7 @@ public class SecurityConfig {
                 );
         httpSecurity.authenticationProvider(firebaseAuthenticationProvider);
 
-//        httpSecurity.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-//        httpSecurity.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil),UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(apiLoggingFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.addFilterAt(
                 new FirebaseAuthenticationFilter(
                         "/login",
@@ -64,7 +63,7 @@ public class SecurityConfig {
                         jwtUtil
                 ),
                 UsernamePasswordAuthenticationFilter.class);
-
+        httpSecurity.addFilterAfter(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

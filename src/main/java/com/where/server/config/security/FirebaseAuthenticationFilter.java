@@ -40,6 +40,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("FirebaseAuthenticationFilter processing login request");
         String firebaseToken = obtainFirebaseToken(request);
 
         if (firebaseToken == null) {
@@ -49,7 +50,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         try {
             // Firebase 토큰 검증
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseToken);
-            String uid = decodedToken.getUid();
+//            String uid = decodedToken.getUid();
 
             // Firebase에서 확인된 전화번호와 요청의 mobile이 일치하는지 확인
             String phoneNumber = decodedToken.getClaims().get("phone_number").toString();
