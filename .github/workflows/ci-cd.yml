@@ -32,11 +32,11 @@ jobs:
 
       - name: Jasypt 키 주입
         run: |
-          echo ${{ secrets.JASYPT }} | base64 -di >> ./src/main/resources/application.yml
+          echo ${{ secrets.JASYPT }} | base64 -d >> ./src/main/resources/application.yml
 
       - name: Create Firebase Key
         run: |
-          echo ${{ secrets.FIREBASE_KEY }} | base64 -di >  ./src/main/resources/firebase-adminsdk-service-key.json
+          echo ${{ secrets.FIREBASE_KEY }} | base64 -d >  ./src/main/resources/firebase-adminsdk-service-key.json
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
