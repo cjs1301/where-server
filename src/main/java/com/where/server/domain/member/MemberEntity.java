@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "member")
 @Getter
 @Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +27,12 @@ public class MemberEntity {
     @Column(name = "is_enabled")
     boolean isEnabled;
 
-    @Column(name = "mobile",unique = true)
-    String mobile;
+    @Column(name = "phone_number",unique = true)
+    String phoneNumber;
+
+    Boolean isAppInstalled;
+
+    String profileImage;
 
     MemberRole role;
 

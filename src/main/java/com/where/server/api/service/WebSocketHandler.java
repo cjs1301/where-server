@@ -3,18 +3,15 @@ package com.where.server.api.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.where.server.api.service.channel.ChannelService;
-import com.where.server.api.service.channel.dto.LocationMessageDto;
+import com.where.server.api.service.channel.dto.LocationDto;
 import com.where.server.api.service.channel.dto.MessageDto;
-import net.minidev.json.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -89,8 +86,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     private void handleLocationMessage(JsonNode jsonNode, String channelId, String payload) throws Exception {
-        LocationMessageDto locationMessage = objectMapper.treeToValue(jsonNode, LocationMessageDto.class);
-        channelService.createLocationMessage(locationMessage);
+        LocationDto locationMessage = objectMapper.treeToValue(jsonNode, LocationDto.class);
+        channelService.createLocation(locationMessage);
         rabbitTemplate.convertAndSend("location.channels." + channelId, payload);
     }
 

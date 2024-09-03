@@ -1,11 +1,11 @@
 package com.where.server.api.service.channel;
 
 import com.where.server.api.service.channel.dto.*;
-import com.where.server.domain.channel.LocationMessageEntity;
+import com.where.server.domain.channel.LocationEntity;
 import com.where.server.domain.channel.MessageEntity;
 import com.where.server.domain.channel.ChannelRepository;
 import com.where.server.domain.channel.FollowChannelRepository;
-import com.where.server.domain.channel.LocationMessageRepository;
+import com.where.server.domain.channel.LocationRepository;
 import com.where.server.domain.channel.MessageRepository;
 import com.where.server.domain.channel.ChannelEntity;
 import com.where.server.domain.channel.FollowChannelEntity;
@@ -13,13 +13,11 @@ import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +27,11 @@ public class ChannelService {
     private final FollowChannelRepository followChannelRepository;
     private final MemberRepository memberRepository;
     private final MessageRepository messageRepository;
-    private final LocationMessageRepository locationMessageRepository;
+    private final LocationRepository locationRepository;
 
     @Transactional
     public FollowChannelDto createChannelAndFollow(CreateChannelDto createChannelDto){
-        MemberEntity member = memberRepository.findByMobile(createChannelDto.getMemberMobileNumber());
+        MemberEntity member = memberRepository.findByPhoneNumber(createChannelDto.getMemberPhoneNumber());
         ChannelEntity channel = ChannelEntity.builder()
                 .name(createChannelDto.getChannelName())
                 .build();
@@ -56,21 +54,21 @@ public class ChannelService {
     }
 
     @Transactional
-    public void createLocationMessage(LocationMessageDto messageDto){
-        MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
-        UUID channelId = UUID.fromString(messageDto.getChannelId());
+    public void createLocation(LocationDto locationDto){
+        MemberEntity member = memberRepository.findByPhoneNumber(locationDto.getSender());
+        UUID channelId = UUID.fromString(locationDto.getChannelId());
 
-        LocationMessageEntity locationMessage = LocationMessageEntity.builder()
-                .coordinates(messageDto.toCoordinateList())
+        LocationEntity locationMessage = LocationEntity.builder()
+                .coordinates(locationDto.toCoordinateList())
                 .channel(ChannelEntity.builder().id(channelId).build())
                 .member(member)
                 .build();
 
-        locationMessageRepository.save(locationMessage);
+        locationRepository.save(locationMessage);
     }
 
     public void createMessage(MessageDto messageDto){
-        MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
+        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender());
         MessageEntity message = MessageEntity.builder()
                 .message(messageDto.getMessage())
                 .member(member)

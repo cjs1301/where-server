@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateChannelDto {
     String channelName;
-    String memberMobileNumber;
+    String memberPhoneNumber;
 }

@@ -18,7 +18,7 @@ public class MessageDto {
     public static MessageDto fromEntity(MessageEntity messageEntity){
         return MessageDto.builder()
                 .id(messageEntity.getId().toString())
-                .sender(messageEntity.getMember().getMobile())
+                .sender(messageEntity.getMember().getPhoneNumber())
                 .message(messageEntity.getMessage())
                 .createdAt(messageEntity.getCreatedAt().toString())
                 .build();

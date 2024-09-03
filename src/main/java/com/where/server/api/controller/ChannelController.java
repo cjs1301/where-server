@@ -26,7 +26,7 @@ public class ChannelController {
     public ResponseEntity<FollowChannelDto> createChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String channelName){
         CreateChannelDto createChannelDto = new CreateChannelDto();
         createChannelDto.setChannelName(channelName);
-        createChannelDto.setMemberMobileNumber(user.getUsername());
+        createChannelDto.setMemberPhoneNumber(user.getUsername());
         return ResponseEntity.ok(channelService.createChannelAndFollow(createChannelDto));
     }
     @DeleteMapping("/{channelId}/follow/{followId}")

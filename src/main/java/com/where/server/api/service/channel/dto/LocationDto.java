@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LocationMessageDto {
+public class LocationDto {
     String type;
     String sender;
     String channelId;

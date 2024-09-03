@@ -10,13 +10,13 @@ import org.locationtech.jts.geom.*;
 import java.util.List;
 
 @Entity
-@Table(name = "location_message")
+@Table(name = "location")
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LocationMessageEntity extends TimeStamped {
+public class LocationEntity extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_message_id", nullable = false)
+    @Column(name = "location_id", nullable = false)
     Long id;
 
     @Column(columnDefinition = "geometry(LineString, 4326)")
@@ -32,7 +32,7 @@ public class LocationMessageEntity extends TimeStamped {
     MemberEntity member;
 
     @Builder
-    public LocationMessageEntity(Long id, List<Coordinate> coordinates, ChannelEntity channel, MemberEntity member) {
+    public LocationEntity(Long id, List<Coordinate> coordinates, ChannelEntity channel, MemberEntity member) {
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
         this.id = id;
         this.route = geometryFactory.createLineString(coordinates.toArray(new Coordinate[0]));
