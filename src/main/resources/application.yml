@@ -7,6 +7,8 @@ spring:
   jwt:
     secret: ENC(Sf0mbAVAvAquNajogLZTaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9oNQ=)
     expired: 604800000 # ms 1000 / sec 60 / min 60 / hour 24 / day 7
+  rabbitmq:
+    addresses: ENC(Ma9AzBO3fbjct+D7h4MUGu1x+c6BReiFL4dA6TeP1kGlAb3EHd4E7/wyUd0Z1iv1Vzov/lAm2aNHLhAILVaM4CBBVDsKhIrV6sT13BMBW1IOhzB9sfhxgX6cuobmedy4)
 server:
   port: 4000
 management:
@@ -19,8 +21,6 @@ management:
       enabled: true
     metrics:
       enabled: true
-
-
-jasypt:
-  encryptor:
-    password: ehxhfl
+logging:
+  level:
+    org.springframework.amqp: DEBUG

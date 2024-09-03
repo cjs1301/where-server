@@ -13,11 +13,13 @@ import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,15 +55,18 @@ public class ChannelService {
         return messageEntities.stream().map(MessageDto::fromEntity).toList();
     }
 
+    @Transactional
     public void createLocationMessage(LocationMessageDto messageDto){
         MemberEntity member = memberRepository.findByMobile(messageDto.getSender());
-        CoordinateDto coordinate = messageDto.getCoordinates();
-        LocationMessageEntity.builder()
-                .latitude(coordinate.getLatitude())
-                .longitude(coordinate.getLongitude())
+        UUID channelId = UUID.fromString(messageDto.getChannelId());
+
+        LocationMessageEntity locationMessage = LocationMessageEntity.builder()
+                .coordinates(messageDto.toCoordinateList())
+                .channel(ChannelEntity.builder().id(channelId).build())
                 .member(member)
-                .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
                 .build();
+
+        locationMessageRepository.save(locationMessage);
     }
 
     public void createMessage(MessageDto messageDto){
