@@ -1,9 +1,3 @@
-# Build stage
-FROM openjdk:21-jdk-slim AS build
-WORKDIR /app
-COPY . /app
-RUN ./gradlew clean build --no-daemon -x test
-
 # Package stage
 FROM openjdk:21-jdk-slim
 WORKDIR /app
