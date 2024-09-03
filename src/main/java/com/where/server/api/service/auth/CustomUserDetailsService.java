@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService{
     private final MemberService memberService;
 
-    @Override
-    public UserDetails loadUserByUsername(final String mobile)throws UsernameNotFoundException {
+    public UserDetails loadUserByMobile(final String mobile)throws UsernameNotFoundException {
         log.info("Loading user details for mobile: {}", mobile);
         try {
             Boolean isMemberExist = memberService.existMember(mobile);
