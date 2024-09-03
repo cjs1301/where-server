@@ -17,7 +17,7 @@ jobs:
 
       - name: Jasypt 키 주입
         run: |
-          echo ${{ secrets.JASYPT }} >> ./src/main/resources/application.yml
+          echo $(echo ${{ secrets.JASYPT }} | base64 --decode) >> ./src/main/resources/application.yml
 
       - name: Create Firebase Key
         run: |
