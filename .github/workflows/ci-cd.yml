@@ -47,6 +47,18 @@ jobs:
       - name: Run Tests
         run: ./gradlew :test
 
+      - name: 테스트 결과를 PR에 코멘트로 등록합니다
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+
+      - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
