@@ -21,6 +21,3 @@ management:
       enabled: true
     metrics:
       enabled: true
-logging:
-  level:
-    org.springframework.amqp: DEBUG

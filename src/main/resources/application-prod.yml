@@ -19,6 +19,3 @@ spring:
       default_batch_fetch_size: 100 # 한번에 묶어서 쿼리보내는 갯수
       time_zone: UTC
 
-
-aligo:
-  api_key: ENC(dYrjtxEjTMYfrvqrQ2RxTWHpTFaeDkEMV0VmfuTlUYFkac5rQ0iPW5oJIeI5SU41)
