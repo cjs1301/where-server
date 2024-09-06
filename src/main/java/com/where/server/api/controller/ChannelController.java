@@ -1,7 +1,7 @@
 package com.where.server.api.controller;
 
 import com.where.server.api.service.channel.dto.MessageDto;
-import com.where.server.api.service.auth.CustomUserDetails;
+import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.api.service.channel.dto.CreateChannelDto;
 import com.where.server.api.service.channel.dto.FollowChannelDto;
 import com.where.server.api.service.channel.ChannelService;

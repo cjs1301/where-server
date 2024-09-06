@@ -1,7 +1,7 @@
 package com.where.server.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.where.server.api.service.auth.CustomUserDetails;
+import com.where.server.domain.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,7 +60,7 @@ public class JWTFilter extends OncePerRequestFilter {
             // UserDetails에 회원 정보 객체 담기
             CustomUserDetails customUserDetails = CustomUserDetails.builder()
                     .id(id)
-                    .mobile(mobile)
+                    .phoneNumber(mobile)
                     .role(role)
                     .isEnabled(true)
                     .build();

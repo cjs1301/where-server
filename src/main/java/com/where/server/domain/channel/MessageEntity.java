@@ -3,10 +3,8 @@ package com.where.server.domain.channel;
 import com.where.server.domain.TimeStamped;
 import com.where.server.domain.member.MemberEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
@@ -16,7 +14,8 @@ import java.util.UUID;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageEntity extends TimeStamped {
     @Id
     @UuidGenerator

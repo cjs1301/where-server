@@ -1,5 +1,6 @@
-package com.where.server.api.service.auth;
+package com.where.server.domain.security;
 
+import com.where.server.domain.member.MemberEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
 
     boolean isEnabled;
 
-    String mobile;
+    String phoneNumber;
 
     @Getter
     String role;
@@ -41,47 +42,53 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-
         return null;
     }
 
     @Override
     public String getUsername() {
-
-        return this.mobile;
+        return this.name;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-
         return this.isEnabled;
     }
+
     @Override
     public String toString() {
         return "CustomUserDetails{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", mobile='" + mobile + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", role='" + role + '\'' +
                 ", isEnabled=" + isEnabled +
                 '}';
     }
+
+    public static CustomUserDetails fromMemberEntity(MemberEntity member){
+        return CustomUserDetails.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .phoneNumber(member.getPhoneNumber())
+                .isEnabled(member.isEnabled())
+                .role(member.getRole().toString())
+                .build();
+    }
+
 }

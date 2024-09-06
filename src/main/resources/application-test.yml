@@ -19,13 +19,16 @@ spring:
         show_sql: true
         format_sql: true
         default_schema: public
-  #    open-in-view: false
+      open-in-view: false
   #    generate-ddl: true
   #    show-sql: true
   h2:
     console:
       enabled: true
   jwt:
-    secret: ENC(Sf0mbAVAvAquNajogLZTaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9oNQ=)
+    secret: TaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9
     expired: 604800000 #
 
+jasypt:
+  encryptor:
+    password: asdfasdf

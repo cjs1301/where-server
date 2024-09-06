@@ -3,14 +3,13 @@ package com.where.server.config.security;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
-import com.where.server.api.service.auth.CustomUserDetails;
+import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.config.security.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -18,13 +17,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 @Slf4j
@@ -85,7 +82,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String successMessage = String.format("{ \"message\": \"Authentication successful\", \"userId\": %d, \"mobile\": \"%s\", \"role\": \"%s\" }", id, mobile, role);
+        String successMessage = String.format("{ \"message\": \"Authentication successful\", \"userId\": %d, \"phoneNumber\": \"%s\", \"role\": \"%s\" }", id, mobile, role);
         response.getWriter().write(successMessage);
     }
 

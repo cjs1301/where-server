@@ -26,7 +26,7 @@ public class JWTUtil {
 
     public String getMobile(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("mobile", String.class);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("phoneNumber", String.class);
     }
     public Long getId(String token) {
 
@@ -47,7 +47,7 @@ public class JWTUtil {
 
         return Jwts.builder()
                 .claim("id", id)
-                .claim("mobile", mobile)
+                .claim("phoneNumber", mobile)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))

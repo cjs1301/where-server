@@ -1,7 +1,7 @@
 package com.where.server.api.controller;
 
 
-import com.where.server.api.service.auth.CustomUserDetails;
+import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.api.service.auth.CustomUserDetailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -11,7 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "location")
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationEntity extends TimeStamped {
     @Id

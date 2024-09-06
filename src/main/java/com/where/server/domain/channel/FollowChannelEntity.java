@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "follow_channel",uniqueConstraints = {
         @UniqueConstraint(name = "uk_channel_member", columnNames = {"channel_id", "member_id"})
