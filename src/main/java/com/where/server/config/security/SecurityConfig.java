@@ -5,6 +5,7 @@ import com.where.server.config.log.ApiLoggingFilter;
 import com.where.server.config.security.jwt.JWTFilter;
 import com.where.server.config.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +21,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final JWTUtil jwtUtil;
-    private final FirebaseAuthenticationProvider firebaseAuthenticationProvider;
-    private final ApiLoggingFilter apiLoggingFilter;
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
+    @Autowired
+    private JWTUtil jwtUtil;
+    @Autowired
+    private FirebaseAuthenticationProvider firebaseAuthenticationProvider;
+    @Autowired
+    private ApiLoggingFilter apiLoggingFilter;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

@@ -8,6 +8,7 @@ import com.where.server.domain.member.MemberRepository;
 import com.where.server.domain.member.MemberRole;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -16,10 +17,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class FollowRelationService {
-    private final FollowRelationRepository followRelationRepository;
-    private final MemberRepository memberRepository;
+    @Autowired
+    private FollowRelationRepository followRelationRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     public Set<MemberDto> getMyFollowing(Long standardMemberId) {
         return followRelationRepository.findAllByFollowerId(standardMemberId).stream()

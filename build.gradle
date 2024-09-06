@@ -2,6 +2,10 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.3'
 	id 'io.spring.dependency-management' version '1.1.6'
+
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'maven-publish'
+	id 'org.springframework.boot.experimental.thin-launcher' version "1.0.31.RELEASE"
 }
 
 group = 'com.where'
@@ -21,19 +25,64 @@ configurations {
 
 repositories {
 	mavenCentral()
+	mavenLocal()
+	maven { url 'https://repo.spring.io/milestone' }
 }
 ext {
 	set('queryDslVersion', "5.0.0")
+	springCloudVersion = "2023.0.3"
 }
 
+assemble.dependsOn = [thinJar, shadowJar]
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+			versionMapping {
+				usage('java-api') {
+					fromResolutionOf('runtimeClasspath')
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
+		}
+	}
+}
+
+shadowJar.mustRunAfter thinJar
+
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+
+shadowJar {
+	archiveClassifier = 'aws'
+	manifest {
+		inheritFrom(project.tasks.thinJar.manifest)
+	}
+//	 Required for Spring
+	mergeServiceFiles()
+	append 'META-INF/spring.handlers'
+	append 'META-INF/spring.schemas'
+	append 'META-INF/spring.tooling'
+	append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
+	append 'META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports'
+	transform(PropertiesFileTransformer) {
+		paths = ['META-INF/spring.factories']
+		mergeStrategy = "append"
+	}
+}
+
+
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
-//	implementation 'org.testng:testng:7.1.0'
+
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'io.projectreactor:reactor-test'
 
@@ -66,6 +115,17 @@ dependencies {
 
 	testImplementation 'com.squareup.okhttp3:mockwebserver'
 
+	implementation 'org.springframework.cloud:spring-cloud-function-web'
+	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
+	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+	implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 // 1. Q-Class를 생성할 디렉토리 경로를 설정합니다.
@@ -86,6 +146,12 @@ clean {
 	delete file(queryDslSrcDir)
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -97,3 +163,5 @@ configurations {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+

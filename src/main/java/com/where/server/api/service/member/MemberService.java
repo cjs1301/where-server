@@ -8,16 +8,20 @@ import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
-    private final LocationRepository locationRepository;
-    private final MessageRepository messageRepository;
-    private final FollowChannelRepository followChannelRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private LocationRepository locationRepository;
+    @Autowired
+    private MessageRepository messageRepository;
+    @Autowired
+    private FollowChannelRepository followChannelRepository;
 
     @Transactional
     public void deleteMember(Long id) {

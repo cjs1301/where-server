@@ -7,6 +7,7 @@ import com.where.server.api.service.channel.dto.FollowChannelDto;
 import com.where.server.api.service.channel.ChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,10 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/channels")
-@RequiredArgsConstructor
 public class ChannelController {
 
-    private final ChannelService channelService;
+    @Autowired
+    private ChannelService channelService;
 
     @PostMapping
     public ResponseEntity<FollowChannelDto> createChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String channelName){

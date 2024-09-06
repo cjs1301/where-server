@@ -13,6 +13,7 @@ import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +21,18 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ChannelService {
-    private final ChannelRepository channelRepository;
-    private final FollowChannelRepository followChannelRepository;
-    private final MemberRepository memberRepository;
-    private final MessageRepository messageRepository;
-    private final LocationRepository locationRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
+    @Autowired
+    private FollowChannelRepository followChannelRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MessageRepository messageRepository;
+    @Autowired
+    private LocationRepository locationRepository;
 
     @Transactional
     public FollowChannelDto createChannelAndFollow(CreateChannelDto createChannelDto){

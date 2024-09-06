@@ -4,12 +4,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.QMemberEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@RequiredArgsConstructor
 public class FollowRelationRepoCustomImpl implements FollowRelationRepoCustom {
+    @Autowired
     private final JPAQueryFactory queryFactory;
 
     @Override

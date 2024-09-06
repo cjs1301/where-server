@@ -6,6 +6,7 @@ import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.api.service.member.MemberService;
 import com.where.server.api.service.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,11 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/me")
-@RequiredArgsConstructor
 public class MeController {
-    private final MemberService memberService;
-    private final FollowRelationService followRelationService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private FollowRelationService followRelationService;
 
     @GetMapping
     public ResponseEntity<MemberDto> getMeInfo(@AuthenticationPrincipal CustomUserDetails user){

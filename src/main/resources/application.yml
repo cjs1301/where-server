@@ -4,6 +4,9 @@ spring:
       local: "local"
       prod: "prod"
       test: "test"
+  cloud:
+    function:
+      definition: router
 server:
   port: 4000
 management:
