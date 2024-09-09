@@ -10,8 +10,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class FollowRelationRepoCustomImpl implements FollowRelationRepoCustom {
-    @Autowired
-    private final JPAQueryFactory queryFactory;
+    private JPAQueryFactory queryFactory;
+    FollowRelationRepoCustomImpl(JPAQueryFactory jpaQueryFactory){
+        this.queryFactory = jpaQueryFactory;
+    }
 
     @Override
     public Set<MemberEntity> findAllByFollowerId(Long followerId){

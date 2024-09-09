@@ -11,6 +11,7 @@ import com.where.server.domain.channel.ChannelEntity;
 import com.where.server.domain.channel.FollowChannelEntity;
 import com.where.server.domain.member.MemberEntity;
 import com.where.server.domain.member.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,7 +38,7 @@ public class ChannelService {
 
     @Transactional
     public FollowChannelDto createChannelAndFollow(CreateChannelDto createChannelDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(createChannelDto.getMemberPhoneNumber());
+        MemberEntity member = memberRepository.findByPhoneNumber(createChannelDto.getMemberPhoneNumber()).orElseThrow(EntityNotFoundException::new);
         ChannelEntity channel = ChannelEntity.builder()
                 .name(createChannelDto.getChannelName())
                 .build();
@@ -60,7 +62,7 @@ public class ChannelService {
 
     @Transactional
     public void createLocation(LocationDto locationDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(locationDto.getSender());
+        MemberEntity member = memberRepository.findByPhoneNumber(locationDto.getSender()).orElseThrow(EntityNotFoundException::new);
         UUID channelId = UUID.fromString(locationDto.getChannelId());
 
         LocationEntity locationMessage = LocationEntity.builder()
@@ -73,7 +75,7 @@ public class ChannelService {
     }
 
     public void createMessage(MessageDto messageDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender());
+        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender()).orElseThrow(EntityNotFoundException::new);
         MessageEntity message = MessageEntity.builder()
                 .message(messageDto.getMessage())
                 .member(member)
@@ -101,5 +103,20 @@ public class ChannelService {
         if(channel.getFollowChannelEntities().isEmpty()){
             messageRepository.deleteAllByChannelId(channelId);
         }
+    }
+
+    public void addUserToChannel(String channelId, Long memberId, String connectionId) {
+        followChannelRepository.updateConnectionId(UUID.fromString(channelId), memberId, connectionId);
+    }
+
+    public List<String> getChannelConnectionIds(String channelId) {
+        return followChannelRepository.findActiveConnectionsByChannelId(UUID.fromString(channelId))
+                .stream()
+                .map(FollowChannelEntity::getConnectionId)
+                .collect(Collectors.toList());
+    }
+
+    public void removeConnection(String connectionId) {
+        followChannelRepository.removeConnectionId(connectionId);
     }
 }

@@ -3,7 +3,6 @@ package com.where.server.api.controller;
 
 import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.api.service.auth.CustomUserDetailDto;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

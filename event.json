@@ -1,0 +1,54 @@
+{
+  "getAuthInfo": {
+    "resource": "/auth",
+    "path": "/auth",
+    "httpMethod": "GET",
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicGhvbmVOdW1iZXIiOiIrMTIzNDU2Nzg5MCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzAwNDg0NjAwfQ.dQim2GqV5mG-Ui7rrTi-mGsU1HaRgtYmttygtIcKZKA"
+    }
+  },
+  "deleteMember": {
+    "resource": "/members",
+    "path": "/members",
+    "httpMethod": "DELETE",
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicGhvbmVOdW1iZXIiOiIrMTIzNDU2Nzg5MCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzAwNDg0NjAwfQ.dQim2GqV5mG-Ui7rrTi-mGsU1HaRgtYmttygtIcKZKA"
+    }
+  },
+  "getMeInfo": {
+    "resource": "/me",
+    "path": "/me",
+    "httpMethod": "GET",
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicGhvbmVOdW1iZXIiOiIrMTIzNDU2Nzg5MCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzAwNDg0NjAwfQ.dQim2GqV5mG-Ui7rrTi-mGsU1HaRgtYmttygtIcKZKA"
+    }
+  },
+  "getMyFollowing": {
+    "resource": "/me/following",
+    "path": "/me/following",
+    "httpMethod": "GET",
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicGhvbmVOdW1iZXIiOiIrMTIzNDU2Nzg5MCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzAwNDg0NjAwfQ.dQim2GqV5mG-Ui7rrTi-mGsU1HaRgtYmttygtIcKZKA"
+    }
+  },
+  "synchronizeContactPhoneNumber": {
+    "resource": "/me/following",
+    "path": "/me/following",
+    "httpMethod": "POST",
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicGhvbmVOdW1iZXIiOiIrMTIzNDU2Nzg5MCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzAwNDg0NjAwfQ.dQim2GqV5mG-Ui7rrTi-mGsU1HaRgtYmttygtIcKZKA",
+      "Content-Type": "application/json"
+    },
+    "body": "{\"phoneNumbers\": [\"+1234567890\", \"+9876543210\"]}"
+  },
+  "iosDeeplinkHandler": {
+    "resource": "/.well-known/apple-app-site-association",
+    "path": "/.well-known/apple-app-site-association",
+    "httpMethod": "GET"
+  },
+  "androidDeeplinkHandler": {
+    "resource": "/.well-known/assetlinks.json",
+    "path": "/.well-known/assetlinks.json",
+    "httpMethod": "GET"
+  }
+}

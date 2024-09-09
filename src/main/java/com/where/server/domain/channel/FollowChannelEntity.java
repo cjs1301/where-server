@@ -23,10 +23,17 @@ public class FollowChannelEntity {
     @Column(name = "follow_channel_id", nullable = false)
     UUID id;
 
+    @Column(name = "connection_id")
+    String connectionId;
+
     @ManyToOne
     @JoinColumn(name = "channel_id")
     ChannelEntity channel;
     @ManyToOne
     @JoinColumn(name = "member_id")
     MemberEntity member;
+
+    public void updateConnectionId(String connectionId) {
+        this.connectionId = connectionId;
+    }
 }

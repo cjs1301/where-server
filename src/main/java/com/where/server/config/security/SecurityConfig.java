@@ -52,6 +52,7 @@ public class SecurityConfig {
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/login").permitAll()
+                        .requestMatchers("/warmup").permitAll()
                         .requestMatchers("/.well-known/**").permitAll()
                         .requestMatchers("/ws/**", "/actuator/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()

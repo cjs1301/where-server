@@ -5,7 +5,6 @@ import com.where.server.api.service.follow.FollowRelationService;
 import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.api.service.member.MemberService;
 import com.where.server.api.service.member.dto.MemberDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

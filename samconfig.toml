@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "test"
+resolve_s3 = true
+s3_prefix = "test"
+region = "ap-northeast-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = ["WhereFunction=445310641860.dkr.ecr.ap-northeast-2.amazonaws.com/test098f6bcd/wherefunction709ef713repo"]

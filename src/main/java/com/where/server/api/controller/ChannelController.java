@@ -5,7 +5,6 @@ import com.where.server.domain.security.CustomUserDetails;
 import com.where.server.api.service.channel.dto.CreateChannelDto;
 import com.where.server.api.service.channel.dto.FollowChannelDto;
 import com.where.server.api.service.channel.ChannelService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -4,9 +4,12 @@ spring:
       local: "local"
       prod: "prod"
       test: "test"
+  main:
+    banner-mode: off
   cloud:
     function:
-      definition: router
+      definition: functionRouter
+      routing-expression: headers['httpMethod'].concat(' ').concat(headers['path'])
 server:
   port: 4000
 management:

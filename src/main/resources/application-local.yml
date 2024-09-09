@@ -6,21 +6,23 @@ spring:
   config:
     activate:
       on-profile: local
+  jwt:
+    secret: ${JWT_SECRET}
+    expired: ${JWT_EXPIRED:604800000}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: mysecretpassword
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
-    database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-#    hibernate:
-#      ddl-auto: create
     properties:
       hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
         default_schema: odiya
-        show_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-      format_sql: true # sql 보기좋게
-      default_batch_fetch_size: 100 # 한번에 묶어서 쿼리보내는 갯수
+      default_batch_fetch_size: 100
       time_zone: UTC
+      format_sql: true
+    open-in-view: false
 
+server:
+  port: 4000

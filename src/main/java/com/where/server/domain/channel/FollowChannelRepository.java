@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FollowChannelRepository extends JpaRepository<FollowChannelEntity, UUID> {
-//    @Query("select f.channel from FollowChannelEntity f where f.member.id = ?1")
-//    Optional<List<ChannelEntity>> findAllByMemberId(Long memberId);
+
 @Query("select f from FollowChannelEntity f where f.member.id = ?1")
 List<FollowChannelEntity> findAllByMemberId(Long memberId);
 
@@ -24,4 +23,17 @@ List<FollowChannelEntity> findAllByMemberId(Long memberId);
     @Modifying
     @Query("delete from FollowChannelEntity f where f.member.id = ?1")
     void deleteAllByMemberId(Long id);
+
+    @Query("select f from FollowChannelEntity f where f.channel.id = ?1 and f.connectionId is not null")
+    List<FollowChannelEntity> findActiveConnectionsByChannelId(UUID channelId);
+
+    @Modifying
+    @Transactional
+    @Query("update FollowChannelEntity f set f.connectionId = ?3 where f.channel.id = ?1 and f.member.id = ?2")
+    void updateConnectionId(UUID channelId, Long memberId, String connectionId);
+
+    @Modifying
+    @Transactional
+    @Query("update FollowChannelEntity f set f.connectionId = null where f.connectionId = ?1")
+    void removeConnectionId(String connectionId);
 }

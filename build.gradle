@@ -58,9 +58,12 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.*
 
 shadowJar {
 	archiveClassifier = 'aws'
+	archiveVersion = ''
 	manifest {
 		inheritFrom(project.tasks.thinJar.manifest)
+		attributes 'Main-Class': 'org.springframework.cloud.function.adapter.aws.FunctionInvoker'
 	}
+	mergeServiceFiles()
 //	 Required for Spring
 	mergeServiceFiles()
 	append 'META-INF/spring.handlers'
@@ -76,12 +79,12 @@ shadowJar {
 
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+//	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'io.projectreactor:reactor-test'
@@ -120,6 +123,7 @@ dependencies {
 	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
 	implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
 
+	implementation 'software.amazon.awssdk:apigatewaymanagementapi:2.27.21'
 }
 
 dependencyManagement {
