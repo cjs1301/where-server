@@ -1,7 +1,4 @@
 package com.where.server.config.exception;
-
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,18 +19,6 @@ public class ErrorResponse {
     private int status;
     private List<FieldError> errors;
     private String code;
-
-    public APIGatewayProxyResponseEvent toAPIGatewayProxyResponseEvent() {
-        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
-        responseEvent.setStatusCode(this.status);
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            responseEvent.setBody(objectMapper.writeValueAsString(this));
-        } catch (Exception e) {
-            responseEvent.setBody("{\"message\":\"Error serializing response\"}");
-        }
-        return responseEvent;
-    }
 
 
     private ErrorResponse(final ErrorCode code, final List<FieldError> errors) {

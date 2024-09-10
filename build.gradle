@@ -11,6 +11,11 @@ plugins {
 group = 'com.where'
 version = '0.0.1-SNAPSHOT'
 
+def profiles = 'local'
+if (project.hasProperty('profile')) {
+	profiles = project.property('profile')
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -21,6 +26,8 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	// 5. QueryDSL과 관련된 라이브러리들이 컴파일 시점에만 필요하도록 설정합니다. 또한, QueryDSL 설정을 컴파일 클래스패스에 추가합니다.
+	querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -28,12 +35,14 @@ repositories {
 	mavenLocal()
 	maven { url 'https://repo.spring.io/milestone' }
 }
+
+
 ext {
 	set('queryDslVersion', "5.0.0")
-	springCloudVersion = "2023.0.3"
+//	springCloudVersion = "2023.0.3"
 }
 
-assemble.dependsOn = [thinJar, shadowJar]
+
 
 publishing {
 	publications {
@@ -61,7 +70,7 @@ shadowJar {
 	archiveVersion = ''
 	manifest {
 		inheritFrom(project.tasks.thinJar.manifest)
-		attributes 'Main-Class': 'org.springframework.cloud.function.adapter.aws.FunctionInvoker'
+		attributes 'Main-Class': 'com.where.server.StreamLambdaHandler'
 	}
 	mergeServiceFiles()
 //	 Required for Spring
@@ -76,24 +85,29 @@ shadowJar {
 		mergeStrategy = "append"
 	}
 }
-
+assemble.dependsOn = [thinJar, shadowJar]
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	if (profiles == 'prod') {
+		configurations {
+			implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+		}
+	}
+//	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 //	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
-	testImplementation 'org.springframework.amqp:spring-rabbit-test'
-	testImplementation 'io.projectreactor:reactor-test'
+//	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+//	testImplementation 'io.projectreactor:reactor-test'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+//	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'com.h2database:h2'
@@ -118,19 +132,36 @@ dependencies {
 
 	testImplementation 'com.squareup.okhttp3:mockwebserver'
 
-	implementation 'org.springframework.cloud:spring-cloud-function-web'
-	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
+	implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.3'
+
+//	implementation 'org.springframework.cloud:spring-cloud-function-web'
+//	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
 	implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
 	implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
-
+	runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.5.1'
+//
 	implementation 'software.amazon.awssdk:apigatewaymanagementapi:2.27.21'
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+tasks.register('buildZip', Zip) {
+	from compileJava
+	from processResources
+	into('lib') {
+		from(configurations.compileClasspath) {
+			exclude 'tomcat-embed-*'
+		}
 	}
 }
+buildZip.dependsOn compileTestJava
+if (profiles == 'prod') {
+	build.dependsOn buildZip
+}
+
+//dependencyManagement {
+//	imports {
+//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//	}
+//}
 
 // 1. Q-Class를 생성할 디렉토리 경로를 설정합니다.
 def queryDslSrcDir = 'src/main/generated/querydsl/'
@@ -150,19 +181,6 @@ clean {
 	delete file(queryDslSrcDir)
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	// 5. QueryDSL과 관련된 라이브러리들이 컴파일 시점에만 필요하도록 설정합니다. 또한, QueryDSL 설정을 컴파일 클래스패스에 추가합니다.
-	querydsl.extendsFrom compileClasspath
-}
 
 tasks.named('test') {
 	useJUnitPlatform()

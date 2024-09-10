@@ -47,7 +47,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect # org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+#        dialect: org.hibernate.dialect.PostgreSQLDialect # org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
         default_schema: odiya
       time_zone: UTC
     open-in-view: false

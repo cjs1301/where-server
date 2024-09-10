@@ -28,7 +28,3 @@ spring:
   jwt:
     secret: TaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9
     expired: 604800000 #
-
-jasypt:
-  encryptor:
-    password: asdfasdf

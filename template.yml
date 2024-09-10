@@ -16,12 +16,12 @@ Resources:
       MemorySize: 1024
       Environment:
         Variables:
-          SPRING_CLOUD_FUNCTION_DEFINITION: lambdaHandler
-          JWT_SECRET: ${JWT_SECRET}
+#          SPRING_CLOUD_FUNCTION_DEFINITION: lambdaHandler
+          JWT_SECRET: d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0
           JWT_EXPIRED: 600000 #${JWT_EXPIRED}
-          DB_URL: ${DB_URL}
-          DB_USERNAME:  ${DB_USERNAME}
-          DB_PASSWORD:  ${DB_PASSWORD}
+          DB_URL:
+          DB_USERNAME:
+          DB_PASSWORD:
           SPRING_PROFILES_ACTIVE: prod
       Events:
         ApiEvent:
