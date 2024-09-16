@@ -88,7 +88,8 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          sam deploy --parameter-overrides \
+          sam deploy --no-confirm-changeset \
+          --parameter-overrides \
           ParameterKey=JwtSecret,ParameterValue=$JWT_SECRET \
           ParameterKey=JwtExpired,ParameterValue=$JWT_EXPIRED \
           ParameterKey=DbUrl,ParameterValue=$DB_URL \
