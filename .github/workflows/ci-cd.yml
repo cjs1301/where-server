@@ -88,7 +88,7 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          sam deploy --template-file template.yml --stack-name where-stack --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
+          sam deploy --parameter-overrides \
           ParameterKey=JwtSecret,ParameterValue=$JWT_SECRET \
           ParameterKey=JwtExpired,ParameterValue=$JWT_EXPIRED \
           ParameterKey=DbUrl,ParameterValue=$DB_URL \
