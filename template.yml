@@ -59,11 +59,11 @@ Resources:
 #      Environment:
 #        Variables:
 #          #          SPRING_CLOUD_FUNCTION_DEFINITION: lambdaHandler
-#          JWT_SECRET: d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0
+#          JWT_SECRET:
 #          JWT_EXPIRED: 600000 #${JWT_EXPIRED}
-#          DB_URL: jdbc:postgresql://odiya.cfyhh6osb5hh.ap-northeast-2.rds.amazonaws.com:5432/postgres
-#          DB_USERNAME: jaesong
-#          DB_PASSWORD: ehxhfl123
+#          DB_URL:
+#          DB_USERNAME:
+#          DB_PASSWORD:
 #          SPRING_PROFILES_ACTIVE: prod
 #    Metadata:
 #      Dockerfile: Websocket.Dockerfile
