@@ -1,0 +1,53 @@
+#spring:
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    default-schema: odiya
+#  jwt:
+#    secret: ENC(Sf0mbAVAvAquNajogLZTaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9oNQ=)
+#    expired: 604800000 # ms 1000 / sec 60 / min 60 / hour 24 / day 7
+#  rabbitmq:
+#    addresses: ENC(Ma9AzBO3fbjct+D7h4MUGu1x+c6BReiFL4dA6TeP1kGlAb3EHd4E7/wyUd0Z1iv1Vzov/lAm2aNHLhAILVaM4CBBVDsKhIrV6sT13BMBW1IOhzB9sfhxgX6cuobmedy4)
+#  config:
+#    activate:
+#      on-profile: prod
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: ENC(ah9S7zNFgpypCEn+BH3zCGorts/7AwvYXWPzfX40b5kaDho6wDwEMNioCSX37h/FSq536qzgCh3efC2vLl6uz6oT3MZduVXqYN3G+sVVVNJfqd7HOvGgAjeSeiy7sv9C)
+#    username: ENC(mluTiRa0QUdOfdC/truNcw==)
+#    password: ENC(oWB0jD2lS1+y/SOFHbs9KpE9IpG0p2VZ)
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+#        default_schema: odiya
+#      default_batch_fetch_size: 100 # 한번에 묶어서 쿼리보내는 갯수
+#      time_zone: UTC
+#    open-in-view: false
+spring:
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    default-schema: odiya
+  jwt:
+    secret: ${JWT_SECRET}
+    expired: ${JWT_EXPIRED:604800000}
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+  jpa:
+    properties:
+      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect # org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+        default_schema: odiya
+      time_zone: UTC
+    open-in-view: false

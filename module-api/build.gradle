@@ -1,0 +1,102 @@
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'maven-publish'
+    id 'org.springframework.boot.experimental.thin-launcher' version "1.0.31.RELEASE"
+}
+
+def profiles = 'local'
+if (project.hasProperty('profile')) {
+    profiles = project.property('profile')
+}
+
+bootJar.enabled = true
+
+repositories {
+    mavenLocal()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
+
+shadowJar.mustRunAfter thinJar
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+
+shadowJar {
+    archiveClassifier = 'aws'
+    archiveVersion = ''
+    manifest {
+        inheritFrom(project.tasks.thinJar.manifest)
+        attributes 'Main-Class': 'org.where.moduleapi.StreamLambdaHandler'
+    }
+
+    mergeServiceFiles()
+    append 'META-INF/spring.handlers'
+    append 'META-INF/spring.schemas'
+    append 'META-INF/spring.tooling'
+    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
+    append 'META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports'
+    transform(PropertiesFileTransformer) {
+        paths = ['META-INF/spring.factories']
+        mergeStrategy = "append"
+    }
+}
+assemble.dependsOn = [thinJar, shadowJar]
+
+dependencies {
+    implementation project(":module-core")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    if (profiles == 'prod') {
+        configurations {
+            implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+        }
+    }
+
+    implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.3'
+
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
+    runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.5.1'
+
+    implementation 'software.amazon.awssdk:apigatewaymanagementapi:2.27.21'
+
+    // Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    // Firebase SDK
+    implementation 'com.google.firebase:firebase-admin:9.3.0'
+
+    testImplementation 'com.h2database:h2'
+}
+
+tasks.register('buildZip', Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from(configurations.compileClasspath) {
+            exclude 'tomcat-embed-*'
+        }
+    }
+}
+
+if (profiles == 'prod') {
+    build.dependsOn buildZip
+}
+

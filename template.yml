@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Where Application
+
+Globals:
+  Function:
+    Timeout: 20
+
+Resources:
+  WhereFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      MemorySize: 1024
+      Environment:
+        Variables:
+          JWT_SECRET: ${JWT_SECRET}
+          JWT_EXPIRED: ${JWT_EXPIRED}
+          DB_URL: ${DB_URL}
+          DB_USERNAME: ${DB_USERNAME}
+          DB_PASSWORD: ${DB_PASSWORD}
+          SPRING_PROFILES_ACTIVE: prod
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      Dockerfile: Lambda.Dockerfile
+      DockerContext: .
+      DockerTag: v1
+  WarmupRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(5 minutes)"
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt WhereFunction.Arn
+          Id: "WarmupLambdaTarget"
+          Input: '{"resource": "/warmup", "path": "/warmup", "httpMethod": "GET"}'
+  WarmupLambdaPermission:
+     Type: AWS::Lambda::Permission
+     Properties:
+      FunctionName: !Ref WhereFunction
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt WarmupRule.Arn
+
+#  WhereWebsocketFunction:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      PackageType: Image
+#      Architectures:
+#        - x86_64
+#      MemorySize: 1024
+#      Environment:
+#        Variables:
+#          #          SPRING_CLOUD_FUNCTION_DEFINITION: lambdaHandler
+#          JWT_SECRET: d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0d2hyZV9qd3Rfc2VjcmV0
+#          JWT_EXPIRED: 600000 #${JWT_EXPIRED}
+#          DB_URL: jdbc:postgresql://odiya.cfyhh6osb5hh.ap-northeast-2.rds.amazonaws.com:5432/postgres
+#          DB_USERNAME: jaesong
+#          DB_PASSWORD: ehxhfl123
+#          SPRING_PROFILES_ACTIVE: prod
+#    Metadata:
+#      Dockerfile: Websocket.Dockerfile
+#      DockerContext: .
+#      DockerTag: v1
+
+
+
+Outputs:
+  WhereApi:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

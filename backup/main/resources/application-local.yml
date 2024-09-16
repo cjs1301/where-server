@@ -1,0 +1,27 @@
+spring:
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    default-schema: odiya
+  jwt:
+    secret: ${JWT_SECRET}
+    expired: ${JWT_EXPIRED:604800000}
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+  jpa:
+    properties:
+      hibernate:
+        #        dialect: org.hibernate.dialect.PostgreSQLDialect # org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+        default_schema: odiya
+      time_zone: UTC
+    open-in-view: false

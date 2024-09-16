@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    group:
+      local: "local"
+      prod: "prod"
+      test: "test"
+#  main:
+#    banner-mode: off
+#  cloud:
+#    function:
+#      definition: functionRouter
+#      routing-expression: headers['httpMethod'].concat(' ').concat(headers['path'])
+server:
+  port: 4000
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+
+logging:
+  level:
+    root: INFO
+    com.where.server: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] %logger{36} - %msg%n"
+
