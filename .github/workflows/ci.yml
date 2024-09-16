@@ -24,7 +24,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build -Pprofile=test
+        run: ./gradlew clean build shadowJar
 
       - name: Run Tests
         run: ./gradlew :test
