@@ -6,20 +6,6 @@ Globals:
   Function:
     Timeout: 20
 
-Parameters:
-  DBPassword:
-    Type: String
-    NoEcho: true
-  DBUrl:
-    Type: String
-  DBUsername:
-    Type: String
-  JwtExpired:
-    Type: String
-  JwtSecret:
-    Type: String
-    NoEcho: true
-
 Resources:
   WhereFunction:
     Type: AWS::Serverless::Function
@@ -30,11 +16,11 @@ Resources:
       MemorySize: 1024
       Environment:
         Variables:
-          DB_PASSWORD: !Ref DBPassword
-          DB_URL: !Ref DBUrl
-          DB_USERNAME: !Ref DBUsername
-          JWT_EXPIRED: !Ref JwtExpired
-          JWT_SECRET: !Ref JwtSecret
+          DB_PASSWORD: '{{resolve:ssm:/where/db-password:1}}'
+          DB_URL: '{{resolve:ssm:/where/db-url:1}}'
+          DB_USERNAME: '{{resolve:ssm:/where/db-username:1}}'
+          JWT_EXPIRED: 600000
+          JWT_SECRET: '{{resolve:ssm:/where/jwt-secret:1}}'
           SPRING_PROFILES_ACTIVE: prod
       Events:
         ApiEvent:

@@ -81,18 +81,6 @@ jobs:
         run: sam build
 
       - name: Deploy to AWS
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_EXPIRED: ${{ secrets.JWT_EXPIRED }}
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          sam deploy --no-confirm-changeset \
-          --parameter-overrides \
-          ParameterKey=JwtSecret,ParameterValue=$JWT_SECRET \
-          ParameterKey=JwtExpired,ParameterValue=$JWT_EXPIRED \
-          ParameterKey=DbUrl,ParameterValue=$DB_URL \
-          ParameterKey=DbUsername,ParameterValue=$DB_USERNAME \
-          ParameterKey=DbPassword,ParameterValue=$DB_PASSWORD
+          sam deploy --no-confirm-changeset
   
