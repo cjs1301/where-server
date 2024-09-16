@@ -1,18 +1,8 @@
-name: Push to Docker Hub
+name: CI & CD
 
 on:
   push:
     branches: [ "main" ]
-
-env:
-  AWS_REGION: ap-northeast-2                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: where_server            # set this to your Amazon ECR repository name
-  ECS_SERVICE: where-service                  # set this to your Amazon ECS service name
-  ECS_CLUSTER: ProjectWhere                  # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: .aws/odiya-server-task.json # set this to the path to your Amazon ECS task definition
-  # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: server            # set this to the name of the container in the
-  IMAGE_TAG: ${{ github.sha }}
 
 permissions:
   contents: read
@@ -32,13 +22,9 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Jasypt 키 주입
-        run: |
-          echo ${{ secrets.JASYPT }} | base64 -d >> ./src/main/resources/application.yml
-
       - name: Create Firebase Key
         run: |
-          echo ${{ secrets.FIREBASE_KEY }} | base64 -d > ./src/main/resources/firebase-adminsdk-service-key.json
+          echo ${{ secrets.FIREBASE_KEY }} | base64 -d > ./module-core/src/main/resources/firebase-adminsdk-service-key.json
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -63,7 +49,7 @@ jobs:
           overwrite: true
 
   CD:
-    name: Push to Docker Hub
+    name: Deploy
     runs-on: ubuntu-latest
     needs: CI
 
@@ -77,12 +63,6 @@ jobs:
           name: app
           path: build/libs
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -90,36 +70,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+      - uses: actions/setup-python@v3
+      - uses: aws-actions/setup-sam@v2
 
-      - name: Build and push
-        id: build-image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true # 이미지를 푸쉬합니다.
-          tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-          cache-from: type=gha # 여기서 gha 는 Guthub Actions 용 캐시를 의미합니다.
-          cache-to: type=gha,mode=max
+      - name: Build Sam Image
+        run: sam build
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
-
+      - name: Deploy to AWS
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRED: ${{ secrets.JWT_EXPIRED }}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          sam deploy --template-file template.yml --stack-name where-stack --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
+          ParameterKey=JwtSecret,ParameterValue=$JWT_SECRET \
+          ParameterKey=JwtExpired,ParameterValue=$JWT_EXPIRED \
+          ParameterKey=DbUrl,ParameterValue=$DB_URL \
+          ParameterKey=DbUsername,ParameterValue=$DB_USERNAME \
+          ParameterKey=DbPassword,ParameterValue=$DB_PASSWORD
+  
