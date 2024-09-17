@@ -64,9 +64,6 @@ jobs:
         with:
           name: app
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
