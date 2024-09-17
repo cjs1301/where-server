@@ -82,8 +82,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
     // Firebase SDK
     implementation 'com.google.firebase:firebase-admin:9.3.0'
-
-    testImplementation 'com.h2database:h2'
 }
 
 tasks.register('buildZip', Zip) {

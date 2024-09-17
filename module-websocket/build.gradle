@@ -37,7 +37,6 @@ shadowJar {
     archiveVersion = ''
     manifest {
         inheritFrom(project.tasks.thinJar.manifest)
-        attributes 'Main-Class': 'org.where.modulewebsocket.WebSocketLambdaHandler'
     }
 
     mergeServiceFiles()
@@ -54,10 +53,11 @@ shadowJar {
 assemble.dependsOn = [thinJar, shadowJar]
 
 dependencies {
-
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation project(":module-core")
+    implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
     implementation 'org.springframework.cloud:spring-cloud-function-context'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.1'
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
 }
 
 dependencyManagement {

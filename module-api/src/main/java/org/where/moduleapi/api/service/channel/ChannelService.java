@@ -69,23 +69,12 @@ public class ChannelService {
         locationRepository.save(locationMessage);
     }
 
-    public void createMessage(MessageDto messageDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender()).orElseThrow(EntityNotFoundException::new);
-        MessageEntity message = MessageEntity.builder()
-                .message(messageDto.getMessage())
-                .member(member)
-                .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
-                .build();
-        messageRepository.save(message);
-    }
-
-
     public FollowChannelDto createFollowChannel(UUID channelId, Long memberId) {
         ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
         MemberEntity member = memberRepository.findById(memberId).orElseThrow();
         Boolean isExists = followChannelRepository.existsByChannelIdAndMemberId(channelId,memberId);
         if(Boolean.TRUE.equals(isExists)){
-            return FollowChannelDto.fromEntity(followChannelRepository.findByChannelIdAndMemberId(channelId,memberId));
+            return FollowChannelDto.fromEntity(followChannelRepository.findByChannelIdAndMemberId(channelId,memberId).orElseThrow());
         }
         FollowChannelEntity followChannelEntity = FollowChannelEntity.builder().member(member).channel(channel).build();
         followChannelRepository.save(followChannelEntity);
@@ -113,5 +102,16 @@ public class ChannelService {
 
     public void removeConnection(String connectionId) {
         followChannelRepository.removeConnectionId(connectionId);
+    }
+
+
+    public void createMessage(MessageDto messageDto){
+        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender()).orElseThrow(EntityNotFoundException::new);
+        MessageEntity message = MessageEntity.builder()
+                .message(messageDto.getMessage())
+                .member(member)
+                .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
+                .build();
+        messageRepository.save(message);
     }
 }

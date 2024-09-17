@@ -4,4 +4,4 @@ FROM public.ecr.aws/lambda/java:21
 COPY module-websocket/build/libs/*-websocket-aws.jar ${LAMBDA_TASK_ROOT}/lib/
 
 # Lambda 함수 핸들러 설정
-CMD ["org.where.modulewebsocket.WebSockerLambdaHandler::handleRequest"]
+CMD ["org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest"]

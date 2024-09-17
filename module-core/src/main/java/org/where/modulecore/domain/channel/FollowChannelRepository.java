@@ -6,18 +6,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface FollowChannelRepository extends JpaRepository<FollowChannelEntity, UUID> {
 
-@Query("select f from FollowChannelEntity f where f.member.id = ?1")
-List<FollowChannelEntity> findAllByMemberId(Long memberId);
+    @Query("select f from FollowChannelEntity f where f.member.id = ?1")
+    List<FollowChannelEntity> findAllByMemberId(Long memberId);
 
     @Query("select (count(f) > 0) from FollowChannelEntity f where f.channel.id = ?1 and f.member.id = ?2")
     Boolean existsByChannelIdAndMemberId(UUID channelId, Long memberId);
 
     @Query("select f from FollowChannelEntity f where f.channel.id = ?1 and f.member.id = ?2")
-    FollowChannelEntity findByChannelIdAndMemberId(UUID channelId, Long memberId);
+    Optional<FollowChannelEntity> findByChannelIdAndMemberId(UUID channelId, Long memberId);
 
     @Transactional
     @Modifying
@@ -36,4 +37,6 @@ List<FollowChannelEntity> findAllByMemberId(Long memberId);
     @Transactional
     @Query("update FollowChannelEntity f set f.connectionId = null where f.connectionId = ?1")
     void removeConnectionId(String connectionId);
+
+    Optional<FollowChannelEntity> findByConnectionId(String connectionId);
 }

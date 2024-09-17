@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
 import org.where.modulecore.domain.member.MemberEntity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -32,6 +33,9 @@ public class FollowChannelEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")
     MemberEntity member;
+
+    @Version
+    private Long version;
 
     public void updateConnectionId(String connectionId) {
         this.connectionId = connectionId;
