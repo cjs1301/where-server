@@ -16,11 +16,11 @@ Resources:
       MemorySize: 1024
       Environment:
         Variables:
-          DB_PASSWORD: '{{resolve:ssm-secure:/where/db-password:1}}'
+          DB_PASSWORD: '{{resolve:ssm:/where/db-password:1}}'
           DB_URL: '{{resolve:ssm:/where/db-url:1}}'
           DB_USERNAME: '{{resolve:ssm:/where/db-username:1}}'
           JWT_EXPIRED: 600000
-          JWT_SECRET: '{{resolve:ssm-secure:/where/jwt-secret:1}}'
+          JWT_SECRET: '{{resolve:ssm:/where/jwt-secret:1}}'
           SPRING_PROFILES_ACTIVE: prod
       Events:
         ApiEvent:
