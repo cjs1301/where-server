@@ -3,7 +3,6 @@ spring:
     enabled: true
     baseline-on-migrate: true
     default-schema: odiya
-    repair:
   config:
     activate:
       on-profile: local

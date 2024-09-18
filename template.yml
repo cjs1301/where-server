@@ -49,26 +49,30 @@ Resources:
       Principal: "events.amazonaws.com"
       SourceArn: !GetAtt WarmupRule.Arn
 
-#  WhereWebsocketFunction:
-#    Type: AWS::Serverless::Function
-#    Properties:
-#      PackageType: Image
-#      Architectures:
-#        - x86_64
-#      MemorySize: 1024
-#      Environment:
-#        Variables:
-#          #          SPRING_CLOUD_FUNCTION_DEFINITION: lambdaHandler
-#          JWT_SECRET:
-#          JWT_EXPIRED: 600000 #${JWT_EXPIRED}
-#          DB_URL:
-#          DB_USERNAME:
-#          DB_PASSWORD:
-#          SPRING_PROFILES_ACTIVE: prod
-#    Metadata:
-#      Dockerfile: Websocket.Dockerfile
-#      DockerContext: .
-#      DockerTag: v1
+  WhereWebsocketFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      MemorySize: 1024
+      Environment:
+        Variables:
+          SPRING_CLOUD_FUNCTION_DEFINITION: webSocketLambdaHandler
+          DB_PASSWORD: '{{resolve:ssm:/where/db-password:1}}'
+          DB_URL: '{{resolve:ssm:/where/db-url:1}}'
+          DB_USERNAME: '{{resolve:ssm:/where/db-username:1}}'
+          SPRING_PROFILES_ACTIVE: prod
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - execute-api:ManageConnections
+              Resource: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:pt76s4l1ag/prod/POST/@connections/*'
+    Metadata:
+      Dockerfile: Websocket.Dockerfile
+      DockerContext: .
+      DockerTag: v1
 
 
 

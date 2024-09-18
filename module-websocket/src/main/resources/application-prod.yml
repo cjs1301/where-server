@@ -3,13 +3,12 @@ spring:
     enabled: true
     baseline-on-migrate: true
     default-schema: odiya
-    repair:
-  config:
-    activate:
-      on-profile: local
   jwt:
     secret: ${JWT_SECRET}
     expired: ${JWT_EXPIRED:604800000}
+  config:
+    activate:
+      on-profile: prod
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DB_URL}

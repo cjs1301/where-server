@@ -15,7 +15,9 @@ public class AuthController {
 
     @GetMapping
     public ResponseEntity<CustomUserDetailDto> getAuthInfo(@AuthenticationPrincipal CustomUserDetails user){
-        return ResponseEntity.ok().body(CustomUserDetailDto.builder().mobile(user.getUsername()).role(user.getRole()).name(user.getNickName()).build());
+        return ResponseEntity.ok()
+                .body(CustomUserDetailDto.from(user));
+
     }
 
 }

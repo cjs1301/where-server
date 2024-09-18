@@ -58,8 +58,7 @@ public class SecurityConfig {
                 );
         httpSecurity.authenticationProvider(firebaseAuthenticationProvider);
 
-        httpSecurity.addFilterBefore(apiLoggingFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.addFilterAt(
+        httpSecurity.addFilterBefore(
                 new FirebaseAuthenticationFilter(
                         "/login",
                         authenticationManager(authenticationConfiguration),
@@ -67,6 +66,7 @@ public class SecurityConfig {
                 ),
                 UsernamePasswordAuthenticationFilter.class);
         httpSecurity.addFilterAfter(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(apiLoggingFilter, JWTFilter.class);
         return httpSecurity.build();
     }
 

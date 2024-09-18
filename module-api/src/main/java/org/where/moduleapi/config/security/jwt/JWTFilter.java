@@ -53,13 +53,15 @@ public class JWTFilter extends OncePerRequestFilter {
         }
         try {
             // 토큰에서 username과 role 획득
-            String mobile = jwtUtil.getMobile(token);
+            String mobile = jwtUtil.getPhoneNumber(token);
             Long id = jwtUtil.getId(token);
             String role = jwtUtil.getRole(token);
+            String name = jwtUtil.getName(token);
 
             // UserDetails에 회원 정보 객체 담기
             CustomUserDetails customUserDetails = CustomUserDetails.builder()
                     .id(id)
+                    .name(name)
                     .phoneNumber(mobile)
                     .role(role)
                     .isEnabled(true)

@@ -22,5 +22,7 @@ spring:
     properties:
       hibernate:
         default_schema: odiya
+        show_sql: true
+        format_sql: true
       time_zone: UTC
-    open-in-view: false
+    open-in-view: true
