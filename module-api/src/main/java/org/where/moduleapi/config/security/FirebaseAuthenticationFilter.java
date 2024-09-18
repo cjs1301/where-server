@@ -80,7 +80,14 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String successMessage = String.format("{ \"message\": \"Authentication successful\", \"userId\": %d, \"phoneNumber\": \"%s\", \"role\": \"%s\" }", id, mobile, role);
+        String successMessage = String.format(
+                "{" +
+                        " \"message\": \"Authentication successful\"," +
+                        " \"token\": %s," +
+                        " \"userId\": %d," +
+                        " \"phoneNumber\": \"%s\"," +
+                        " \"role\": \"%s\"" +
+                        " }", token, id, mobile, role);
         response.getWriter().write(successMessage);
     }
 
