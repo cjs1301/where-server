@@ -1,4 +1,5 @@
 package org.where.moduleapi.config.exception;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
 
     /**
      * @ModelAttribut 으로 binding error 발생시 BindException 발생한다.
-     * ref https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args
+     * ref <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args">...</a>
      */
     @ExceptionHandler(BindException.class)
     @ResponseStatus
@@ -104,5 +105,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ResponseEntity<ErrorResponse> handleEntityNotFoundException(HttpServletRequest req, EntityNotFoundException e) {
+        log.error("handleEntityNotFoundException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

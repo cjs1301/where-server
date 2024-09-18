@@ -9,6 +9,7 @@ import java.util.Set;
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     Boolean existsByPhoneNumber(String phoneNumber);
 
+    @Query("select m from MemberEntity m where m.phoneNumber = ?1")
     Optional<MemberEntity> findByPhoneNumber(String phoneNumber);
 
     @Query("select m from MemberEntity m where m.phoneNumber in ?1")

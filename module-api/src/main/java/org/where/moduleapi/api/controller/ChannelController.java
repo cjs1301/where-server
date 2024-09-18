@@ -23,12 +23,10 @@ public class ChannelController {
     private ChannelService channelService;
 
     @PostMapping
-    public ResponseEntity<FollowChannelDto> createChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String channelName){
-        CreateChannelDto createChannelDto = new CreateChannelDto();
-        createChannelDto.setChannelName(channelName);
-        createChannelDto.setMemberPhoneNumber(user.getUsername());
-        return ResponseEntity.ok(channelService.createChannelAndFollow(createChannelDto));
+    public ResponseEntity<FollowChannelDto> createChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody CreateChannelDto body){
+        return ResponseEntity.ok(channelService.createChannelAndFollow(body.getChannelName(),user.getPhoneNumber()));
     }
+
     @DeleteMapping("/{channelId}/follow/{followId}")
     public ResponseEntity<String> deleteFollowChannelAndChannel(@PathVariable UUID channelId,@PathVariable UUID followId){
         channelService.deleteFollowChannel(channelId,followId);

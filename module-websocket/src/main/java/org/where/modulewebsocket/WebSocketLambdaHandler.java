@@ -2,6 +2,9 @@ package org.where.modulewebsocket;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2WebSocketResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.where.modulewebsocket.service.MessageService;
 import org.where.modulewebsocket.service.WebSocketConnectionService;
@@ -10,57 +13,102 @@ import org.where.modulewebsocket.service.WebSocketConnectionService;
 import java.util.UUID;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 public class WebSocketLambdaHandler implements Function<APIGatewayV2WebSocketEvent, APIGatewayV2WebSocketResponse> {
 
     private final WebSocketConnectionService connectionService;
     private final MessageService messageService;
+    private final ObjectMapper objectMapper;
 
-    public WebSocketLambdaHandler(WebSocketConnectionService connectionService, MessageService messageService) {
+    public WebSocketLambdaHandler(WebSocketConnectionService connectionService, MessageService messageService, ObjectMapper objectMapper) {
         this.connectionService = connectionService;
         this.messageService = messageService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public APIGatewayV2WebSocketResponse apply(APIGatewayV2WebSocketEvent event) {
-        String connectionId = event.getRequestContext().getConnectionId();
-        String routeKey = event.getRequestContext().getRouteKey();
-
         try {
-            switch (routeKey) {
-                case "$connect":
-                    return handleConnect(connectionId, event);
-                case "$disconnect":
-                    return handleDisconnect(connectionId);
-                case "$default":
-                    return handleMessage(connectionId, event.getBody());
-                default:
-                    return createResponse(400, "Unsupported route: " + routeKey);
-            }
+            String connectionId = event.getRequestContext().getConnectionId();
+            String routeKey = event.getRequestContext().getRouteKey();
+            log.info("Received event. RouteKey: {}, ConnectionId: {}", routeKey, connectionId);
+
+            return switch (routeKey) {
+                case "$connect" -> handleConnect(connectionId, event);
+                case "$disconnect" -> handleDisconnect(connectionId);
+                case "$default" -> handleDefaultMessage(connectionId, event.getBody());
+                default -> createResponse(400, "Unsupported route: " + routeKey);
+            };
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error processing request", e);
             return createResponse(500, "Internal server error: " + e.getMessage());
         }
     }
 
     private APIGatewayV2WebSocketResponse handleConnect(String connectionId, APIGatewayV2WebSocketEvent event) {
-        // 이 부분은 실제 구현에서 적절히 수정해야 합니다.
-        // 예를 들어, 쿼리 파라미터나 헤더에서 memberId와 channelId를 추출해야 할 수 있습니다.
-        Long memberId = Long.getLong(event.getQueryStringParameters().get("memberId"));
-        UUID channelId = UUID.fromString(event.getQueryStringParameters().get("channelId"));
+        try {
+            Long memberId = Long.valueOf(event.getQueryStringParameters().get("memberId"));
+            UUID channelId = UUID.fromString(event.getQueryStringParameters().get("channelId"));
+            log.info("Connecting. MemberId: {}, ChannelId: {}, ConnectionId: {}", memberId, channelId, connectionId);
 
-        connectionService.handleConnect(connectionId, memberId, channelId);
-        return createResponse(200, "Connected.");
+            connectionService.handleConnect(connectionId, memberId, channelId);
+            return createResponse(200, "Connected.");
+        } catch (Exception e) {
+            log.error("Error handling connect", e);
+            return createResponse(500, "Error connecting: " + e.getMessage());
+        }
     }
 
     private APIGatewayV2WebSocketResponse handleDisconnect(String connectionId) {
-        connectionService.handleDisconnect(connectionId);
-        return createResponse(200, "Disconnected.");
+        try {
+            log.info("Disconnecting. ConnectionId: {}", connectionId);
+            connectionService.handleDisconnect(connectionId);
+            return createResponse(200, "Disconnected.");
+        } catch (Exception e) {
+            log.error("Error handling disconnect", e);
+            return createResponse(500, "Error disconnecting: " + e.getMessage());
+        }
     }
 
-    private APIGatewayV2WebSocketResponse handleMessage(String connectionId, String body) throws Exception {
-        messageService.routeMessage(connectionId, body);
-        return createResponse(200, "Message processed.");
+    private APIGatewayV2WebSocketResponse handleDefaultMessage(String connectionId, String body) {
+        try {
+            log.info("Handling default message. ConnectionId: {}, Body: {}", connectionId, body);
+            JsonNode jsonNode = objectMapper.readTree(body);
+            String action = jsonNode.get("action").asText();
+            String data = jsonNode.get("data").toString();
+
+            return switch (action) {
+                case "chat" -> handleChatMessage(connectionId, data);
+                case "location" -> handleLocationMessage(connectionId, data);
+                default -> createResponse(400, "Unsupported action: " + action);
+            };
+        } catch (Exception e) {
+            log.error("Error handling default message", e);
+            return createResponse(500, "Error processing message: " + e.getMessage());
+        }
+    }
+
+    private APIGatewayV2WebSocketResponse handleChatMessage(String connectionId, String body) {
+        try {
+            log.info("Handling chat message. ConnectionId: {}, Body: {}", connectionId, body);
+            messageService.handleChat(connectionId, body);
+            return createResponse(200, "Chat message processed.");
+        } catch (Exception e) {
+            log.error("Error handling chat message", e);
+            return createResponse(500, "Error processing chat message: " + e.getMessage());
+        }
+    }
+
+    private APIGatewayV2WebSocketResponse handleLocationMessage(String connectionId, String body) {
+        try {
+            log.info("Handling location message. ConnectionId: {}, Body: {}", connectionId, body);
+            messageService.handleLocation(connectionId, body);
+            return createResponse(200, "Location update processed.");
+        } catch (Exception e) {
+            log.error("Error handling location message", e);
+            return createResponse(500, "Error processing location update: " + e.getMessage());
+        }
     }
 
     private APIGatewayV2WebSocketResponse createResponse(int statusCode, String body) {

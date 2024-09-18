@@ -21,7 +21,7 @@ public class JWTUtil {
         this.expiredMs = Long.valueOf(expiredMs);
     }
 
-    public String getMobile(String token) {
+    public String getPhoneNumber(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("phoneNumber", String.class);
     }
@@ -33,6 +33,11 @@ public class JWTUtil {
     public String getRole(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    }
+
+    public String getName(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("name", String.class);
     }
 
     public Boolean isExpired(String token) {

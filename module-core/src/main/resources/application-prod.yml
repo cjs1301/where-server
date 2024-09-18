@@ -21,3 +21,4 @@ spring:
         default_schema: odiya
       time_zone: UTC
     open-in-view: false
+    defer-datasource-initialization: true

@@ -32,22 +32,29 @@ public class ChannelService {
     private LocationRepository locationRepository;
 
     @Transactional
-    public FollowChannelDto createChannelAndFollow(CreateChannelDto createChannelDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(createChannelDto.getMemberPhoneNumber()).orElseThrow(EntityNotFoundException::new);
-        ChannelEntity channel = ChannelEntity.builder()
-                .name(createChannelDto.getChannelName())
-                .build();
+    public FollowChannelDto createChannelAndFollow(String channelName,String phoneNumber) {
+        MemberEntity member = memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(EntityNotFoundException::new);
+        ChannelEntity channel = createChannel(channelName);
         channelRepository.save(channel);
-        FollowChannelEntity followChannelEntity = FollowChannelEntity.builder()
-                .channel(channel)
-                .member(member)
-                .build();
+        FollowChannelEntity followChannelEntity = createFollowChannel(member,channel);
         followChannelRepository.save(followChannelEntity);
         return FollowChannelDto.fromEntity(followChannelEntity);
     }
 
-    public List<FollowChannelDto> getFollowChannelList(Long memberId){
+    private ChannelEntity createChannel(String channelName){
+        return ChannelEntity.builder()
+                .name(channelName)
+                .build();
+    }
 
+    private FollowChannelEntity createFollowChannel(MemberEntity member,ChannelEntity channel){
+        return FollowChannelEntity.builder()
+                .channel(channel)
+                .member(member)
+                .build();
+    }
+
+    public List<FollowChannelDto> getFollowChannelList(Long memberId){
         return followChannelRepository.findAllByMemberId(memberId).stream().map(FollowChannelDto::fromEntity).toList();
     }
     public List<MessageDto> getChannelMessageList(UUID channelId){

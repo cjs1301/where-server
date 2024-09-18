@@ -63,6 +63,12 @@ Resources:
           DB_URL: '{{resolve:ssm:/where/db-url:1}}'
           DB_USERNAME: '{{resolve:ssm:/where/db-username:1}}'
           SPRING_PROFILES_ACTIVE: prod
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - execute-api:ManageConnections
+              Resource: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:pt76s4l1ag/prod/POST/@connections/*'
     Metadata:
       Dockerfile: Websocket.Dockerfile
       DockerContext: .

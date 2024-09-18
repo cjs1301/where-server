@@ -39,4 +39,6 @@ public interface FollowChannelRepository extends JpaRepository<FollowChannelEnti
     void removeConnectionId(String connectionId);
 
     Optional<FollowChannelEntity> findByConnectionId(String connectionId);
+
+    List<FollowChannelEntity> findAllByChannelId(UUID channelId);
 }
