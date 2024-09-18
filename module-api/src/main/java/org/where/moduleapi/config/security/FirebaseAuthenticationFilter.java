@@ -83,7 +83,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         String successMessage = String.format(
                 "{" +
                         " \"message\": \"Authentication successful\"," +
-                        " \"token\": %s," +
+                        " \"token\": \"%s\"," +
                         " \"userId\": %d," +
                         " \"phoneNumber\": \"%s\"," +
                         " \"role\": \"%s\"" +
