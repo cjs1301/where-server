@@ -15,7 +15,6 @@ import java.util.Collection;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
 
-    @Getter
     Long id;
 
     String name;
@@ -24,7 +23,6 @@ public class CustomUserDetails implements UserDetails {
 
     String phoneNumber;
 
-    @Getter
     String role;
 
 

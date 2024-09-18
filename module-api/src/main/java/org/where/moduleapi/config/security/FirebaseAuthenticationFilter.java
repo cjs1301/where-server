@@ -64,7 +64,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         //UserDetailsS
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String mobile = customUserDetails.getUsername();
+        String mobile = customUserDetails.getPhoneNumber();
         Long id = customUserDetails.getId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
