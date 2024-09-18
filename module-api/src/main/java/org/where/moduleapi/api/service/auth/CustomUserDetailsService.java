@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
+import org.where.modulecore.domain.member.MemberRole;
 
 @Slf4j
 @Service
@@ -23,6 +24,7 @@ public class CustomUserDetailsService{
     private MemberEntity createMember(String phoneNumber) {
         MemberEntity memberEntity = MemberEntity.builder()
                 .phoneNumber(phoneNumber)
+                .role(MemberRole.ROLE_USER)
                 .isEnabled(true)
                 .isAppInstalled(true)
                 .isContactListSynchronized(false)
