@@ -45,11 +45,12 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(Long id,String mobile, String role) {
+    public String createJwt(Long id,String mobile,String name, String role) {
 
         return Jwts.builder()
                 .claim("id", id)
                 .claim("phoneNumber", mobile)
+                .claim("name", name)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))

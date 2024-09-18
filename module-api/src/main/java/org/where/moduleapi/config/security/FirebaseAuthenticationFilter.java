@@ -65,6 +65,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String mobile = customUserDetails.getPhoneNumber();
+        String name = customUserDetails.getName();
         Long id = customUserDetails.getId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -73,7 +74,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(id, mobile, role);
+        String token = jwtUtil.createJwt(id, mobile,name, role);
 
         response.addHeader("Authorization", "Bearer " + token);
         // 성공 메시지 추가
