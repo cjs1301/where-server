@@ -62,7 +62,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app
-          path: artifacts
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
