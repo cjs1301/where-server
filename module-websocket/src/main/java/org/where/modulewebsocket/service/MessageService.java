@@ -1,14 +1,13 @@
 package org.where.modulewebsocket.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.where.modulecore.domain.channel.FollowChannelEntity;
-import org.where.modulecore.domain.channel.FollowChannelRepository;
-import org.where.modulecore.domain.channel.MessageEntity;
-import org.where.modulecore.domain.channel.MessageRepository;
+import org.where.modulecore.domain.channel.ChannelMembershipEntity;
+import org.where.modulecore.domain.channel.ChannelMembershipRepository;
+import org.where.modulecore.domain.message.MessageEntity;
+import org.where.modulecore.domain.message.MessageRepository;
 import org.where.modulewebsocket.service.dto.BroadcastMessage;
 import org.where.modulewebsocket.service.dto.LocationDto;
 import org.where.modulewebsocket.service.dto.MessageDto;
@@ -25,23 +24,23 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class MessageService {
-    private final FollowChannelRepository followChannelRepository;
+    private final ChannelMembershipRepository channelMembershipRepository;
     private final MessageRepository messageRepository;
     private final ApiGatewayManagementApiClient apiGatewayManagementApiClient;
     private final ObjectMapper objectMapper;
 
-    public MessageService(FollowChannelRepository followChannelRepository,
+    public MessageService(ChannelMembershipRepository channelMembershipRepository,
                           ApiGatewayManagementApiClient apiGatewayManagementApiClient,
                           MessageRepository messageRepository,
                           ObjectMapper objectMapper) {
         this.messageRepository = messageRepository;
-        this.followChannelRepository = followChannelRepository;
+        this.channelMembershipRepository = channelMembershipRepository;
         this.apiGatewayManagementApiClient = apiGatewayManagementApiClient;
         this.objectMapper = objectMapper;
     }
     public void handleChat(String connectionId, String messageBody) throws JsonProcessingException {
         log.info("Handling chat message. ConnectionId: {}, MessageBody: {}", connectionId, messageBody);
-        FollowChannelEntity followChannel = followChannelRepository.findByConnectionId(connectionId)
+        ChannelMembershipEntity followChannel = channelMembershipRepository.findByConnectionId(connectionId)
                 .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
 
         SocketMessageDto socketMessageDto = objectMapper.readValue(messageBody, SocketMessageDto.class);
@@ -63,7 +62,7 @@ public class MessageService {
 
     public void handleLocation(String connectionId, String messageBody) throws JsonProcessingException {
         log.info("Handling location update. ConnectionId: {}, MessageBody: {}", connectionId, messageBody);
-        FollowChannelEntity followChannel = followChannelRepository.findByConnectionId(connectionId)
+        ChannelMembershipEntity followChannel = channelMembershipRepository.findByConnectionId(connectionId)
                 .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
         LocationDto locationDto = objectMapper.readValue(messageBody, LocationDto.class);
 
@@ -75,11 +74,11 @@ public class MessageService {
     }
 
     private void broadcastToChannel(UUID channelId, String type, Object data) throws JsonProcessingException {
-        List<FollowChannelEntity> subscribers = followChannelRepository.findAllByChannelId(channelId);
+        List<ChannelMembershipEntity> subscribers = channelMembershipRepository.findAllByChannelId(channelId);
         String message = objectMapper.writeValueAsString(new BroadcastMessage(type, data));
 
         log.info("Broadcasting to channel. ChannelId: {}, Subscribers count: {}", channelId, subscribers.size());
-        for (FollowChannelEntity subscriber : subscribers) {
+        for (ChannelMembershipEntity subscriber : subscribers) {
             if (subscriber.getConnectionId() != null) {
                 sendMessageToConnection(subscriber.getConnectionId(), message);
             }
@@ -108,14 +107,6 @@ public class MessageService {
     }
 
     private void handleDisconnectedClient(String connectionId) {
-        try {
-            log.info("Handling disconnected client. ConnectionId: {}", connectionId);
-            FollowChannelEntity followChannel = followChannelRepository.findByConnectionId(connectionId)
-                    .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
-            followChannel.updateConnectionId(null);
-            followChannelRepository.save(followChannel);
-        } catch (Exception e) {
-            log.error("Error handling disconnected client. ConnectionId: {}", connectionId, e);
-        }
+        channelMembershipRepository.removeConnectionId(connectionId);
     }
 }

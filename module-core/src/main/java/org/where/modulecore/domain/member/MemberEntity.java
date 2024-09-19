@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import net.minidev.json.annotate.JsonIgnore;
-import org.where.modulecore.domain.channel.FollowChannelEntity;
+import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 import org.where.modulecore.domain.friend.FollowRelationEntity;
 
 import java.util.*;
@@ -52,7 +52,7 @@ public class MemberEntity {
     MemberRole role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<FollowChannelEntity> followingChannelList;
+    List<ChannelMembershipEntity> ChannelMembershipList;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE, orphanRemoval = true)
     Set<FollowRelationEntity> followingList;

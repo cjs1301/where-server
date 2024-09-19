@@ -2,39 +2,37 @@ package org.where.modulewebsocket.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.where.modulecore.domain.channel.FollowChannelEntity;
-import org.where.modulecore.domain.channel.FollowChannelRepository;
+import org.where.modulecore.domain.channel.ChannelMembershipEntity;
+import org.where.modulecore.domain.channel.ChannelMembershipRepository;
 
 import java.util.UUID;
 
 @Service
 public class WebSocketConnectionService {
 
-    private final FollowChannelRepository followChannelRepository;
+    private final ChannelMembershipRepository channelMembershipRepository;
 
-    public WebSocketConnectionService(FollowChannelRepository followChannelRepository) {
-        this.followChannelRepository = followChannelRepository;
+    public WebSocketConnectionService(ChannelMembershipRepository channelMembershipRepository) {
+        this.channelMembershipRepository = channelMembershipRepository;
     }
     @Transactional
     public void handleConnect(String connectionId, Long memberId, UUID channelId) {
-        FollowChannelEntity followChannel = followChannelRepository
-                .findByChannelIdAndMemberId(channelId, memberId)
-                .orElseThrow(() -> new RuntimeException("Follow relationship not found"));
-        followChannel.updateConnectionId(connectionId);
-        followChannelRepository.save(followChannel);
+        channelMembershipRepository
+                .updateConnectionId(channelId, memberId, connectionId);
+
     }
 
     @Transactional
     public void handleDisconnect(String connectionId) {
-        FollowChannelEntity followChannel = followChannelRepository
+        ChannelMembershipEntity followChannel = channelMembershipRepository
                 .findByConnectionId(connectionId)
                 .orElseThrow(() -> new RuntimeException("Connection not found"));
         followChannel.updateConnectionId(null);
-        followChannelRepository.save(followChannel);
+        channelMembershipRepository.save(followChannel);
     }
 
     public boolean isConnected(Long memberId, UUID channelId) {
-        return followChannelRepository
+        return channelMembershipRepository
                 .findByChannelIdAndMemberId(channelId, memberId)
                 .map(followChannel -> followChannel.getConnectionId() != null)
                 .orElse(false);

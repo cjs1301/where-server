@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import org.where.modulecore.domain.channel.MessageEntity;
+import org.where.modulecore.domain.message.MessageEntity;
 
 @Getter
 @Builder

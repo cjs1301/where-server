@@ -6,25 +6,32 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
 import org.where.modulecore.domain.TimeStamped;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Table(name = "channel")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "channel_type")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChannelEntity extends TimeStamped {
+@FieldDefaults(level = AccessLevel.PROTECTED)
+public abstract class ChannelEntity extends TimeStamped {
     @Id
     @UuidGenerator
     @Column(name = "channel_id", nullable = false)
     UUID id;
-    String name;
+    @Column(name = "last_message")
+    String lastMessage;
 
-    @OneToMany(mappedBy = "channel")
-    @Builder.Default
-    List<FollowChannelEntity> followChannelEntities = new ArrayList<>();
+    @Column(name = "last_message_time")
+    LocalDateTime lastMessageTime;
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<ChannelMembershipEntity> memberships = new HashSet<>();
+    ChannelEntity(UUID id, String lastMessage, LocalDateTime lastMessageTime) {
+        this.id = id;
+        this.lastMessage = lastMessage;
+        this.lastMessageTime = lastMessageTime;
+    }
 }

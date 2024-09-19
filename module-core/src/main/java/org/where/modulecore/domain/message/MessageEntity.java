@@ -1,10 +1,11 @@
-package org.where.modulecore.domain.channel;
+package org.where.modulecore.domain.message;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UuidGenerator;
 import org.where.modulecore.domain.TimeStamped;
+import org.where.modulecore.domain.channel.ChannelEntity;
 import org.where.modulecore.domain.member.MemberEntity;
 
 import java.util.UUID;

@@ -5,17 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.where.moduleapi.api.service.channel.dto.ChannelDto;
 import org.where.modulecore.domain.channel.*;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
-import org.where.moduleapi.api.service.channel.dto.CreateChannelDto;
-import org.where.moduleapi.api.service.channel.dto.FollowChannelDto;
-import org.where.moduleapi.api.service.channel.dto.LocationDto;
 import org.where.moduleapi.api.service.channel.dto.MessageDto;
+import org.where.modulecore.domain.message.MessageEntity;
+import org.where.modulecore.domain.message.MessageRepository;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,102 +22,75 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
     @Autowired
-    private FollowChannelRepository followChannelRepository;
+    private ChannelMembershipRepository channelMembershipRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private MessageRepository messageRepository;
-    @Autowired
-    private LocationRepository locationRepository;
 
     @Transactional
-    public FollowChannelDto createChannelAndFollow(String channelName,String phoneNumber) {
-        MemberEntity member = memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(EntityNotFoundException::new);
-        ChannelEntity channel = createChannel(channelName);
-        channelRepository.save(channel);
-        FollowChannelEntity followChannelEntity = createFollowChannel(member,channel);
-        followChannelRepository.save(followChannelEntity);
-        return FollowChannelDto.fromEntity(followChannelEntity);
+    public ChannelDto findOrCreateChannelAndFollow(Long standardMemberId, ChannelDto.CreateOneToOneChannel body) {
+        MemberEntity member = findMemberById(standardMemberId);
+        //기존 채팅 방이 있는지 확인
+        OneToOneChannelEntity oneToOneChannel = findOrCreateOneToOneChannelEntity(standardMemberId,body.getFollowingPhoneNumber());
+
+        channelRepository.save(oneToOneChannel);
+        ChannelMembershipEntity channelMembership = createChannelMembership(member,oneToOneChannel);
+        channelMembershipRepository.save(channelMembership);
+        return ChannelDto.fromEntity(channelMembership);
     }
 
-    private ChannelEntity createChannel(String channelName){
-        return ChannelEntity.builder()
-                .name(channelName)
-                .build();
-    }
-
-    private FollowChannelEntity createFollowChannel(MemberEntity member,ChannelEntity channel){
-        return FollowChannelEntity.builder()
-                .channel(channel)
-                .member(member)
-                .build();
-    }
-
-    public List<FollowChannelDto> getFollowChannelList(Long memberId){
-        return followChannelRepository.findAllByMemberId(memberId).stream().map(FollowChannelDto::fromEntity).toList();
+    public List<ChannelDto> getFollowChannelList(Long memberId){
+        return channelMembershipRepository.findAllByMemberId(memberId).stream().map(ChannelDto::fromEntity).toList();
     }
     public List<MessageDto> getChannelMessageList(UUID channelId){
         List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId);
         return messageEntities.stream().map(MessageDto::fromEntity).toList();
     }
 
-    @Transactional
-    public void createLocation(LocationDto locationDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(locationDto.getSender()).orElseThrow(EntityNotFoundException::new);
-        UUID channelId = UUID.fromString(locationDto.getChannelId());
 
-        LocationEntity locationMessage = LocationEntity.builder()
-                .coordinates(locationDto.toCoordinateList())
-                .channel(ChannelEntity.builder().id(channelId).build())
-                .member(member)
-                .build();
-
-        locationRepository.save(locationMessage);
-    }
-
-    public FollowChannelDto createFollowChannel(UUID channelId, Long memberId) {
+    public ChannelDto createChannelMembership(UUID channelId, Long memberId) {
         ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
         MemberEntity member = memberRepository.findById(memberId).orElseThrow();
-        Boolean isExists = followChannelRepository.existsByChannelIdAndMemberId(channelId,memberId);
-        if(Boolean.TRUE.equals(isExists)){
-            return FollowChannelDto.fromEntity(followChannelRepository.findByChannelIdAndMemberId(channelId,memberId).orElseThrow());
-        }
-        FollowChannelEntity followChannelEntity = FollowChannelEntity.builder().member(member).channel(channel).build();
-        followChannelRepository.save(followChannelEntity);
-        return FollowChannelDto.fromEntity(followChannelEntity);
+
+        ChannelMembershipEntity channelMembership = findOrCreateChannelMembership(member,channel);
+
+        return ChannelDto.fromEntity(channelMembership);
     }
 
-    public void deleteFollowChannel(UUID channelId,UUID followChannelId) {
-        followChannelRepository.deleteById(followChannelId);
+    public void deleteChannelMembership(UUID channelId, UUID membershipId) {
+        channelMembershipRepository.deleteById(membershipId);
         ChannelEntity channel = channelRepository.findById(channelId).orElseThrow();
-        if(channel.getFollowChannelEntities().isEmpty()){
+        if(channel.getMemberships().isEmpty()){
             messageRepository.deleteAllByChannelId(channelId);
         }
     }
 
-    public void addUserToChannel(String channelId, Long memberId, String connectionId) {
-        followChannelRepository.updateConnectionId(UUID.fromString(channelId), memberId, connectionId);
+    private MemberEntity findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
+    }
+    private OneToOneChannelEntity findOrCreateOneToOneChannelEntity(Long standardMemberId,String followingPhoneNumber){
+        return channelRepository.findOneToOneChannel(standardMemberId,followingPhoneNumber).orElseGet(()->OneToOneChannelEntity.builder().build());
     }
 
-    public List<String> getChannelConnectionIds(String channelId) {
-        return followChannelRepository.findActiveConnectionsByChannelId(UUID.fromString(channelId))
-                .stream()
-                .map(FollowChannelEntity::getConnectionId)
-                .collect(Collectors.toList());
-    }
-
-    public void removeConnection(String connectionId) {
-        followChannelRepository.removeConnectionId(connectionId);
-    }
-
-
-    public void createMessage(MessageDto messageDto){
-        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender()).orElseThrow(EntityNotFoundException::new);
-        MessageEntity message = MessageEntity.builder()
-                .message(messageDto.getMessage())
+    private ChannelMembershipEntity createChannelMembership(MemberEntity member,ChannelEntity channel){
+        return ChannelMembershipEntity.builder()
+                .channel(channel)
                 .member(member)
-                .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
                 .build();
-        messageRepository.save(message);
     }
+
+    private ChannelMembershipEntity findOrCreateChannelMembership(MemberEntity member,ChannelEntity channel){
+        return channelMembershipRepository.findByChannelIdAndMemberId(channel.getId(),member.getId())
+                .orElseGet(()->{
+                    ChannelMembershipEntity channelMembership = ChannelMembershipEntity.builder()
+                            .channel(channel)
+                            .member(member)
+                            .build();
+                    channelMembershipRepository.save(channelMembership);
+                    return channelMembership;
+                });
+    }
+
 }
