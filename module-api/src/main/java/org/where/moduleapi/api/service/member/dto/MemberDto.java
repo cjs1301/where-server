@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.where.modulecore.domain.member.MemberEntity;
 
+import java.util.List;
+
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,5 +26,10 @@ public class MemberDto {
                 .isAppInstalled(memberEntity.getIsAppInstalled())
                 .isContactListSynchronized(memberEntity.getIsContactListSynchronized())
                 .build();
+    }
+
+    @Getter
+    public static class PhoneNumberList {
+        List<String> phoneNumberList;
     }
 }

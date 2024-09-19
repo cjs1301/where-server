@@ -7,6 +7,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.where.moduleapi.api.service.auth.CustomUserDetails;
 import org.where.moduleapi.api.service.member.MemberService;
+import org.where.moduleapi.api.service.member.dto.MemberDto;
+
+import java.util.Set;
 
 
 @Slf4j
@@ -21,5 +24,10 @@ public class MemberController {
     public ResponseEntity<String> deleteMember(@AuthenticationPrincipal CustomUserDetails user){
         memberService.deleteMember(user.getId());
         return ResponseEntity.ok("삭제");
+    }
+
+    @PostMapping("/registered")
+    public ResponseEntity<Set<MemberDto>> inviteMember(@RequestBody MemberDto.PhoneNumberList body){
+        return ResponseEntity.ok().body(memberService.isRegisteredMember(body));
     }
 }

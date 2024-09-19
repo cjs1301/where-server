@@ -14,4 +14,5 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
     @Query("select m from MemberEntity m where m.phoneNumber in ?1")
     Set<MemberEntity> findAllByPhoneNumberIn(Set<String> uniquePhoneNumbers);
+
 }

@@ -3,6 +3,7 @@ package org.where.moduleapi.api.service.follow;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.where.moduleapi.api.service.member.dto.MemberDto;
 import org.where.modulecore.domain.friend.FollowRelationEntity;
 import org.where.modulecore.domain.friend.FollowRelationRepository;
@@ -22,59 +23,67 @@ public class FollowRelationService {
     @Autowired
     private MemberRepository memberRepository;
 
+    public FollowRelationService(FollowRelationRepository followRelationRepository, MemberRepository memberRepository) {
+        this.followRelationRepository = followRelationRepository;
+        this.memberRepository = memberRepository;
+    }
+
+    @Transactional(readOnly = true)
     public Set<MemberDto> getMyFollowing(Long standardMemberId) {
         return followRelationRepository.findAllByFollowerId(standardMemberId).stream()
                 .map(MemberDto::fromEntity)
                 .collect(Collectors.toSet());
     }
-    public Set<MemberDto> createMyFollowRelation(Long standardMemberId, FollowRelationDto.Create body){
-        List<String> friendPhoneNumberList = body.phoneNumberList;
 
-        MemberEntity standardMember = memberRepository.findById(standardMemberId).orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + standardMemberId));
-
-        Set<MemberEntity> memberEntitySet = this.findOrCreateMember(friendPhoneNumberList);
-
-        Set<FollowRelationEntity> newFollowRelations = memberEntitySet.stream()
-                .map(memberEntity -> FollowRelationEntity.builder()
-                        .follower(standardMember)
-                        .following(memberEntity)
-                        .build()
-                ).collect(Collectors.toSet());
-
+    @Transactional
+    public Set<MemberDto> createMyFollowRelationList(Long standardMemberId, FollowRelationDto.CreateList body) {
+        MemberEntity standardMember = findMemberById(standardMemberId);
+        Set<MemberEntity> membersToFollow = findRegisteredMembers(body.getPhoneNumberList());
+        Set<FollowRelationEntity> newFollowRelations = createFollowRelations(standardMember, membersToFollow);
         followRelationRepository.saveAll(newFollowRelations);
-
-        return memberEntitySet.stream().map(MemberDto::fromEntity).collect(Collectors.toSet());
+        return convertToMemberDtoSet(newFollowRelations);
     }
 
-    private Set<MemberEntity> findOrCreateMember(List<String> phoneNumberList){
-        Set<String> uniquePhoneNumbers = new HashSet<>(phoneNumberList);
-
-        Set<MemberEntity> existingMembers = memberRepository.findAllByPhoneNumberIn(uniquePhoneNumbers);
-
-        Set<String> existingPhoneNumbers = existingMembers.stream()
-                .map(MemberEntity::getPhoneNumber)
-                .collect(Collectors.toSet());
-
-        Set<MemberEntity> newMembers = uniquePhoneNumbers.stream()
-                .filter(phoneNumber -> !existingPhoneNumbers.contains(phoneNumber))
-                .map(this::createMemberEntity)
-                .collect(Collectors.toSet());
-
-        if (!newMembers.isEmpty()) {
-            memberRepository.saveAll(newMembers);
-        }
-        Set<MemberEntity> allMembers = new HashSet<>(existingMembers);
-        allMembers.addAll(newMembers);
-        return allMembers;
+    @Transactional
+    public MemberDto createMyFollowRelation(Long standardMemberId, FollowRelationDto.Create body) {
+        MemberEntity standardMember = findMemberById(standardMemberId);
+        MemberEntity followingMember = findMemberByPhoneNumber(body.getPhoneNumber());
+        FollowRelationEntity newFollowRelation = createFollowRelation(standardMember, followingMember);
+        followRelationRepository.save(newFollowRelation);
+        return MemberDto.fromEntity(followingMember);
     }
 
-    private MemberEntity createMemberEntity(String phoneNumber){
-        return MemberEntity.builder()
-                .phoneNumber(phoneNumber)
-                .isAppInstalled(false)
-                .isEnabled(false)
-                .isContactListSynchronized(false)
-                .role(MemberRole.ROLE_USER)
+    private Set<MemberEntity> findRegisteredMembers(List<String> phoneNumbers) {
+        Set<String> uniquePhoneNumbers = new HashSet<>(phoneNumbers);
+        return memberRepository.findAllByPhoneNumberIn(uniquePhoneNumbers);
+    }
+
+    private MemberEntity findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
+    }
+
+    private MemberEntity findMemberByPhoneNumber(String phoneNumber) {
+        return memberRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(()->new EntityNotFoundException("Member not found with phoneNumber: " + phoneNumber));
+    }
+
+    private Set<FollowRelationEntity> createFollowRelations(MemberEntity follower, Set<MemberEntity> followings) {
+        return followings.stream()
+                .map(following -> createFollowRelation(follower, following))
+                .collect(Collectors.toSet());
+    }
+
+    private FollowRelationEntity createFollowRelation(MemberEntity follower, MemberEntity following) {
+        return FollowRelationEntity.builder()
+                .follower(follower)
+                .following(following)
                 .build();
+    }
+
+    private Set<MemberDto> convertToMemberDtoSet(Set<FollowRelationEntity> followRelations) {
+        return followRelations.stream()
+                .map(relation -> MemberDto.fromEntity(relation.getFollowing()))
+                .collect(Collectors.toSet());
     }
 }

@@ -11,6 +11,10 @@ import org.where.modulecore.domain.channel.MessageRepository;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class MemberService {
     @Autowired
@@ -39,4 +43,12 @@ public class MemberService {
     }
 
 
+    public Set<MemberDto> isRegisteredMember(MemberDto.PhoneNumberList body) {
+        Set<String> setPhoneNumberList = new HashSet<>(body.getPhoneNumberList());
+        Set<MemberEntity> memberList = isRegisteredMemberByPhoneNumber(setPhoneNumberList);
+        return memberList.stream().map(MemberDto::fromEntity).collect(Collectors.toSet());
+    }
+    private Set<MemberEntity> isRegisteredMemberByPhoneNumber(Set<String> setPhoneNumberList){
+        return memberRepository.findAllByPhoneNumberIn(setPhoneNumberList);
+    }
 }

@@ -12,7 +12,12 @@ import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "member")
+@Table(
+        name = "member",
+        indexes = {
+                @Index(name = "idx_member_phone_number", columnList = "phone_number")
+        }
+)
 @Getter
 @Builder
 @AllArgsConstructor

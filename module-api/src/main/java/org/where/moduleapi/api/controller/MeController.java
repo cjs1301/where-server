@@ -30,8 +30,12 @@ public class MeController {
         return ResponseEntity.ok(followRelationService.getMyFollowing(user.getId()));
     }
 
+    @PostMapping("/following/synchronize")
+    public ResponseEntity<Set<MemberDto>> synchronizeContactPhoneNumber(@AuthenticationPrincipal CustomUserDetails user, @RequestBody FollowRelationDto.CreateList body){
+        return ResponseEntity.ok(followRelationService.createMyFollowRelationList(user.getId(), body));
+    }
     @PostMapping("/following")
-    public ResponseEntity<Set<MemberDto>> synchronizeContactPhoneNumber(@AuthenticationPrincipal CustomUserDetails user, @RequestBody FollowRelationDto.Create body){
+    public ResponseEntity<MemberDto> createMemberFollowing(@AuthenticationPrincipal CustomUserDetails user, @RequestBody FollowRelationDto.Create body){
         return ResponseEntity.ok(followRelationService.createMyFollowRelation(user.getId(), body));
     }
 }
