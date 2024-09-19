@@ -42,8 +42,8 @@ public class MemberEntity {
 
     String profileImage;
 
-    @Column(name = "is_app_installed", nullable = false)
-    Boolean isAppInstalled;
+    @Column(name = "is_registered", nullable = false)
+    Boolean isRegistered;
 
     @Column(name = "is_contact_list_synchronized", nullable = false)
     Boolean isContactListSynchronized;

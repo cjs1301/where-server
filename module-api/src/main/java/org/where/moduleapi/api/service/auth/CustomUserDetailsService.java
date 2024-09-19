@@ -26,7 +26,7 @@ public class CustomUserDetailsService{
                 .phoneNumber(phoneNumber)
                 .role(MemberRole.ROLE_USER)
                 .isEnabled(true)
-                .isAppInstalled(true)
+                .isRegistered(true)
                 .isContactListSynchronized(false)
                 .build();
         return memberRepository.save(memberEntity);

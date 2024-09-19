@@ -15,7 +15,7 @@ public class MemberDto {
     String name;
     String phoneNumber;
     String profileImage;
-    Boolean isAppInstalled;
+    Boolean isRegistered;
     Boolean isContactListSynchronized;
 
     public static MemberDto fromEntity(MemberEntity memberEntity){
@@ -23,7 +23,7 @@ public class MemberDto {
                 .name(memberEntity.getName())
                 .phoneNumber(memberEntity.getPhoneNumber())
                 .profileImage(memberEntity.getProfileImage())
-                .isAppInstalled(memberEntity.getIsAppInstalled())
+                .isRegistered(memberEntity.getIsRegistered())
                 .isContactListSynchronized(memberEntity.getIsContactListSynchronized())
                 .build();
     }
