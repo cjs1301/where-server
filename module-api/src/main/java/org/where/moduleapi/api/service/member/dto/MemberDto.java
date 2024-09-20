@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MemberDto {
+    Long id;
     String name;
     String phoneNumber;
     String profileImage;
@@ -20,6 +21,7 @@ public class MemberDto {
 
     public static MemberDto fromEntity(MemberEntity memberEntity){
         return MemberDto.builder()
+                .id(memberEntity.getId())
                 .name(memberEntity.getName())
                 .phoneNumber(memberEntity.getPhoneNumber())
                 .profileImage(memberEntity.getProfileImage())
