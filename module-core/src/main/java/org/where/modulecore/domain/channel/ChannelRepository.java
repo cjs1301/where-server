@@ -10,9 +10,9 @@ import java.util.UUID;
 public interface ChannelRepository extends JpaRepository<ChannelEntity, UUID> {
     @Query("SELECT c FROM OneToOneChannelEntity c " +
             "WHERE c.id IN (SELECT cm.channel.id FROM ChannelMembershipEntity cm " +
-            "               WHERE cm.member.id = :member1Id OR cm.member.phoneNumber = :member2PhoneNumber " +
+            "               WHERE cm.member.id = :member1Id OR cm.member.id = :member2Id " +
             "               GROUP BY cm.channel.id " +
             "               HAVING COUNT(cm) = 2)")
     Optional<OneToOneChannelEntity> findOneToOneChannel(@Param("member1Id") Long member1Id,
-                                                        @Param("member2PhoneNumber") String member2PhoneNumber);
+                                                        @Param("member2Id") String member2Id);
 }

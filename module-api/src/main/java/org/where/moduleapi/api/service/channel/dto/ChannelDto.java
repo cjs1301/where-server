@@ -38,6 +38,6 @@ public class ChannelDto {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class CreateOneToOneChannel {
         String channelName;
-        String followingPhoneNumber;
+        String targetMemberId;
     }
 }
