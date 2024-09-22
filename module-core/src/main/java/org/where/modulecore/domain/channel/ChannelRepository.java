@@ -14,5 +14,5 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, UUID> {
             "               GROUP BY cm.channel.id " +
             "               HAVING COUNT(cm) = 2)")
     Optional<OneToOneChannelEntity> findOneToOneChannel(@Param("member1Id") Long member1Id,
-                                                        @Param("member2Id") String member2Id);
+                                                        @Param("member2Id") Long member2Id);
 }

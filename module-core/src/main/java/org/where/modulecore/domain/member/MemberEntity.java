@@ -52,7 +52,7 @@ public class MemberEntity {
     MemberRole role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<ChannelMembershipEntity> ChannelMembershipList;
+    List<ChannelMembershipEntity> channelMembershipList;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE, orphanRemoval = true)
     Set<FollowRelationEntity> followingList;

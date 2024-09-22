@@ -70,7 +70,7 @@ public class ChannelService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
     }
-    private OneToOneChannelEntity findOrCreateOneToOneChannelEntity(Long standardMemberId,String targetMemberId){
+    private OneToOneChannelEntity findOrCreateOneToOneChannelEntity(Long standardMemberId,Long targetMemberId){
         return channelRepository.findOneToOneChannel(standardMemberId,targetMemberId).orElseGet(()->OneToOneChannelEntity.builder().build());
     }
 
