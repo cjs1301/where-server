@@ -3,6 +3,7 @@ package org.where.modulecore.domain.channel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.UUID;
 
 public interface ChannelMembershipRepository extends JpaRepository<ChannelMembershipEntity, UUID> {
 
-    @Query("select f from ChannelMembershipEntity f where f.member.id = ?1")
-    List<ChannelMembershipEntity> findAllByMemberId(Long memberId);
+    @Query("SELECT cm FROM ChannelMembershipEntity cm JOIN FETCH cm.channel c LEFT JOIN FETCH c.lastMessage WHERE cm.member.id = :memberId")
+    List<ChannelMembershipEntity> findAllByMemberId(@Param("memberId") Long memberId);
 
     @Query("select (count(f) > 0) from ChannelMembershipEntity f where f.channel.id = ?1 and f.member.id = ?2")
     Boolean existsByChannelIdAndMemberId(UUID channelId, Long memberId);

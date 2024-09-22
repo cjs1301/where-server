@@ -45,6 +45,6 @@ public class MeController {
     }
     @GetMapping("/channels")
     public ResponseEntity<List<ChannelDto>> getMyChannelList(@AuthenticationPrincipal CustomUserDetails user){
-        return ResponseEntity.ok(channelService.getFollowChannelList(user.getId()));
+        return ResponseEntity.ok(channelService.getChannelMembershipList(user.getId()));
     }
 }

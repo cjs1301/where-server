@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ChannelMembershipEntity {
     @Id
     @UuidGenerator
-    @Column(name = "membership_id", nullable = false)
+    @Column(name = "membership_id")
     private UUID id;
 
     @Column(name = "connection_id")

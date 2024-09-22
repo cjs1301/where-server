@@ -40,7 +40,7 @@ public class ChannelService {
         return ChannelDto.fromEntity(channelMembership);
     }
 
-    public List<ChannelDto> getFollowChannelList(Long memberId){
+    public List<ChannelDto> getChannelMembershipList(Long memberId){
         return channelMembershipRepository.findAllByMemberId(memberId).stream().map(ChannelDto::fromEntity).toList();
     }
     public List<MessageDto> getChannelMessageList(UUID channelId){
