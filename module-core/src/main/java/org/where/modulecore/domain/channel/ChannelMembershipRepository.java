@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface ChannelMembershipRepository extends JpaRepository<ChannelMembershipEntity, UUID> {
 
-    @Query("SELECT cm FROM ChannelMembershipEntity cm JOIN FETCH cm.channel c LEFT JOIN FETCH c.lastMessage WHERE cm.member.id = :memberId")
+    @Query("SELECT cm FROM ChannelMembershipEntity cm JOIN FETCH cm.channel c WHERE cm.member.id = :memberId")
     List<ChannelMembershipEntity> findAllByMemberId(@Param("memberId") Long memberId);
 
     @Query("select (count(f) > 0) from ChannelMembershipEntity f where f.channel.id = ?1 and f.member.id = ?2")
