@@ -1,8 +1,6 @@
 package org.where.moduleapi.api.service.channel.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 
@@ -35,6 +33,7 @@ public class ChannelDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class CreateOneToOneChannel {
         String channelName;
