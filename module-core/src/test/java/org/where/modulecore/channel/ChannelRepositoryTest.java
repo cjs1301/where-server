@@ -59,7 +59,10 @@ class ChannelRepositoryTest {
         memberRepository.saveAll(List.of(member1,member2));
 
         // Create a one-to-one channel
-        channel = OneToOneChannelEntity.builder().build();
+        channel = OneToOneChannelEntity.builder()
+                .member1Id(member1.getId())
+                .member2Id(member2.getId())
+                .build();
         channelRepository.save(channel);
 
         // Create channel memberships
