@@ -13,4 +13,6 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, UUID> {
             "(c.member1Id = :member2Id AND c.member2Id = :member1Id)")
     Optional<OneToOneChannelEntity> findOneToOneChannel(@Param("member1Id") Long member1Id,
                                                         @Param("member2Id") Long member2Id);
+
+    long countByMemberships_Member_Id(Long id);
 }

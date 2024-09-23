@@ -42,4 +42,6 @@ public interface ChannelMembershipRepository extends JpaRepository<ChannelMember
     Optional<ChannelMembershipEntity> findByConnectionId(String connectionId);
 
     List<ChannelMembershipEntity> findAllByChannelId(UUID channelId);
+
+    long countByChannel_Id(UUID id);
 }

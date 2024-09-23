@@ -54,19 +54,19 @@ class ChannelServiceTest {
                 "Should return the same channel ID for existing channel");
 
         // Verify that no new channel was created
-        long channelCount = channelRepository.count();
+        long channelCount = channelRepository.countByMemberships_Member_Id(member1.getId());
         assertEquals(1, channelCount, "Should not create a new channel");
 
         // Verify channel memberships
-        long membershipCount = channelMembershipRepository.count();
+        long membershipCount = channelMembershipRepository.countByChannel_Id(result.getChannelId());
         assertEquals(2, membershipCount, "Should have two memberships for the channel");
     }
 
     @Test
     void findOrCreateChannelAndFollow_NewChannel_ShouldCreateNewChannel() {
         // Arrange
-        MemberEntity member1 = createAndSaveMember("+821011112222");
-        MemberEntity member2 = createAndSaveMember("+821033332222");
+        MemberEntity member1 = createAndSaveMember("+821011113333");
+        MemberEntity member2 = createAndSaveMember("+821033334444");
 
         // Act
         ChannelDto result = channelService.findOrCreateChannelAndFollow(
@@ -78,11 +78,11 @@ class ChannelServiceTest {
         assertNotNull(result.getChannelId(), "Should create a new channel with a valid ID");
 
         // Verify that a new channel was created
-        long channelCount = channelRepository.count();
+        long channelCount = channelRepository.countByMemberships_Member_Id(member1.getId());
         assertEquals(1, channelCount, "Should create one new channel");
 
         // Verify channel memberships
-        long membershipCount = channelMembershipRepository.count();
+        long membershipCount = channelMembershipRepository.countByChannel_Id(result.getChannelId());
         assertEquals(2, membershipCount, "Should create two memberships for the new channel");
     }
 
