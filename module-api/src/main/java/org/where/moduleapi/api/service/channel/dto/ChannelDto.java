@@ -3,6 +3,7 @@ package org.where.moduleapi.api.service.channel.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.where.modulecore.domain.channel.ChannelMembershipEntity;
+import org.where.modulecore.domain.channel.ChannelType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +17,8 @@ public class ChannelDto {
 
     UUID membershipId;
 
+    ChannelType channelType;
+
     String channelName;
 
     String lastMessage;
@@ -26,6 +29,7 @@ public class ChannelDto {
         return ChannelDto.builder()
                 .membershipId(channelMembership.getId())
                 .channelId(channelMembership.getChannel().getId())
+                .channelType(channelMembership.getChannelType())
                 .lastMessage(channelMembership.getChannel().getLastMessage())
                 .lastMessageTime(channelMembership.getChannel().getLastMessageTime())
                 .build();

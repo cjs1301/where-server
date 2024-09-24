@@ -42,5 +42,8 @@ public class ChannelMembershipEntity {
     public void updateConnectionId(String connectionId) {
         this.connectionId = connectionId;
     }
+    public ChannelType getChannelType() {
+        return this.channel.getChannelType();
+    }
 }
 

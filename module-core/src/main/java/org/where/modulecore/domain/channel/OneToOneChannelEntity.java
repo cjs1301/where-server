@@ -19,7 +19,7 @@ public class OneToOneChannelEntity extends ChannelEntity {
 
     @Builder
     public OneToOneChannelEntity(UUID id, String lastMessage, LocalDateTime lastMessageTime, Long member1Id, Long member2Id) {
-        super(id, lastMessage, lastMessageTime);
+        super(id, lastMessage, lastMessageTime, ChannelType.ONE_TO_ONE);
         this.member1Id = member1Id;
         this.member2Id = member2Id;
     }

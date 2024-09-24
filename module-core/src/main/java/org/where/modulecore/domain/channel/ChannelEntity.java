@@ -17,21 +17,28 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class ChannelEntity extends TimeStamped {
+
     @Id
     @UuidGenerator
     @Column(name = "channel_id", nullable = false)
     UUID id;
+
     @Column(name = "last_message")
     String lastMessage;
 
     @Column(name = "last_message_time")
     LocalDateTime lastMessageTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "channel_type", insertable = false, updatable = false)
+    ChannelType channelType;
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ChannelMembershipEntity> memberships = new HashSet<>();
-    ChannelEntity(UUID id, String lastMessage, LocalDateTime lastMessageTime) {
+    ChannelEntity(UUID id, String lastMessage, LocalDateTime lastMessageTime,ChannelType channelType) {
         this.id = id;
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
+        this.channelType = channelType;
     }
 }

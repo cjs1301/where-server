@@ -21,7 +21,7 @@ public class GroupChannelEntity extends ChannelEntity {
 
     @Builder
     public GroupChannelEntity(UUID id, String name, String lastMessage, LocalDateTime lastMessageTime) {
-        super(id, lastMessage, lastMessageTime);
+        super(id, lastMessage, lastMessageTime, ChannelType.GROUP);
         this.name = name;
     }
 }
