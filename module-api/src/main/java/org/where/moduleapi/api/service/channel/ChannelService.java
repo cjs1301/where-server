@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.where.moduleapi.api.service.channel.dto.ChannelDto;
+import org.where.moduleapi.api.service.member.dto.MemberDto;
 import org.where.modulecore.domain.channel.*;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
@@ -91,4 +92,11 @@ public class ChannelService {
                 });
     }
 
+    public List<MemberDto> getChannelMemberList(UUID channelId) {
+        ChannelEntity channel = channelRepository.findById(channelId).orElseThrow(EntityNotFoundException::new);
+        return channel.getMemberships().stream()
+                .map(ChannelMembershipEntity::getMember)
+                .map(MemberDto::fromEntity)
+                .toList();
+    }
 }

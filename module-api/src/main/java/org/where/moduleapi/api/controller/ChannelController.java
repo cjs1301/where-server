@@ -9,6 +9,7 @@ import org.where.moduleapi.api.service.auth.CustomUserDetails;
 import org.where.moduleapi.api.service.channel.ChannelService;
 import org.where.moduleapi.api.service.channel.dto.ChannelDto;
 import org.where.moduleapi.api.service.channel.dto.MessageDto;
+import org.where.moduleapi.api.service.member.dto.MemberDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +36,11 @@ public class ChannelController {
     @GetMapping("/{channelId}/messages")
     public ResponseEntity<List<MessageDto>> getChannelMessageList(@PathVariable UUID channelId){
         return ResponseEntity.ok(channelService.getChannelMessageList(channelId));
+    }
+
+    @GetMapping("/{channelId}/members")
+    public ResponseEntity<List<MemberDto>> getChannelMemberList(@PathVariable UUID channelId){
+        return ResponseEntity.ok(channelService.getChannelMemberList(channelId));
     }
 
     @PostMapping("/{channelId}/membership")
