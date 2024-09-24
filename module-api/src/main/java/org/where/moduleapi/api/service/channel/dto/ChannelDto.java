@@ -29,6 +29,7 @@ public class ChannelDto {
 
     public static ChannelDto fromEntity(ChannelMembershipEntity channelMembership){
         return ChannelDto.builder()
+                .channelName(channelMembership.getChannel().getName())
                 .membershipId(channelMembership.getId())
                 .channelId(channelMembership.getChannel().getId())
                 .channelType(channelMembership.getChannelType())
