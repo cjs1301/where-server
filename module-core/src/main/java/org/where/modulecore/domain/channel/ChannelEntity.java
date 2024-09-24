@@ -23,6 +23,9 @@ public abstract class ChannelEntity extends TimeStamped {
     @Column(name = "channel_id", nullable = false)
     UUID id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "last_message")
     String lastMessage;
 
@@ -33,12 +36,23 @@ public abstract class ChannelEntity extends TimeStamped {
     @Column(name = "channel_type", insertable = false, updatable = false)
     ChannelType channelType;
 
+    @Column(name = "unread_count")
+    Integer unreadCount = 0;
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<ChannelMembershipEntity> memberships = new HashSet<>();
+
     ChannelEntity(UUID id, String lastMessage, LocalDateTime lastMessageTime,ChannelType channelType) {
         this.id = id;
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
         this.channelType = channelType;
+    }
+
+    public void increaseUnreadCount(){
+        unreadCount++;
+    }
+    public void resetUnreadCount(){
+        unreadCount = 0;
     }
 }
