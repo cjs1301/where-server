@@ -25,6 +25,8 @@ public class ChannelDto {
 
     LocalDateTime lastMessageTime;
 
+    Integer unreadCount;
+
     public static ChannelDto fromEntity(ChannelMembershipEntity channelMembership){
         return ChannelDto.builder()
                 .membershipId(channelMembership.getId())
@@ -32,6 +34,7 @@ public class ChannelDto {
                 .channelType(channelMembership.getChannelType())
                 .lastMessage(channelMembership.getChannel().getLastMessage())
                 .lastMessageTime(channelMembership.getChannel().getLastMessageTime())
+                .unreadCount(channelMembership.getChannel().getUnreadCount())
                 .build();
     }
 
