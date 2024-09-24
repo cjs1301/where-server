@@ -32,19 +32,19 @@ class ChannelServiceTest {
 
 
     @Test
-    void findOrCreateChannelAndFollow_ExistingChannel_ShouldReturnExistingChannel() {
+    void findOrCreateChannelAndFollow_ExistingChannel_ShouldReturnExistingOnoToOneChannel() {
         // Arrange
         MemberEntity member1 = createAndSaveMember("+821011112222");
         MemberEntity member2 = createAndSaveMember("+821033332222");
 
         // Create an initial channel
-        ChannelDto initialChannel = channelService.findOrCreateChannelAndFollow(
+        ChannelDto initialChannel = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
                 new ChannelDto.CreateOneToOneChannel(null,member2.getId())
         );
 
         // Act
-        ChannelDto result = channelService.findOrCreateChannelAndFollow(
+        ChannelDto result = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
                 new ChannelDto.CreateOneToOneChannel(null,member2.getId())
         );
@@ -63,13 +63,13 @@ class ChannelServiceTest {
     }
 
     @Test
-    void findOrCreateChannelAndFollow_NewChannel_ShouldCreateNewChannel() {
+    void findOrCreateChannelAndFollow_NewChannel_ShouldCreateNewOnoToOneChannel() {
         // Arrange
         MemberEntity member1 = createAndSaveMember("+821011113333");
         MemberEntity member2 = createAndSaveMember("+821033334444");
 
         // Act
-        ChannelDto result = channelService.findOrCreateChannelAndFollow(
+        ChannelDto result = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
                 new ChannelDto.CreateOneToOneChannel(null,member2.getId())
         );

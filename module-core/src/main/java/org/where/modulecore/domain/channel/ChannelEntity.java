@@ -23,6 +23,7 @@ public abstract class ChannelEntity extends TimeStamped {
     @Column(name = "channel_id", nullable = false)
     UUID id;
 
+    @Setter
     @Column(name = "name")
     private String name;
 

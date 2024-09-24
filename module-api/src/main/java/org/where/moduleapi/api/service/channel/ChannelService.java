@@ -30,11 +30,13 @@ public class ChannelService {
     private MessageRepository messageRepository;
 
     @Transactional
-    public ChannelDto findOrCreateChannelAndFollow(Long standardMemberId, ChannelDto.CreateOneToOneChannel body) {
+    public ChannelDto findOrCreateOneToOneChannel(Long standardMemberId, ChannelDto.CreateOneToOneChannel body) {
         MemberEntity standardMember = findMemberById(standardMemberId);
         MemberEntity targetMember = findMemberById(body.getTargetMemberId());
         //기존 채팅 방이 있는지 확인
         OneToOneChannelEntity oneToOneChannel = findOrCreateOneToOneChannelEntity(standardMemberId,body.getTargetMemberId());
+        oneToOneChannel.setName(body.getChannelName());
+        channelRepository.save(oneToOneChannel);
         ChannelMembershipEntity channelMembership = findOrCreateChannelMembership(standardMember,oneToOneChannel);
         findOrCreateChannelMembership(targetMember,oneToOneChannel);
         return ChannelDto.fromEntity(channelMembership);
@@ -71,13 +73,11 @@ public class ChannelService {
                 .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
     }
     private OneToOneChannelEntity findOrCreateOneToOneChannelEntity(Long standardMemberId,Long targetMemberId){
-        return channelRepository.findOneToOneChannel(standardMemberId,targetMemberId).orElseGet(()-> {
-            OneToOneChannelEntity newChannel = OneToOneChannelEntity.builder()
+        return channelRepository.findOneToOneChannel(standardMemberId,targetMemberId).orElseGet(()-> OneToOneChannelEntity.builder()
                     .member1Id(standardMemberId)
                     .member2Id(targetMemberId)
-                    .build();
-            return channelRepository.save(newChannel);
-        });
+                    .build()
+        );
     }
 
     private ChannelMembershipEntity findOrCreateChannelMembership(MemberEntity member,ChannelEntity channel){

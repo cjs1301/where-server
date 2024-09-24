@@ -24,7 +24,7 @@ public class ChannelController {
 
     @PostMapping
     public ResponseEntity<ChannelDto> findOrCreateChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody ChannelDto.CreateOneToOneChannel body){
-        return ResponseEntity.ok(channelService.findOrCreateChannelAndFollow(user.getId(),body));
+        return ResponseEntity.ok(channelService.findOrCreateOneToOneChannel(user.getId(),body));
     }
 
     @DeleteMapping("/{channelId}/membership/{membershipId}")
