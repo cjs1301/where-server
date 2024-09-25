@@ -2,6 +2,7 @@ package org.where.moduleapi.api.service.channel.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.where.modulecore.domain.channel.ChannelEntity;
 import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 import org.where.modulecore.domain.channel.ChannelType;
 
@@ -36,6 +37,17 @@ public class ChannelDto {
                 .lastMessage(channelMembership.getChannel().getLastMessage())
                 .lastMessageTime(channelMembership.getChannel().getLastMessageTime())
                 .unreadCount(channelMembership.getChannel().getUnreadCount())
+                .build();
+    }
+
+    public static ChannelDto fromEntity(ChannelEntity channel){
+        return ChannelDto.builder()
+                .channelName(channel.getName())
+                .channelId(channel.getId())
+                .channelType(channel.getChannelType())
+                .lastMessage(channel.getLastMessage())
+                .lastMessageTime(channel.getLastMessageTime())
+                .unreadCount(channel.getUnreadCount())
                 .build();
     }
 

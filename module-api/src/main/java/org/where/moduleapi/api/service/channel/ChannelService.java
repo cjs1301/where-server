@@ -93,10 +93,17 @@ public class ChannelService {
     }
 
     public List<MemberDto> getChannelMemberList(UUID channelId) {
-        ChannelEntity channel = channelRepository.findById(channelId).orElseThrow(EntityNotFoundException::new);
+        ChannelEntity channel = findChannelById(channelId);
         return channel.getMemberships().stream()
                 .map(ChannelMembershipEntity::getMember)
                 .map(MemberDto::fromEntity)
                 .toList();
+    }
+
+    public ChannelDto getChannelInfo(UUID channelId) {
+        return ChannelDto.fromEntity(findChannelById(channelId));
+    }
+    private ChannelEntity findChannelById(UUID channelId){
+        return channelRepository.findById(channelId).orElseThrow(EntityNotFoundException::new);
     }
 }

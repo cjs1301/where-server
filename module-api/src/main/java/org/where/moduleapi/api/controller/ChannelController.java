@@ -22,6 +22,11 @@ public class ChannelController {
     @Autowired
     private ChannelService channelService;
 
+    @GetMapping("/{channelId}")
+    public ResponseEntity<ChannelDto> getChannelInfo(@PathVariable UUID channelId){
+        return ResponseEntity.ok(channelService.getChannelInfo(channelId));
+    }
+
     @PostMapping
     public ResponseEntity<ChannelDto> findOrCreateChannelAndFollow(@AuthenticationPrincipal CustomUserDetails user, @RequestBody ChannelDto.CreateOneToOneChannel body){
         return ResponseEntity.ok(channelService.findOrCreateOneToOneChannel(user.getId(),body));
