@@ -52,6 +52,7 @@ public class MessageService {
                 .channel(channelMembership.getChannel())
                 .message(socketMessageDto.getMessage())
                 .member(channelMembership.getMember())
+                .isRead(false)
                 .build();
         messageRepository.save(messageEntity);
         MessageDto messageDto = MessageDto.fromEntity(messageEntity);

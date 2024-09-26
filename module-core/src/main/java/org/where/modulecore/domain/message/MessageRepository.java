@@ -22,7 +22,8 @@ public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
     @Query("delete from MessageEntity m where m.member.id = ?1")
     void deleteAllByMemberId(Long id);
 
+    @Transactional
     @Modifying
     @Query("UPDATE MessageEntity m SET m.isRead = true WHERE m.channel.id = :channelId AND m.member.id != :memberId")
-    void updateAllToReadExceptMember(@Param("channelId") UUID channelId, @Param("memberId") Long memberId);
+    int updateAllToReadExceptMember(@Param("channelId") UUID channelId, @Param("memberId") Long memberId);
 }

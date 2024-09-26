@@ -26,7 +26,7 @@ public class MessageEntity extends TimeStamped {
     String message;
 
     @Column(name = "is_read", nullable = false)
-    Boolean isRead = false;
+    Boolean isRead;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "channel_id")
