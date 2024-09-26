@@ -7,13 +7,15 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.where.modulecore.domain.message.MessageEntity;
 
+import java.util.UUID;
+
 @Getter
 @Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageDto {
     String id;
-    String channelId;
+    UUID channelId;
     String sender;
     String message;
     Boolean isRead;
@@ -22,6 +24,7 @@ public class MessageDto {
     public static MessageDto fromEntity(MessageEntity messageEntity){
         return MessageDto.builder()
                 .id(messageEntity.getId().toString())
+                .channelId(messageEntity.getChannel().getId())
                 .sender(messageEntity.getMember().getPhoneNumber())
                 .message(messageEntity.getMessage())
                 .isRead(messageEntity.getIsRead())
