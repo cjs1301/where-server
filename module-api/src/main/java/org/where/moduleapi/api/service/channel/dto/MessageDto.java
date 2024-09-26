@@ -25,7 +25,7 @@ public class MessageDto {
         return MessageDto.builder()
                 .id(messageEntity.getId().toString())
                 .channelId(messageEntity.getChannel().getId())
-                .sender(messageEntity.getMember().getPhoneNumber())
+                .sender(messageEntity.getMember().getId().toString())
                 .message(messageEntity.getMessage())
                 .isRead(messageEntity.getIsRead())
                 .createdAt(messageEntity.getCreatedAt().toString())
