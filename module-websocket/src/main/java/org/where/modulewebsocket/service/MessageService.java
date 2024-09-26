@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 import org.where.modulecore.domain.channel.ChannelMembershipRepository;
 import org.where.modulecore.domain.message.MessageEntity;
@@ -38,23 +39,25 @@ public class MessageService {
         this.apiGatewayManagementApiClient = apiGatewayManagementApiClient;
         this.objectMapper = objectMapper;
     }
+
+    @Transactional
     public void handleChat(String connectionId, String messageBody) throws JsonProcessingException {
         log.info("Handling chat message. ConnectionId: {}, MessageBody: {}", connectionId, messageBody);
-        ChannelMembershipEntity followChannel = channelMembershipRepository.findByConnectionId(connectionId)
+        ChannelMembershipEntity channelMembership = channelMembershipRepository.findByConnectionId(connectionId)
                 .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
 
         SocketMessageDto socketMessageDto = objectMapper.readValue(messageBody, SocketMessageDto.class);
 
         MessageEntity messageEntity = MessageEntity.builder()
-                .channel(followChannel.getChannel())
+                .channel(channelMembership.getChannel())
                 .message(socketMessageDto.getMessage())
-                .member(followChannel.getMember())
+                .member(channelMembership.getMember())
                 .build();
         messageRepository.save(messageEntity);
         MessageDto messageDto = MessageDto.fromEntity(messageEntity);
 
-        log.info("Broadcasting chat message to channel. ChannelId: {}", followChannel.getChannel().getId());
-        broadcastToChannel(followChannel.getChannel().getId(), "chat", messageDto);
+        log.info("Broadcasting chat message to channel. ChannelId: {}", channelMembership.getChannel().getId());
+        broadcastToChannel(channelMembership.getChannel().getId(), "chat", messageDto);
 
         log.info("Sending confirmation to sender. ConnectionId: {}", connectionId);
         sendMessageToConnection(connectionId, "Message sent successfully");

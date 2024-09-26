@@ -39,6 +39,7 @@ public interface ChannelMembershipRepository extends JpaRepository<ChannelMember
     @Query("update ChannelMembershipEntity f set f.connectionId = null where f.connectionId = ?1")
     void removeConnectionId(String connectionId);
 
+    @Query("select c from ChannelMembershipEntity c where c.connectionId = ?1")
     Optional<ChannelMembershipEntity> findByConnectionId(String connectionId);
 
     List<ChannelMembershipEntity> findAllByChannelId(UUID channelId);
