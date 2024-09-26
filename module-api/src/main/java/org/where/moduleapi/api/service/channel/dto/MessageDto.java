@@ -16,6 +16,7 @@ public class MessageDto {
     String channelId;
     String sender;
     String message;
+    Boolean isRead;
     String createdAt;
 
     public static MessageDto fromEntity(MessageEntity messageEntity){
@@ -23,6 +24,7 @@ public class MessageDto {
                 .id(messageEntity.getId().toString())
                 .sender(messageEntity.getMember().getPhoneNumber())
                 .message(messageEntity.getMessage())
+                .isRead(messageEntity.getIsRead())
                 .createdAt(messageEntity.getCreatedAt().toString())
                 .build();
     }
