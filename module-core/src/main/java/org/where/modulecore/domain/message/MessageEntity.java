@@ -22,11 +22,21 @@ public class MessageEntity extends TimeStamped {
     @UuidGenerator
     @Column(name = "message_id", nullable = false)
     UUID id;
+
     String message;
+
+    @Column(name = "is_read", nullable = false)
+    Boolean isRead = false;
+
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "channel_id")
     ChannelEntity channel;
     @ManyToOne
     @JoinColumn(name = "member_id")
     MemberEntity member;
+
+    public MessageEntity updateToRead(){
+        this.isRead = true;
+        return this;
+    }
 }

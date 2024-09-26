@@ -15,6 +15,7 @@ import org.where.modulecore.domain.message.MessageEntity;
 import org.where.modulecore.domain.message.MessageRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -45,9 +46,17 @@ public class ChannelService {
     public List<ChannelDto> getChannelMembershipList(Long memberId){
         return channelMembershipRepository.findAllByMemberId(memberId).stream().map(ChannelDto::fromEntity).toList();
     }
-    public List<MessageDto> getChannelMessageList(UUID channelId){
+
+
+    public List<MessageDto> getChannelMessageList(Long memberId, UUID channelId){
+        // 해당 멤버의 메시지를 제외한 모든 메시지를 읽음 상태로 업데이트
+        messageRepository.updateAllToReadExceptMember(channelId, memberId);
+
         List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId);
-        return messageEntities.stream().map(MessageDto::fromEntity).toList();
+
+        return messageEntities.stream()
+                .map(MessageDto::fromEntity)
+                .toList();
     }
 
 

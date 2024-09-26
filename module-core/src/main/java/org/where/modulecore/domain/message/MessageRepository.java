@@ -3,6 +3,7 @@ package org.where.modulecore.domain.message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
     @Modifying
     @Query("delete from MessageEntity m where m.member.id = ?1")
     void deleteAllByMemberId(Long id);
+
+    @Modifying
+    @Query("UPDATE MessageEntity m SET m.isRead = true WHERE m.channel.id = :channelId AND m.member.id != :memberId")
+    void updateAllToReadExceptMember(@Param("channelId") UUID channelId, @Param("memberId") Long memberId);
 }

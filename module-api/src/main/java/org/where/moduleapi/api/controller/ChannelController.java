@@ -38,10 +38,7 @@ public class ChannelController {
         return ResponseEntity.ok("삭제");
     }
 
-    @GetMapping("/{channelId}/messages")
-    public ResponseEntity<List<MessageDto>> getChannelMessageList(@PathVariable UUID channelId){
-        return ResponseEntity.ok(channelService.getChannelMessageList(channelId));
-    }
+
 
     @GetMapping("/{channelId}/members")
     public ResponseEntity<List<MemberDto>> getChannelMemberList(@PathVariable UUID channelId){

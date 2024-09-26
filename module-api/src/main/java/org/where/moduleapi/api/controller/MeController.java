@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.where.moduleapi.api.service.auth.CustomUserDetails;
 import org.where.moduleapi.api.service.channel.ChannelService;
 import org.where.moduleapi.api.service.channel.dto.ChannelDto;
+import org.where.moduleapi.api.service.channel.dto.MessageDto;
 import org.where.moduleapi.api.service.follow.FollowRelationDto;
 import org.where.moduleapi.api.service.follow.FollowRelationService;
 import org.where.moduleapi.api.service.member.MemberService;
@@ -14,6 +15,7 @@ import org.where.moduleapi.api.service.member.dto.MemberDto;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/me")
@@ -46,5 +48,9 @@ public class MeController {
     @GetMapping("/channels")
     public ResponseEntity<List<ChannelDto>> getMyChannelList(@AuthenticationPrincipal CustomUserDetails user){
         return ResponseEntity.ok(channelService.getChannelMembershipList(user.getId()));
+    }
+    @GetMapping("/channels/{channelId}/messages")
+    public ResponseEntity<List<MessageDto>> getChannelMessageList(@AuthenticationPrincipal CustomUserDetails user, @PathVariable UUID channelId){
+        return ResponseEntity.ok(channelService.getChannelMessageList(user.getId(),channelId));
     }
 }
