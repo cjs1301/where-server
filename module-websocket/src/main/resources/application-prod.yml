@@ -15,12 +15,12 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
-      maximum-pool-size: 1 # 추후 rds-proxy 를 도입 하면 해당 값을 0으로 합니다.
+      maximum-pool-size: 2 # 추후 rds-proxy 를 도입 하면 해당 값을 0으로 합니다.
       minimum-idle: 0
-      idle-timeout: 10000  # 10 seconds
+      idle-timeout: 15000  # 15 seconds
       max-lifetime: 20000  # 20 seconds (matching Lambda timeout)
-      connection-timeout: 2000  # 2 seconds
-      validation-timeout: 1000  # 1 second
+      connection-timeout: 15000  # 15 seconds
+      validation-timeout: 10000  # 10 second
       leak-detection-threshold: 15000  # 15 seconds
   jpa:
     properties:

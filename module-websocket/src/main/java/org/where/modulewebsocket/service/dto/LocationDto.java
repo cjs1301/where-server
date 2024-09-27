@@ -18,7 +18,7 @@ public class LocationDto {
     String type;
     String sender;
     String channelId;
-    List<CoordinateDto> coordinates;
+    CoordinateDto coordinates;
     String sessionId;  // 선택적: 새 경로 세션을 구분하기 위한 ID
 
     @Getter
@@ -32,10 +32,5 @@ public class LocationDto {
         public Coordinate toCoordinate() {
             return new Coordinate(this.longitude, this.latitude);
         }
-    }
-    public List<Coordinate> toCoordinateList() {
-        return this.coordinates.stream()
-                .map(CoordinateDto::toCoordinate)
-                .collect(Collectors.toList());
     }
 }
