@@ -5,11 +5,6 @@ plugins {
     id 'org.springframework.boot.experimental.thin-launcher' version "1.0.31.RELEASE"
 }
 
-def profiles = 'local'
-if (project.hasProperty('profile')) {
-    profiles = project.property('profile')
-}
-
 bootJar.enabled = true
 
 repositories {
@@ -60,11 +55,11 @@ repositories {
 dependencies {
     implementation project(":module-core")
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    if (profiles == 'prod') {
-        configurations {
-            implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-        }
-    }
+//    if (profiles == 'prod') {
+//        configurations {
+//            implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+//        }
+//    }
 
     implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.3'
 
@@ -94,6 +89,8 @@ tasks.register('buildZip', Zip) {
         }
     }
 }
-if (profiles == 'prod') {
-    build.dependsOn buildZip
-}
+
+build.dependsOn buildZip
+//if (profiles == 'prod') {
+//    build.dependsOn buildZip
+//}
