@@ -85,7 +85,7 @@ tasks.register('buildZip', Zip) {
     into('lib') {
         from(shadowJar)
         from(configurations.compileClasspath) {
-            exclude 'tomcat-embed-*'
+//            exclude 'tomcat-embed-*'
         }
     }
 }
