@@ -72,7 +72,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Build Sam Image
+      - name: Build Sam
         run: sam build
 
       - name: Deploy to AWS

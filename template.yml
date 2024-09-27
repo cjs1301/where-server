@@ -10,10 +10,16 @@ Resources:
   WhereFunction:
     Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
-      Architectures:
-        - x86_64
+      Handler: org.where.moduleapi.StreamLambdaHandler::handleRequest
+      Runtime: java21
+      CodeUri: ./module-api
+      SnapStart:
+        ApplyOn: PublishedVersions
+#      PackageType: Image
+#      Architectures:
+#        - x86_64
       MemorySize: 1024
+      AutoPublishAlias: prod
       Environment:
         Variables:
           DB_PASSWORD: '{{resolve:ssm:/where/db-password:1}}'
@@ -28,10 +34,10 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: ANY
-    Metadata:
-      Dockerfile: Lambda.Dockerfile
-      DockerContext: .
-      DockerTag: v1
+#    Metadata:
+#      Dockerfile: Lambda.Dockerfile
+#      DockerContext: .
+#      DockerTag: v1
   WarmupRule:
     Type: AWS::Events::Rule
     Properties:
@@ -52,12 +58,20 @@ Resources:
   WhereWebsocketFunction:
     Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
-      Architectures:
-        - x86_64
+#      PackageType: Image
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
+      Runtime: java21
+      CodeUri: ./module-websocket
+      SnapStart:
+        ApplyOn: PublishedVersions
+      Tracing: Active
+#      Architectures:
+#        - x86_64
+      AutoPublishAlias: prod
       MemorySize: 1024
       Environment:
         Variables:
+          MAIN_CLASS: org.where.modulewebsocket.ModuleWebsocketApplication
           SPRING_CLOUD_FUNCTION_DEFINITION: webSocketLambdaHandler
           DB_PASSWORD: '{{resolve:ssm:/where/db-password:1}}'
           DB_URL: '{{resolve:ssm:/where/db-url:1}}'
@@ -69,10 +83,10 @@ Resources:
               Action:
                 - execute-api:ManageConnections
               Resource: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:pt76s4l1ag/prod/POST/@connections/*'
-    Metadata:
-      Dockerfile: Websocket.Dockerfile
-      DockerContext: .
-      DockerTag: v1
+#    Metadata:
+#      Dockerfile: Websocket.Dockerfile
+#      DockerContext: .
+#      DockerTag: v1
 
 
 

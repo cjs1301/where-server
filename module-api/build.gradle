@@ -14,48 +14,48 @@ bootJar.enabled = true
 
 repositories {
     mavenLocal()
-    maven { url 'https://repo.spring.io/milestone' }
+//    maven { url 'https://repo.spring.io/milestone' }
 }
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-        }
-    }
-}
-
-shadowJar.mustRunAfter thinJar
-
-import com.github.jengelman.gradle.plugins.shadow.transformers.*
-
-shadowJar {
-    archiveClassifier = 'aws'
-    archiveVersion = ''
-    manifest {
-        inheritFrom(project.tasks.thinJar.manifest)
-        attributes 'Main-Class': 'org.where.moduleapi.StreamLambdaHandler'
-    }
-
-    mergeServiceFiles()
-    append 'META-INF/spring.handlers'
-    append 'META-INF/spring.schemas'
-    append 'META-INF/spring.tooling'
-    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
-    append 'META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports'
-    transform(PropertiesFileTransformer) {
-        paths = ['META-INF/spring.factories']
-        mergeStrategy = "append"
-    }
-}
-assemble.dependsOn = [thinJar, shadowJar]
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            from components.java
+//            versionMapping {
+//                usage('java-api') {
+//                    fromResolutionOf('runtimeClasspath')
+//                }
+//                usage('java-runtime') {
+//                    fromResolutionResult()
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//shadowJar.mustRunAfter thinJar
+//
+//import com.github.jengelman.gradle.plugins.shadow.transformers.*
+//
+//shadowJar {
+//    archiveClassifier = 'SNAPSHOT-plain'
+//    archiveVersion = '0.0.1'
+//    manifest {
+//        inheritFrom(project.tasks.thinJar.manifest)
+//        attributes 'Main-Class': 'org.where.moduleapi.StreamLambdaHandler'
+//    }
+//
+//    mergeServiceFiles()
+//    append 'META-INF/spring.handlers'
+//    append 'META-INF/spring.schemas'
+//    append 'META-INF/spring.tooling'
+//    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
+//    append 'META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports'
+//    transform(PropertiesFileTransformer) {
+//        paths = ['META-INF/spring.factories']
+//        mergeStrategy = "append"
+//    }
+//}
+//assemble.dependsOn = [thinJar, shadowJar]
 
 dependencies {
     implementation project(":module-core")
@@ -88,13 +88,12 @@ tasks.register('buildZip', Zip) {
     from compileJava
     from processResources
     into('lib') {
+        from(shadowJar)
         from(configurations.compileClasspath) {
             exclude 'tomcat-embed-*'
         }
     }
 }
 
-if (profiles == 'prod') {
-    build.dependsOn buildZip
-}
+build.dependsOn buildZip
 

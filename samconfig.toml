@@ -6,4 +6,5 @@ s3_prefix = "where-api-lambda"
 region = "ap-northeast-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-image_repositories = ["WhereFunction=445310641860.dkr.ecr.ap-northeast-2.amazonaws.com/whereapilambda58cdd0b4/wherefunction709ef713repo","WhereWebsocketFunction=445310641860.dkr.ecr.ap-northeast-2.amazonaws.com/whereapilambda58cdd0b4/wherewebsocketfunction501f7152repo"]
+#image_repositories = ["WhereFunction=445310641860.dkr.ecr.ap-northeast-2.amazonaws.com/whereapilambda58cdd0b4/wherefunction709ef713repo","WhereWebsocketFunction=445310641860.dkr.ecr.ap-northeast-2.amazonaws.com/whereapilambda58cdd0b4/wherewebsocketfunction501f7152repo"]
+image_repositories = []
