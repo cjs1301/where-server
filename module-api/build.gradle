@@ -94,6 +94,6 @@ tasks.register('buildZip', Zip) {
         }
     }
 }
-
-build.dependsOn buildZip
-
+if (profiles == 'prod') {
+    build.dependsOn buildZip
+}
