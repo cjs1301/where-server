@@ -1,0 +1,87 @@
+#name: CI & CD
+#
+#on:
+#  push:
+#    branches: [ "main" ]
+#
+#permissions:
+#  contents: read
+#
+#jobs:
+#  CI:
+#    name: Test
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up JDK 21
+#        uses: actions/setup-java@v4
+#        with:
+#          java-version: '21'
+#          distribution: 'temurin'
+#          cache: gradle
+#
+#      - name: Create Firebase Key
+#        run: |
+#          echo ${{ secrets.FIREBASE_KEY }} | base64 -d > ./module-core/src/main/resources/firebase-adminsdk-service-key.json
+#
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x gradlew
+#
+#      - name: Build with Gradle
+#        run: ./gradlew clean build
+#
+#      - name: Run Tests
+#        run: ./gradlew :test
+#
+#      - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
+#        uses: mikepenz/action-junit-report@v4
+#        if: success() || failure()
+#        with:
+#          report_paths: '**/build/test-results/test/TEST-*.xml'
+#
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: app
+#          path: |
+#            **/build/libs/*.jar
+#          overwrite: true
+#
+#  CD:
+#    name: Deploy
+#    runs-on: ubuntu-latest
+#    needs: CI
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#
+#      - name: Set up JDK 21
+#        uses: actions/setup-java@v4
+#        with:
+#          java-version: '21'
+#          distribution: 'temurin'
+#
+#      - name: Download app
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: app
+#
+#      - uses: aws-actions/setup-sam@v2
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Build Sam
+#        run: sam build
+#
+#      - name: Deploy to AWS
+#        run: |
+#          sam deploy --no-confirm-changeset
+#
