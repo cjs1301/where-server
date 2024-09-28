@@ -9,10 +9,7 @@ import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 import org.where.modulecore.domain.channel.ChannelMembershipRepository;
 import org.where.modulecore.domain.message.MessageEntity;
 import org.where.modulecore.domain.message.MessageRepository;
-import org.where.modulewebsocket.service.dto.BroadcastMessage;
-import org.where.modulewebsocket.service.dto.LocationDto;
-import org.where.modulewebsocket.service.dto.MessageDto;
-import org.where.modulewebsocket.service.dto.SocketMessageDto;
+import org.where.modulewebsocket.service.dto.*;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.apigatewaymanagementapi.ApiGatewayManagementApiClient;
 import software.amazon.awssdk.services.apigatewaymanagementapi.model.ApiGatewayManagementApiException;
@@ -43,14 +40,16 @@ public class MessageService {
     @Transactional
     public void handleChat(String connectionId, String messageBody) throws JsonProcessingException {
         log.info("Handling chat message. ConnectionId: {}, MessageBody: {}", connectionId, messageBody);
+
+
         ChannelMembershipEntity channelMembership = channelMembershipRepository.findByConnectionId(connectionId)
                 .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
 
-        SocketMessageDto socketMessageDto = objectMapper.readValue(messageBody, SocketMessageDto.class);
+        SocketChatMessageDto socketChatMessageDto = objectMapper.readValue(messageBody, SocketChatMessageDto.class);
 
         MessageEntity messageEntity = MessageEntity.builder()
                 .channel(channelMembership.getChannel())
-                .message(socketMessageDto.getMessage())
+                .message(socketChatMessageDto.message())
                 .member(channelMembership.getMember())
                 .isRead(false)
                 .build();
@@ -66,12 +65,15 @@ public class MessageService {
 
     public void handleLocation(String connectionId, String messageBody) throws JsonProcessingException {
         log.info("Handling location update. ConnectionId: {}, MessageBody: {}", connectionId, messageBody);
-        ChannelMembershipEntity followChannel = channelMembershipRepository.findByConnectionId(connectionId)
-                .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
-        LocationDto locationDto = objectMapper.readValue(messageBody, LocationDto.class);
 
-        log.info("Broadcasting location update to channel. ChannelId: {}", followChannel.getChannel().getId());
-        broadcastToChannel(followChannel.getChannel().getId(), "location", locationDto);
+
+        ChannelMembershipEntity channelMembership = channelMembershipRepository.findByConnectionId(connectionId)
+                .orElseThrow(() -> new RuntimeException("Connection not found for connectionId: " + connectionId));
+
+        SocketLocationMessageDto socketLocationMessageDto = objectMapper.readValue(messageBody, SocketLocationMessageDto.class);
+
+        log.info("Broadcasting location update to channel. ChannelId: {}", channelMembership.getChannel().getId());
+        broadcastToChannel(channelMembership.getChannel().getId(), "location", socketLocationMessageDto);
 
         log.info("Sending confirmation to sender. ConnectionId: {}", connectionId);
         sendMessageToConnection(connectionId, "Location update received");

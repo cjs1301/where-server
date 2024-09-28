@@ -19,7 +19,7 @@ public class LocationDto {
     String sender;
     String channelId;
     CoordinateDto coordinates;
-    String sessionId;  // 선택적: 새 경로 세션을 구분하기 위한 ID
+//    String sessionId;  // 선택적: 새 경로 세션을 구분하기 위한 ID
 
     @Getter
     @Builder
@@ -28,9 +28,5 @@ public class LocationDto {
     public static class CoordinateDto {
         double latitude;
         double longitude;
-
-        public Coordinate toCoordinate() {
-            return new Coordinate(this.longitude, this.latitude);
-        }
     }
 }
