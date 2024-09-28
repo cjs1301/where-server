@@ -60,7 +60,7 @@ public class MessageService {
         broadcastToChannel(channelMembership.getChannel().getId(), "chat", messageDto);
 
         log.info("Sending confirmation to sender. ConnectionId: {}", connectionId);
-        sendMessageToConnection(connectionId, "Message sent successfully");
+//        sendMessageToConnection(connectionId, "Message sent successfully");
     }
 
     public void handleLocation(String connectionId, String messageBody) throws JsonProcessingException {
@@ -76,7 +76,7 @@ public class MessageService {
         broadcastToChannel(channelMembership.getChannel().getId(), "location", socketLocationMessageDto);
 
         log.info("Sending confirmation to sender. ConnectionId: {}", connectionId);
-        sendMessageToConnection(connectionId, "Location update received");
+//        sendMessageToConnection(connectionId, "Location update received");
     }
 
     private void broadcastToChannel(UUID channelId, String type, Object data) throws JsonProcessingException {
