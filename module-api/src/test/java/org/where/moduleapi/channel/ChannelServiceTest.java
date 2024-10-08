@@ -1,8 +1,7 @@
 package org.where.moduleapi.channel;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.where.moduleapi.BaseServiceTest;
 import org.where.moduleapi.api.service.channel.ChannelService;
@@ -40,23 +39,20 @@ class ChannelServiceTest extends BaseServiceTest {
     @Autowired
     private ChannelMembershipRepository channelMembershipRepository;
 
-    private  MemberEntity member1;
-    private  MemberEntity member2;
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
-        // 기존 데이터 정리
-        channelMembershipRepository.deleteAll();
-        channelRepository.deleteAll();
-        memberRepository.deleteAll();
-
-        member1 = createAndSaveMember("+821011112222");
-        member2 = createAndSaveMember("+821033332222");
     }
+
+
     @Test
     @DisplayName("getChannelMessageList : 채널의 상대 메세지를 읽음 처리합니다.")
     void getChannelMessageListUpdateMassageIsRead() {
         // Arrange
+        MemberEntity member1 = createAndSaveMember("+821011112222");
+        MemberEntity member2 = createAndSaveMember("+821033332222");
         ChannelDto channel = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
                 new ChannelDto.CreateOneToOneChannel(null, member2.getId())
@@ -69,9 +65,10 @@ class ChannelServiceTest extends BaseServiceTest {
 
         // Act
         List<MessageDto> messages = channelService.getChannelMessageList(member1.getId(), channel.getChannelId());
-
+        entityManager.flush();
+        entityManager.clear();
         // Assert
-        assertEquals(3, ((List<?>) messages).size(), "Should return all messages in the channel");
+        assertEquals(3, messages.size(), "Should return all messages in the channel");
 
         // 메시지 상태 확인
         MessageEntity updatedMessage1 = messageRepository.findById(message1.getId()).orElseThrow();
@@ -84,9 +81,11 @@ class ChannelServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("findOrCreateOneToOneChannel : 중복 된 채널을 생성하지 않습니다")
+    @DisplayName("findOrCreateOneToOneChannel : 중복 된 채널을 생성하지 않습니다.")
     void findOrCreateOneToOneChannelExistingChannelShouldReturnExistingOnoToOneChannel() {
         // Arrange
+        MemberEntity member1 = createAndSaveMember("+821011112222");
+        MemberEntity member2 = createAndSaveMember("+821033332222");
         // Create an initial channel
         ChannelDto initialChannel = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
@@ -116,6 +115,8 @@ class ChannelServiceTest extends BaseServiceTest {
     @DisplayName("findOrCreateOneToOneChannel : 중복 된 채널이 없다면 새로운 채널을 생성합니다")
     void findOrCreateOneToOneChannelNewChannelShouldCreateNewOnoToOneChannel() {
         // Act
+        MemberEntity member1 = createAndSaveMember("+821011112222");
+        MemberEntity member2 = createAndSaveMember("+821033332222");
         ChannelDto result = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
                 new ChannelDto.CreateOneToOneChannel(null,member2.getId())
@@ -157,4 +158,12 @@ class ChannelServiceTest extends BaseServiceTest {
         return messageRepository.save(message);
     }
 
+    @AfterEach
+    void afterEach() {
+        // 기존 데이터 정리
+        messageRepository.deleteAll();
+        channelMembershipRepository.deleteAll();
+        channelRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
 }

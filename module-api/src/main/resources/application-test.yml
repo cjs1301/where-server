@@ -6,7 +6,7 @@ spring:
     enabled: false
     baseline-on-migrate: true
   datasource:
-    url: jdbc:h2:~/test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;NON_KEYWORDS=VALUE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     username: sa
     password:
   jpa:
@@ -27,3 +27,7 @@ spring:
   jwt:
     secret: TaRGDN1mVzUqAgAhPXnjC+V4BOCBoFzWizrNCYowa74iLJ8GAJdmggNA80nqEJHTIxpmf/uxO1YEP+i1FSwycUYvhtF2WxFERP1B7F2tB/fgrOYc0gcr9
     expired: 604800000 #
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
