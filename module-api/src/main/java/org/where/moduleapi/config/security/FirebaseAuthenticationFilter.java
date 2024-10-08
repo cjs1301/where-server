@@ -1,5 +1,6 @@
 package org.where.moduleapi.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -17,8 +18,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.where.moduleapi.config.security.jwt.JWTUtil;
 import org.where.moduleapi.api.service.auth.CustomUserDetails;
+import org.where.moduleapi.api.service.member.dto.MemberDto;
+import org.where.moduleapi.config.security.jwt.JWTUtil;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -29,10 +31,13 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final String tokenParameter = "firebaseToken";
+    private final ObjectMapper objectMapper;
+
     public FirebaseAuthenticationFilter(String url, AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         super(new AntPathRequestMatcher(url, "POST"));
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override
@@ -51,7 +56,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
             String phoneNumber = decodedToken.getClaims().get("phone_number").toString();
             log.info("token phone number : {}", phoneNumber);
 
-            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(phoneNumber, null,null);
+            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(phoneNumber, null, null);
             setDetails(request, authRequest);
             return this.authenticationManager.authenticate(authRequest);
         } catch (FirebaseAuthException e) {
@@ -74,22 +79,23 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(id, mobile,name, role);
+        String token = jwtUtil.createJwt(id, mobile, name, role);
 
         response.addHeader("Authorization", "Bearer " + token);
+        MemberDto memberDto = MemberDto.builder()
+                .id(id)
+                .name(name)
+                .phoneNumber(mobile)
+                .profileImage(null) // 안씀
+                .isContactListSynchronized(false) // 안씀
+                .build();
         // 성공 메시지 추가
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String successMessage = String.format(
-                "{" +
-                        " \"message\": \"Authentication successful\"," +
-                        " \"token\": \"%s\"," +
-                        " \"userId\": %d," +
-                        " \"phoneNumber\": \"%s\"," +
-                        " \"role\": \"%s\"" +
-                        " }", token, id, mobile, role);
-        response.getWriter().write(successMessage);
+
+        String jsonResponse = objectMapper.writeValueAsString(memberDto);
+        response.getWriter().write(jsonResponse);
     }
 
     @Override
@@ -107,6 +113,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
             logger.error("Error writing unsuccessful authentication response", e);
         }
     }
+
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
