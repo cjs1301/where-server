@@ -36,6 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+
+.DS_Store
+
 local-db
 
 firebase-adminsdk-service-key.json
