@@ -1,34 +1,31 @@
 package org.where.moduleapi.api.service.channel;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.where.moduleapi.api.service.channel.dto.ChannelDto;
+import org.where.moduleapi.api.service.channel.dto.MessageDto;
 import org.where.moduleapi.api.service.member.dto.MemberDto;
 import org.where.modulecore.domain.channel.*;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
-import org.where.moduleapi.api.service.channel.dto.MessageDto;
 import org.where.modulecore.domain.message.MessageEntity;
 import org.where.modulecore.domain.message.MessageRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ChannelService {
-    @Autowired
-    private ChannelRepository channelRepository;
-    @Autowired
-    private ChannelMembershipRepository channelMembershipRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private MessageRepository messageRepository;
+
+    private final ChannelRepository channelRepository;
+    private final ChannelMembershipRepository channelMembershipRepository;
+    private final MemberRepository memberRepository;
+    private final MessageRepository messageRepository;
 
     @Transactional
     public ChannelDto findOrCreateOneToOneChannel(Long standardMemberId, ChannelDto.CreateOneToOneChannel body) {

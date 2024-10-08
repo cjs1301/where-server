@@ -1,6 +1,6 @@
 package org.where.moduleapi.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +19,23 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/me")
+@RequiredArgsConstructor
 public class MeController {
-    @Autowired
-    private MemberService memberService;
-    @Autowired
-    private FollowRelationService followRelationService;
-    @Autowired
-    private ChannelService channelService;
+
+    private final MemberService memberService;
+
+    private final FollowRelationService followRelationService;
+
+    private final ChannelService channelService;
 
     @GetMapping
     public ResponseEntity<MemberDto> getMeInfo(@AuthenticationPrincipal CustomUserDetails user){
         return ResponseEntity.ok(memberService.getMember(user.getId()));
+    }
+
+    @PutMapping
+    public ResponseEntity<MemberDto> updateMyInfo(@AuthenticationPrincipal CustomUserDetails user,@RequestBody MemberDto.Update body){
+        return ResponseEntity.ok(memberService.updateMember(user.getId(),body));
     }
 
     @GetMapping("/following")

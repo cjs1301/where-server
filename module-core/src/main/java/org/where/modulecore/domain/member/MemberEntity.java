@@ -7,8 +7,8 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 import org.where.modulecore.domain.friend.FollowRelationEntity;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -54,9 +54,11 @@ public class MemberEntity {
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE, orphanRemoval = true)
     Set<FollowRelationEntity> followingList;
 
-    public Set<MemberEntity> getFollowingMembers() {
-        return followingList.stream()
-                .map(FollowRelationEntity::getFollowing)
-                .collect(Collectors.toSet());
+    public void updateName(String name){
+        this.name = name;
+    }
+
+    public void updateProfileImage(String profileImage){
+        this.profileImage = profileImage;
     }
 }

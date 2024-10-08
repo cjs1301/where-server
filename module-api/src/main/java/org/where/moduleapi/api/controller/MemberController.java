@@ -1,7 +1,7 @@
 package org.where.moduleapi.api.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,10 @@ import java.util.Set;
 @Slf4j
 @RestController
 @RequestMapping("/members")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
     @DeleteMapping
     public ResponseEntity<String> deleteMember(@AuthenticationPrincipal CustomUserDetails user){
@@ -27,7 +27,7 @@ public class MemberController {
     }
 
     @PostMapping("/registered")
-    public ResponseEntity<Set<MemberDto>> inviteMember(@RequestBody MemberDto.PhoneNumberList body){
+    public ResponseEntity<Set<MemberDto>> inviteMember(@RequestBody MemberDto.Contact body){
         return ResponseEntity.ok().body(memberService.isRegisteredMember(body));
     }
 }

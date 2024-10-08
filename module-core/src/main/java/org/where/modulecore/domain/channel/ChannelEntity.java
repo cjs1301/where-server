@@ -50,10 +50,4 @@ public abstract class ChannelEntity extends TimeStamped {
         this.channelType = channelType;
     }
 
-    public void increaseUnreadCount(){
-        unreadCount++;
-    }
-    public void resetUnreadCount(){
-        unreadCount = 0;
-    }
 }

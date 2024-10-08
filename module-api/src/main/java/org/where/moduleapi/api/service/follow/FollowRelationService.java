@@ -1,7 +1,7 @@
 package org.where.moduleapi.api.service.follow;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.where.moduleapi.api.service.member.dto.MemberDto;
@@ -9,7 +9,6 @@ import org.where.modulecore.domain.friend.FollowRelationEntity;
 import org.where.modulecore.domain.friend.FollowRelationRepository;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
-import org.where.modulecore.domain.member.MemberRole;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,16 +16,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FollowRelationService {
-    @Autowired
-    private FollowRelationRepository followRelationRepository;
-    @Autowired
-    private MemberRepository memberRepository;
 
-    public FollowRelationService(FollowRelationRepository followRelationRepository, MemberRepository memberRepository) {
-        this.followRelationRepository = followRelationRepository;
-        this.memberRepository = memberRepository;
-    }
+    private final FollowRelationRepository followRelationRepository;
+
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public Set<MemberDto> getMyFollowing(Long standardMemberId) {
@@ -65,7 +60,7 @@ public class FollowRelationService {
 
     private MemberEntity findMemberByPhoneNumber(String phoneNumber) {
         return memberRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(()->new EntityNotFoundException("Member not found with phoneNumber: " + phoneNumber));
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with phoneNumber: " + phoneNumber));
     }
 
     private Set<FollowRelationEntity> createFollowRelations(MemberEntity follower, Set<MemberEntity> followings) {

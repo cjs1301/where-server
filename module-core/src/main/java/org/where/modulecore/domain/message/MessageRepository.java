@@ -26,4 +26,6 @@ public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
     @Modifying
     @Query("UPDATE MessageEntity m SET m.isRead = true WHERE m.channel.id = :channelId AND m.member.id != :memberId")
     int updateAllToReadExceptMember(@Param("channelId") UUID channelId, @Param("memberId") Long memberId);
+
+    int countByMemberId(Long memberId);
 }
