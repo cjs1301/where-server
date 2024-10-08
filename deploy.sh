@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Gradle 빌드 및 shadowJar 생성
-./gradlew clean build shadowJar
+./gradlew clean build
 
 # SAM 빌드
 sam build
