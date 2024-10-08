@@ -46,9 +46,10 @@ class ChannelServiceTest extends BaseServiceTest {
     @BeforeEach
     void setUp() {
         // 기존 데이터 정리
-        memberRepository.deleteAll();
-        channelRepository.deleteAll();
         channelMembershipRepository.deleteAll();
+        channelRepository.deleteAll();
+        memberRepository.deleteAll();
+
         member1 = createAndSaveMember("+821011112222");
         member2 = createAndSaveMember("+821033332222");
     }
