@@ -10,10 +10,9 @@ import org.where.modulecore.QuerydslTestConfig;
 import org.where.modulecore.domain.channel.*;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
-import org.where.modulecore.domain.message.MessageRepository;
 import org.where.modulecore.domain.member.MemberRole;
 import org.where.modulecore.domain.message.MessageEntity;
-
+import org.where.modulecore.domain.message.MessageRepository;
 
 import java.util.List;
 import java.util.Optional;

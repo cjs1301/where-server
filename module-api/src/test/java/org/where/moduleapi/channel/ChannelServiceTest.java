@@ -4,12 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.where.moduleapi.BaseServiceTest;
 import org.where.moduleapi.api.service.channel.ChannelService;
 import org.where.moduleapi.api.service.channel.dto.ChannelDto;
 import org.where.moduleapi.api.service.channel.dto.MessageDto;
-import org.where.modulecore.domain.channel.*;
+import org.where.modulecore.domain.channel.ChannelEntity;
+import org.where.modulecore.domain.channel.ChannelMembershipRepository;
+import org.where.modulecore.domain.channel.ChannelRepository;
 import org.where.modulecore.domain.member.MemberEntity;
 import org.where.modulecore.domain.member.MemberRepository;
 import org.where.modulecore.domain.member.MemberRole;
@@ -22,9 +23,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest
-@ActiveProfiles(value = "test")
-class ChannelServiceTest {
+class ChannelServiceTest extends BaseServiceTest {
 
     @Autowired
     private ChannelService channelService;
@@ -55,7 +54,7 @@ class ChannelServiceTest {
     }
     @Test
     @DisplayName("getChannelMessageList : 채널의 상대 메세지를 읽음 처리합니다.")
-    void getChannelMessageList_update_massage_isRead() {
+    void getChannelMessageListUpdateMassageIsRead() {
         // Arrange
         ChannelDto channel = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
@@ -85,7 +84,7 @@ class ChannelServiceTest {
 
     @Test
     @DisplayName("findOrCreateOneToOneChannel : 중복 된 채널을 생성하지 않습니다")
-    void findOrCreateOneToOneChannel_ExistingChannel_ShouldReturnExistingOnoToOneChannel() {
+    void findOrCreateOneToOneChannelExistingChannelShouldReturnExistingOnoToOneChannel() {
         // Arrange
         // Create an initial channel
         ChannelDto initialChannel = channelService.findOrCreateOneToOneChannel(
@@ -114,7 +113,7 @@ class ChannelServiceTest {
 
     @Test
     @DisplayName("findOrCreateOneToOneChannel : 중복 된 채널이 없다면 새로운 채널을 생성합니다")
-    void ffindOrCreateOneToOneChannel_NewChannel_ShouldCreateNewOnoToOneChannel() {
+    void findOrCreateOneToOneChannelNewChannelShouldCreateNewOnoToOneChannel() {
         // Act
         ChannelDto result = channelService.findOrCreateOneToOneChannel(
                 member1.getId(),
