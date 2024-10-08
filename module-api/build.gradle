@@ -47,6 +47,11 @@ tasks.register('buildZip', Zip) {
 }
 
 build.dependsOn buildZip
-//if (profiles == 'prod') {
-//    build.dependsOn buildZip
+
+//configurations.configureEach {
+//    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+//        if (details.requested.group == 'com.google.protobuf' && details.requested.name == 'protobuf-java') {
+//            details.useVersion '3.25.1'
+//        }
+//    }
 //}
