@@ -13,7 +13,6 @@ import org.where.modulecore.domain.member.MemberRepository;
 import org.where.modulecore.domain.member.MemberRole;
 import org.where.modulecore.domain.message.MessageRepository;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,7 +115,7 @@ class MemberServiceTest extends BaseServiceTest {
     void isRegisteredMember_ShouldReturnSetOfMemberDto() {
         // Given
         MemberEntity anotherMember = createAndSaveMember("+821033334444");
-        MemberDto.Contact contact = MemberDto.Contact.builder().phoneNumberList(Arrays.asList(member.getPhoneNumber(), anotherMember.getPhoneNumber(), "+821055556666")).build();
+        MemberDto.Contact contact = MemberDto.Contact.builder().phoneNumberList(Set.of(member.getPhoneNumber(), anotherMember.getPhoneNumber(), "+821055556666")).build();
 
         // When
         Set<MemberDto> result = memberService.isRegisteredMember(contact);
