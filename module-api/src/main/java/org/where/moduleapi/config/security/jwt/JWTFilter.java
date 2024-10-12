@@ -1,6 +1,7 @@
 package org.where.moduleapi.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,14 +44,17 @@ public class JWTFilter extends OncePerRequestFilter {
         //Bearer 부분 제거 후 순수 토큰만 획득
         String token = authorization.split(" ")[1];
 
-        //토큰 소멸 시간 검증
-        if (Boolean.TRUE.equals(jwtUtil.isExpired(token))) {
-            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Token has expired");
 
-            //조건이 해당되면 메소드 종료 (필수)
-            return;
-        }
         try {
+            //토큰 소멸 시간 검증
+            if (Boolean.TRUE.equals(jwtUtil.isExpired(token))) {
+                sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Token has expired");
+                filterChain.doFilter(request, response);
+
+                //조건이 해당되면 메소드 종료 (필수)
+                return;
+            }
+
             // 토큰에서 username과 role 획득
             String mobile = jwtUtil.getPhoneNumber(token);
             Long id = jwtUtil.getId(token);
@@ -72,6 +76,8 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
             filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "JWT token has expired");
         } catch (Exception e) {
             sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Invalid token: " + e.getMessage());
         }
