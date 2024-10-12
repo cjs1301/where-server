@@ -1,7 +1,7 @@
 package org.where.moduleapi.config.security;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,10 +12,10 @@ import org.where.moduleapi.api.service.auth.CustomUserDetailsService;
 
 
 @Component
+@RequiredArgsConstructor
 public class FirebaseAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
 
     @Override
