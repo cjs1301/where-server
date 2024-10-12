@@ -27,7 +27,7 @@ public class MemberController {
     }
 
     @PostMapping("/registered")
-    public ResponseEntity<Set<MemberDto>> inviteMember(@RequestBody MemberDto.Contact body){
+    public ResponseEntity<Set<MemberDto>> isRegisteredMember(@RequestBody MemberDto.Contact body){
         return ResponseEntity.ok().body(memberService.isRegisteredMember(body));
     }
 }

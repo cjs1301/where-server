@@ -1,13 +1,10 @@
 package org.where.moduleapi.api.service.member.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.where.modulecore.domain.member.MemberEntity;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -21,9 +18,11 @@ public class MemberDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Update{
-        String name;
-        String profileImage;
+        private String name;
+        private String profileImage;
     }
 
     public static MemberDto fromEntity(MemberEntity memberEntity){
@@ -38,20 +37,22 @@ public class MemberDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Contact {
-        List<String> phoneNumberList;
+        private Set<String> phoneNumberList;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MemberDto memberDto = (MemberDto) o;
-        return Objects.equals(id, memberDto.id) && Objects.equals(name, memberDto.name) && Objects.equals(phoneNumber, memberDto.phoneNumber) && Objects.equals(profileImage, memberDto.profileImage) && Objects.equals(isContactListSynchronized, memberDto.isContactListSynchronized);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, phoneNumber, profileImage, isContactListSynchronized);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        MemberDto memberDto = (MemberDto) o;
+//        return Objects.equals(id, memberDto.id) && Objects.equals(name, memberDto.name) && Objects.equals(phoneNumber, memberDto.phoneNumber) && Objects.equals(profileImage, memberDto.profileImage) && Objects.equals(isContactListSynchronized, memberDto.isContactListSynchronized);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, name, phoneNumber, profileImage, isContactListSynchronized);
+//    }
 }
