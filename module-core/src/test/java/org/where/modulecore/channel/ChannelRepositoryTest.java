@@ -86,7 +86,7 @@ class ChannelRepositoryTest {
         entityManager.clear();
 
         // Then
-        Sort sortByCreatedAtAsc = Sort.by(Sort.Direction.ASC, "createdAt");
+        Sort sortByCreatedAtAsc = Sort.by(Sort.Direction.DESC, "createdAt");
         List<MessageEntity> messages = messageRepository.findAllByChannelId(channel.getId(), sortByCreatedAtAsc);
 
         assertThat(messages).hasSize(4);

@@ -51,7 +51,7 @@ public class ChannelService {
         messageRepository.updateAllToReadExceptMember(channelId, memberId);
 
         // 채널 ID로 모든 메시지를 생성 시간 오름차순으로 조회
-        Sort sortByCreatedAtAsc = Sort.by(Sort.Direction.ASC, "createdAt");
+        Sort sortByCreatedAtAsc = Sort.by(Sort.Direction.DESC, "createdAt");
         List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId, sortByCreatedAtAsc);
 
         return messageEntities.stream()
