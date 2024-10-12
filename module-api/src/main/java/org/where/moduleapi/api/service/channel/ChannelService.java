@@ -3,6 +3,7 @@ package org.where.moduleapi.api.service.channel;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.where.moduleapi.api.service.channel.dto.ChannelDto;
@@ -49,7 +50,9 @@ public class ChannelService {
         // 해당 멤버의 메시지를 제외한 모든 메시지를 읽음 상태로 업데이트
         messageRepository.updateAllToReadExceptMember(channelId, memberId);
 
-        List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId);
+        // 채널 ID로 모든 메시지를 생성 시간 오름차순으로 조회
+        Sort sortByCreatedAtAsc = Sort.by(Sort.Direction.ASC, "createdAt");
+        List<MessageEntity> messageEntities = messageRepository.findAllByChannelId(channelId, sortByCreatedAtAsc);
 
         return messageEntities.stream()
                 .map(MessageDto::fromEntity)

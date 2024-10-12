@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Sort;
 import org.where.modulecore.QuerydslTestConfig;
 import org.where.modulecore.domain.channel.*;
 import org.where.modulecore.domain.member.MemberEntity;
@@ -85,7 +86,8 @@ class ChannelRepositoryTest {
         entityManager.clear();
 
         // Then
-        List<MessageEntity> messages = messageRepository.findAllByChannelId(channel.getId());
+        Sort sortByCreatedAtAsc = Sort.by(Sort.Direction.ASC, "createdAt");
+        List<MessageEntity> messages = messageRepository.findAllByChannelId(channel.getId(), sortByCreatedAtAsc);
 
         assertThat(messages).hasSize(4);
 

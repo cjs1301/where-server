@@ -1,5 +1,6 @@
 package org.where.modulecore.domain.message;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
-    List<MessageEntity> findAllByChannelId(UUID channelId);
+    List<MessageEntity> findAllByChannelId(UUID channelId, Sort sort);
 
     @Transactional
     @Modifying
