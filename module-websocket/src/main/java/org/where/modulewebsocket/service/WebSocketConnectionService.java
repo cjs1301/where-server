@@ -2,7 +2,6 @@ package org.where.modulewebsocket.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.where.modulecore.domain.channel.ChannelMembershipEntity;
 import org.where.modulecore.domain.channel.ChannelMembershipRepository;
 
 import java.util.UUID;
@@ -15,45 +14,30 @@ public class WebSocketConnectionService {
     public WebSocketConnectionService(ChannelMembershipRepository channelMembershipRepository) {
         this.channelMembershipRepository = channelMembershipRepository;
     }
-    @Transactional
-    public void handleConnect(String connectionId, Long memberId, UUID channelId) {
-        channelMembershipRepository
-                .updateConnectionId(channelId, memberId, connectionId);
 
+    @Transactional
+    public void handleSubscribe(String connectionId, Long memberId, UUID channelId) {
+        channelMembershipRepository
+                .findByChannelIdAndMemberId(channelId, memberId)
+                .ifPresentOrElse(
+                        membership -> {
+                            membership.setConnectionId(connectionId);
+                            channelMembershipRepository.save(membership);
+                        },
+                        () -> {
+                            throw new RuntimeException("Channel membership not found for member " + memberId + " and channel " + channelId);
+                        }
+                );
     }
 
     @Transactional
     public void handleDisconnect(String connectionId) {
-        ChannelMembershipEntity followChannel = channelMembershipRepository
+        channelMembershipRepository
                 .findByConnectionId(connectionId)
-                .orElseThrow(() -> new RuntimeException("Connection not found"));
-        followChannel.updateConnectionId(null);
-        channelMembershipRepository.save(followChannel);
+                .ifPresent(membership -> {
+                    membership.setConnectionId(null);
+                    channelMembershipRepository.save(membership);
+                });
     }
 
-    public boolean isConnected(Long memberId, UUID channelId) {
-        return channelMembershipRepository
-                .findByChannelIdAndMemberId(channelId, memberId)
-                .map(followChannel -> followChannel.getConnectionId() != null)
-                .orElse(false);
-    }
-
-//    private APIGatewayV2WebSocketResponse createResponse(int statusCode, String body) {
-//        APIGatewayV2WebSocketResponse response = new APIGatewayV2WebSocketResponse();
-//        response.setStatusCode(statusCode);
-//        response.setBody(body);
-//        return response;
-//    }
-
-
-
-//    public void createMessage(MessageDto messageDto){
-//        MemberEntity member = memberRepository.findByPhoneNumber(messageDto.getSender()).orElseThrow(EntityNotFoundException::new);
-//        MessageEntity message = MessageEntity.builder()
-//                .message(messageDto.getMessage())
-//                .member(member)
-//                .channel(ChannelEntity.builder().id(UUID.fromString(messageDto.getChannelId())).build())
-//                .build();
-//        messageRepository.save(message);
-//    }
 }

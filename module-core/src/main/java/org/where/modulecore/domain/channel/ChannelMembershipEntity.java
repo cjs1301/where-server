@@ -19,6 +19,7 @@ public class ChannelMembershipEntity {
     @Column(name = "membership_id")
     private UUID id;
 
+    @Setter
     @Column(name = "connection_id")
     String connectionId;
 
@@ -39,9 +40,7 @@ public class ChannelMembershipEntity {
         this.member = member;
         this.joinedAt = LocalDateTime.now();
     }
-    public void updateConnectionId(String connectionId) {
-        this.connectionId = connectionId;
-    }
+
     public ChannelType getChannelType() {
         return this.channel.getChannelType();
     }

@@ -35,7 +35,7 @@ public class WebSocketLambdaHandler implements Function<APIGatewayV2WebSocketEve
             log.info("Received event. RouteKey: {}, ConnectionId: {}", routeKey, connectionId);
 
             return switch (routeKey) {
-                case "$connect" -> handleConnect(connectionId, event);
+                case "$connect" -> handleConnect(connectionId);
                 case "$disconnect" -> handleDisconnect(connectionId);
                 case "$default" -> handleDefaultMessage(connectionId, event.getBody());
                 default -> createResponse(400, "Unsupported route: " + routeKey);
@@ -46,13 +46,9 @@ public class WebSocketLambdaHandler implements Function<APIGatewayV2WebSocketEve
         }
     }
 
-    private APIGatewayV2WebSocketResponse handleConnect(String connectionId, APIGatewayV2WebSocketEvent event) {
+    private APIGatewayV2WebSocketResponse handleConnect(String connectionId) {
         try {
-            Long memberId = Long.valueOf(event.getQueryStringParameters().get("memberId"));
-            UUID channelId = UUID.fromString(event.getQueryStringParameters().get("channelId"));
-            log.info("Connecting. MemberId: {}, ChannelId: {}, ConnectionId: {}", memberId, channelId, connectionId);
-
-            connectionService.handleConnect(connectionId, memberId, channelId);
+            log.info("Handling Connect. ConnectionId: {}", connectionId);
             return createResponse(200, "Connected.");
         } catch (Exception e) {
             log.error("Error handling connect", e);
@@ -79,6 +75,7 @@ public class WebSocketLambdaHandler implements Function<APIGatewayV2WebSocketEve
             String data = jsonNode.get("data").toString();
 
             return switch (action) {
+                case "subscribe" -> handleSubscribe(connectionId, data);
                 case "chat" -> handleChatMessage(connectionId, data);
                 case "location" -> handleLocationMessage(connectionId, data);
                 default -> createResponse(400, "Unsupported action: " + action);
@@ -86,6 +83,21 @@ public class WebSocketLambdaHandler implements Function<APIGatewayV2WebSocketEve
         } catch (Exception e) {
             log.error("Error handling default message", e);
             return createResponse(500, "Error processing message: " + e.getMessage());
+        }
+    }
+
+    private APIGatewayV2WebSocketResponse handleSubscribe(String connectionId, String body) {
+        try {
+            log.info("Handling subscribe. ConnectionId: {}, Body: {}", connectionId, body);
+            JsonNode jsonNode = objectMapper.readTree(body);
+            Long memberId = jsonNode.get("memberId").asLong();
+            UUID channelId = UUID.fromString(jsonNode.get("channelId").asText());
+
+            connectionService.handleSubscribe(connectionId, memberId, channelId);
+            return createResponse(200, "Subscribed to channel.");
+        } catch (Exception e) {
+            log.error("Error handling subscribe", e);
+            return createResponse(500, "Error subscribing: " + e.getMessage());
         }
     }
 
