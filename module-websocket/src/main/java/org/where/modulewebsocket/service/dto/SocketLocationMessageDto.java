@@ -2,15 +2,13 @@ package org.where.modulewebsocket.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.locationtech.jts.geom.Coordinate;
 
-public record SocketLocationMessageDto(String sender, double latitude, double longitude) {
+public record SocketLocationMessageDto(String sender, Coordinate coordinate) {
     @JsonCreator
     public SocketLocationMessageDto(@JsonProperty("sender") String sender,
-                                    @JsonProperty("latitude") double latitude,
-                                    @JsonProperty("longitude") double longitude
-    ) {
+                                    @JsonProperty("coordinate") Coordinate coordinate) {
         this.sender = sender;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.coordinate = coordinate;
     }
 }
