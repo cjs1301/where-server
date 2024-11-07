@@ -86,8 +86,6 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
                 .id(id)
                 .name(name)
                 .phoneNumber(mobile)
-                .profileImage(null) // 안씀
-                .isContactListSynchronized(false) // 안씀
                 .build();
         // 성공 메시지 추가
         response.setStatus(HttpServletResponse.SC_OK);
